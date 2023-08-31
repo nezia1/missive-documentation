@@ -1,15 +1,15 @@
-site_name: Tutoriel nouveau projet gitlab
-site_url: https://edu-bonvinp.docs.gitlab.ictge.ch/tutoriel
-site_author: Pascal Bonvin
+site_name: Cahier des charges
+site_url: https://anthony-rdrgz.docs.gitlab.ictge.ch/cdc-diplome
+site_author: Anthony Rodriguez
 site_description: >-
-  Tutoriel de création de projet dans gitlab.
+  Cahier des charges de mon travail de diplôme de technicien ES
 
 # Repository
-repo_name: edu-bonvinp/tutoriel
-repo_url: https://gitlab.ictge.ch/edu-bonvinp/tutoriel
+repo_name: anthony-rdrgz/cdc-diplome
+repo_url: https://gitlab.ictge.ch/anthony-rdrgz/cdc-diplome
 
 # Copyright
-copyright: Copyright &copy; 2023 - 2024 Pascal Bonvin
+copyright: Copyright &copy; 2023 - 2024 Anthony Rodriguez
 
 # Configuration
 theme:
@@ -64,11 +64,11 @@ plugins:
   - search:
       separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - with-pdf:
-      author: Pascal Bonvin
+      author: Anthony Rodriguez
       credits: Cfpt informatique
       cover: true
-      cover_title: Tutoriel Gitlab
-      cover_subtitle: Documentation
+      cover_title: Cahier des charges
+      cover_subtitle: Cahier des charges de mon travail de diplôme de technicien ES
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
 
