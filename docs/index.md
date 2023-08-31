@@ -1,17 +1,3 @@
-# Welcome to MkDocs
+yasma (yet another secure messaging app) est une application de messagerie sécurisée, chiffrée de bout en bout. L'idée est de proposer une solution de messagerie multi-plateformes et respectueuse des données de l'utilisateur, tout en proposant une expérience utilisateur agréable et intuitive. Elle sera disponible sur Windows, macOS, Linux, Android et iOS.
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
-
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+L'application utiliserait des serveurs mais uniquement comme "mandataire", permettant de connecter les utilisateurs entre eux en utilisant WebSocket, et ne stockerait aucune information à part les informations de connexions et les clés publiques. 
