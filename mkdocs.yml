@@ -1,12 +1,12 @@
 site_name: Documentation travail de diplôme
-site_url: https://anthony-rdrgz.docs.gitlab.ictge.ch/documentation-diplome
+site_url: https://anthony-rdrgz.docs.gitlab.ictge.ch/documentation-projet
 site_author: Anthony Rodriguez
 site_description: >-
   Cahier des charges de mon travail de diplôme de technicien ES
 
 # Repository
-repo_name: anthony-rdrgz/cdc-diplome
-repo_url: https://gitlab.ictge.ch/anthony-rdrgz/cdc-diplome
+repo_name: anthony-rdrgz/documentation-projet
+repo_url: https://gitlab.ictge.ch/anthony-rdrgz/documentation-projet
 
 # Copyright
 copyright: Copyright &copy; 2023 - 2024 Anthony Rodriguez
