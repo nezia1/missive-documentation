@@ -113,3 +113,4 @@ markdown_extensions:
 # Page tree
 nav:
   - Accueil: index.md
+  - Cahier des charges: cahier-des-charges.md
