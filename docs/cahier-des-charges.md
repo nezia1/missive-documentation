@@ -13,14 +13,35 @@ L'objectif principal de ce projet est de développer une application de messager
 ### Messagerie sécurisée
 
 L'application doit permettre aux utilisateurs d'envoyer des messages chiffrés de bout en bout à d'autres personnes. Ce chiffrement sera assuré par le protocole Signal, qui est décrit dans plusieurs documents de la fondation, et déjà implémenté par des entreprises de sécurité informatique dans une multitude de langages.
+
+#### Le protocole Signal
+
+Ce protocole fonctionne avec ce qu'on appelle un algorithme à *double ratchet* (roue à rochet / crantée) : il s'agit d'un algorithme  qui permet de chiffrer les messages de bout en bout depuis une clé partagée (protocole X3DH), et ensuite en utilisant une partie du message précédemment envoyé afin de s'assurer que si une des clés est compromise, les autres messages restent confidentiels.
+
+##### Diffie Hellman
+
+Avant d'expliquer ce qu'est X3DH, qui est une partie importante du protocole Signal, il est nécéssaire de bien comprendre comment l'algorithme de Diffie Hellman fonctionne.
+Ce dernier est un algorithme permettant de générer des clés partagées qui sont les mêmes, ce qui permet d'attester de l'identité des utilisateurs qui communique. Cette clé partagée est formée en mélangeant la clé publique signée de l'envoyeur (précédemment envoyée sur le serveur), et la clé privée du destinataire. L'opération est ensuite réalisée en sens inverse. Cet algorithme génère une clé qui sera la même pour les deux utilisateurs, et qui permet d'attester de l'identité de l'autre utilisateur. Cette clé partagée sera ensuite affichée sur la conversation pour que les deux utilisateurs puissent attester de l'identité de l'autre si le besoin se présente.
+![Diffie Hellman](./img/diffie-hellman.png)
+
+##### X3DH
+
+#### Communication en temps réel
+
 Elle fonctionnera avec la mise en place d’un serveur WebSocket, qui permettra l’échange des messages en temps réel, ainsi qu’une API plus classique, qui permettra de gérer les comptes utilisateurs et les connexions.
 Le serveur de WebSocket ainsi que l’API seront protégés par les mécanismes classiques au web (entête CORS, authentification avec jeton, chiffrement SSL).
+
+Le serveur ne stockera jamais d'autres informations que les informations de connexion, et les messages en attente de réception. Les messages seront supprimés dès qu'ils auront été reçus par le destinataire. Cela permettra de garantir la confidentialité des messages, même dans le cas où le serveur serait compromis.
 
 ### Multiplateforme
 
 L’application doit être compatible avec les principales plateformes mobiles (iOS / Android), ainsi que les différentes plateformes bureautiques (Windows macOS Linux). Le choix de React Native couplé à Tauri permettra de garder une seule base qui permettra ensuite de build automatiquement l’application, notamment grâce à fastlane.
 Synchronisations entre différents appareils
 Les conversations et les messages doivent être synchronisés de manière transparente entre les différents appareils d'un utilisateur. Le mécanisme utilisé sera celui du QR code, comme on peut retrouver sur les différentes applications de chat.
+
+### Synchronisation entre périphériques
+
+L'application doit pouvoir permettre de synchroniser différents périphériques entre eux. Pour ce faire, un mécanisme de QR code sera mis en place, comme on peut le retrouver sur un grand nombre d'applications de messagerie. L'utilisateur pourra scanner le QR code de son appareil principal avec un autre appareil, et ainsi synchroniser les conversations et les messages entre les deux appareils.
 
 ### Hébergement
 
