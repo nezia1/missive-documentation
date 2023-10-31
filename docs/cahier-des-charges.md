@@ -36,8 +36,6 @@ Le serveur ne stockera jamais d'autres informations que les informations de conn
 ### Multiplateforme
 
 L’application doit être compatible avec les principales plateformes mobiles (iOS / Android), ainsi que les différentes plateformes bureautiques (Windows macOS Linux). Le choix de React Native couplé à Tauri permettra de garder une seule base qui permettra ensuite de build automatiquement l’application, notamment grâce à fastlane.
-Synchronisations entre différents appareils
-Les conversations et les messages doivent être synchronisés de manière transparente entre les différents appareils d'un utilisateur. Le mécanisme utilisé sera celui du QR code, comme on peut retrouver sur les différentes applications de chat.
 
 ### Synchronisation entre périphériques
 
