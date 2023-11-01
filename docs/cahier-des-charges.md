@@ -26,7 +26,10 @@ Avant de parler du fonctionnement du protocole dans son ensemble, il est nécés
 
 Avant d'expliquer ce qu'est X3DH, qui est une partie importante du protocole Signal, il est nécéssaire de bien comprendre comment l'algorithme de Diffie-Hellman fonctionne.
 Ce dernier est un algorithme permettant de générer des clés partagées qui sont les mêmes, ce qui permet d'attester de l'identité des utilisateur·rice·s qui communiquent. Cette clé partagée est formée en mélangeant la clé publique signée de l'envoyeur (précédemment envoyée sur le serveur), et la clé privée du destinataire. L'opération est ensuite réalisée en sens inverse. Cet algorithme génère une clé qui sera la même pour les deux utilisateur·rice·s, et qui permet d'attester de l'identité de l'autre utilisateur·rice. Cette clé partagée sera ensuite affichée sur la conversation pour que les deux utilisateur·rice·s puissent attester de l'identité de l'autre si le besoin se présente.
-![Diffie Hellman](./img/diffie-hellman.png)
+<figure markdown>
+![Diffie Hellman](./img/diffie-hellman.png){ width=400 loading=lazy }
+<figcaption>Schéma d'un échange Diffie-Hellman</figcaption>
+</figure>
 
 ###### X3DH (Extended Triple Diffie-Hellman)
 
@@ -38,7 +41,10 @@ Il fonctionne exactement de la même manière, mais utilise des valeurs différe
 
 Finalement, l'un des éléments clés de ce protocole est la manière dont les messages sont chiffrés tout au long des conversation. Il fonctionne avec ce qu'on appelle un algorithme à *double ratchet* (roue à rochet / crantée) : il s'agit d'un algorithme  qui permet de chiffrer les messages de bout en bout depuis une clé initiale après vérification d'identité mutuelle (protocole X3DH), et ensuite en utilisant une partie du message précédemment envoyé afin de s'assurer que si une des clés est compromise, les autres messages restent confidentiels.
 
-![Roue à rochet](./img/roue-rochet.png)
+<figure markdown>
+![Roue à rochet](./img/roue-rochet.png){ width=300 loading=lazy }
+<figcaption>Exemple d'une roue à rochet</figcaption>
+</figure>
 Il utilise ce qu'on appelle une chaîne KDF, une fonction cryptographique qui, en prenant une clé secrète, une clé aléatoire, et une chaîne de caractères quelconque, va générer du contenu chiffré (algorithme de chiffrement symmétrique). La spécificité de cette fonction de chiffrement se trouve dans sa capacité à être chaînée ; en plus de chiffrer le contenu avec la clé secrète, elle va également ajouter une clé aléatoire à la fin du contenu chiffré, qui sera utilisée pour chiffrer le message suivant. Cela permet de s'assurer que si une des clés est compromise, les messages précédents restent confidentiels (d'où le nom de *double ratchet*).
 
 ##### Fonctionnement général
