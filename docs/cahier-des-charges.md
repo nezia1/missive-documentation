@@ -16,19 +16,23 @@ L'application doit permettre aux utilisateur·rice·s d'envoyer des messages chi
 
 #### Le protocole Signal
 
+##### Concepts importants
+
 Ce protocole fonctionne avec ce qu'on appelle un algorithme à *double ratchet* (roue à rochet / crantée) : il s'agit d'un algorithme  qui permet de chiffrer les messages de bout en bout depuis une clé partagée (protocole X3DH), et ensuite en utilisant une partie du message précédemment envoyé afin de s'assurer que si une des clés est compromise, les autres messages restent confidentiels.
 
-##### Diffie-Hellman
+###### Diffie-Hellman
 
 Avant d'expliquer ce qu'est X3DH, qui est une partie importante du protocole Signal, il est nécéssaire de bien comprendre comment l'algorithme de Diffie-Hellman fonctionne.
 Ce dernier est un algorithme permettant de générer des clés partagées qui sont les mêmes, ce qui permet d'attester de l'identité des utilisateur·rice·s qui communiquent. Cette clé partagée est formée en mélangeant la clé publique signée de l'envoyeur (précédemment envoyée sur le serveur), et la clé privée du destinataire. L'opération est ensuite réalisée en sens inverse. Cet algorithme génère une clé qui sera la même pour les deux utilisateur·rice·s, et qui permet d'attester de l'identité de l'autre utilisateur·rice. Cette clé partagée sera ensuite affichée sur la conversation pour que les deux utilisateur·rice·s puissent attester de l'identité de l'autre si le besoin se présente.
 ![Diffie Hellman](./img/diffie-hellman.png)
 
-##### X3DH (Extended Triple Diffie-Hellman)
+###### X3DH (Extended Triple Diffie-Hellman)
 
 Maintenant que nous avons expliqué Diffie-Hellman, nous allons nous intéresser à XD3H, qui est une partie importante du protocole Signal. Ce dernier reprend les mêmes concepts que Diffie-Hellman, mais génère une série de valeurs au lieu d'une seule clé partagée. Il est plus adapté aux contextes asynchrones, et permet de gérer automatiquement les cas où le destinataire serait hors-ligne, ou aurait son périphérique éteint.
 
 Il fonctionne exactement de la même manière, mais utilise des valeurs différentes dont nous allons parler plus tard. X3DH récupère d'abord un bundle de pré-clés dont le contenu sera expliquée plus bas, et l'utilise pour générer 4 valeurs Diffie-Hellman, qui sont ensuite regroupées pour calculer une clé partagée secrète. Elle a le même but que Diffie-Hellman, à savoir établir un accord entre les deux utilisateur·rice·s, mais elle a l'avantage de contenir des clés éphémères (certaines des clés privées sont mêmes supprimées après utilisation), et permet d'encore renforcer la sécurité dans le cas où une des clés serait compromise.
+
+##### Fonctionnement général
 
 ###### Génération des clés
 
