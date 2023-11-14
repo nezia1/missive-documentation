@@ -46,7 +46,10 @@ Finalement, l'un des éléments clés de ce protocole est la manière dont les m
 <figcaption>Exemple d'une roue à rochet</figcaption>
 </figure>
 Il utilise ce qu'on appelle une chaîne KDF, une fonction cryptographique qui, en prenant une clé secrète, une clé aléatoire, et une chaîne de caractères quelconque, va générer du contenu chiffré (algorithme de chiffrement symmétrique). La spécificité de cette fonction de chiffrement se trouve dans sa capacité à être chaînée ; en plus de chiffrer le contenu avec la clé secrète, elle va également utiliser une partie de la sortie pour chiffrer le message suivant. Cela permet de s'assurer que si une des clés est compromise, les messages précédents restent confidentiels (d'où le *ratchet*, la chaîne ne va que dans un seul sens).
-
+<figure markdown>
+![Schéma explicatif du fonctionnement de la chaîne KDF](./img/chaine-kdf.png){ width=500 loading=lazy }
+<figcaption>Schéma explicatif du fonctionnement de la chaîne KDF</figcaption>
+</figure>
 Cette approche comporte cependant un problème : si un attaquant venait à intercepter l'une des clés, il pourrait décrypter tous les messages suivants. C'est ici que la partie *double* du nom *double ratchet* intervient : l'algorithme combine la clé symmétrique générée précédemment avec l'algorithme de chaîne KDF (premier rochet), avec un second rochet Diffie-Hellman. Il fonctionne de la manière suivante :
 
 - Pour l'initialisation, une paire de clés Diffie-Hellman est générée de chaque côté
@@ -70,6 +73,8 @@ Après avoir installé l'application, la première étape du protocole est de g�
 - Une paire de clés d'identité (privée / publique)
 - Une pré-clé signée (publique)
 - Plusieurs pré-clés non signées
+
+Les clés publiques sont ensuites publiées sur le serveur.
 
 #### Communication en temps réel
 
