@@ -99,6 +99,20 @@ Les différents serveurs de l’application seront hébergés sur les serveurs /
 
 Le déploiement de l’application sera complètement automatisé grâce à fastlane, un service acquéri en 2017 par Google. Il permet le build automatique, le déploiement en accès anticipé sur les différentes plateformes mobiles (TestFlight, Play Console), la soumission sur les app stores, et il est complètement intégrable avec GitLab Runner pour autant que le serveur soit sous macOS (afin de pouvoir build pour iOS).
 
+## Technologies utilisées
+
+### Flutter
+
+Le framework Flutter sera utilisé afin de réaliser le client. Ce dernier permettra de pouvoir réaliser une application multi-plateformes, qui fonctionne sur iOS, Android, Windows, macOS et Linux. L'utilisation de React Native a été considérée, mais Flutter a été retenu car la bibliothèque du protocole Signal ne fonctionnait pas (WebCrypto, l'API de chiffrement, n'est malheureusement pas disponible sur React Native, malgré les tentatives de polyfills et d'installation de différentes solutions alternatives).
+
+### Typescript
+
+Le back-end de l'application sera réalisé en Typescript, couplé à Bun, nouveau runtime qui offre des performances nettement supérieures à Node.JS, et qui est disponible en version 1.x depuis maintenant quelques mois. Typescript a été retenu pour sa facilité d'utilisation, sa solidité, et sa compatibilité avec les différentes bibliothèques utilisées.
+
+### Docker
+
+Docker sera utilisé afin de pouvoir déployer le back-end de manière simple et reproductible. Un docker-compose sera réalisé, qui permettra de déployer l'application en une seule commande, et également de la mettre à jour avec les différents tags et versions proposés.
+
 ## Budget
 
 ### Hébergement Jelastic Cloud Infomaniak
