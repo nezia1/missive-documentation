@@ -114,3 +114,4 @@ markdown_extensions:
 nav:
   - Accueil: index.md
   - Cahier des charges: cahier-des-charges.md
+  - Le protocole Signal: protocole-signal.md
