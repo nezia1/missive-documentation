@@ -16,8 +16,9 @@ L'application doit permettre aux utilisateur·rice·s d'envoyer des messages chi
 
 #### Communication en temps réel
 
-Elle fonctionnera avec la mise en place d’un serveur WebSocket, qui permettra l’échange des messages en temps réel, ainsi qu’une API plus classique, qui permettra de gérer les comptes utilisateur·rice·s et les connexions.
-Le serveur de WebSocket ainsi que l’API seront protégés par les mécanismes classiques au web (entête CORS, authentification avec jeton, chiffrement SSL).
+Elle fonctionnera avec la mise en place d’un serveur WebSocket, qui permettra l’échange des messages en temps réel, ainsi qu’une API plus classique, qui permettra de gérer les comptes utilisateur·rice·s, les connexions, ainsi que les messages stockés temporairement en attente de réception.
+Ils fonctionneront en parallèle : le serveur de WebSocket utilisera également l'API afin de pouvoir gérer les messages en attente de réception.
+Le serveur de WebSocket ainsi que l’API seront protégés par les mécanismes classiques au web (entête CORS afin d'éviter les CSRF / requêtes depuis des périphériques non autorisés, authentification avec jeton pour s'assurer de l'identité des utilisateurs, et chiffrement SSL avec HTTPS).
 
 Le serveur ne stockera jamais d'autres informations que les informations de connexion, et les messages en attente de réception. Les messages seront supprimés dès qu'ils auront été reçus par le destinataire. Cela permettra de garantir la confidentialité des messages, même dans le cas où le serveur serait compromis.
 
