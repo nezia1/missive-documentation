@@ -37,6 +37,14 @@ Les différents serveurs de l’application seront hébergés sur les serveurs /
 
 Le déploiement de l’application sera complètement automatisé grâce à fastlane, un service acquéri en 2017 par Google. Il permet le build automatique, le déploiement en accès anticipé sur les différentes plateformes mobiles (TestFlight, Play Console), la soumission sur les app stores, et il est complètement intégrable avec GitLab Runner pour autant que le serveur soit sous macOS (afin de pouvoir build pour iOS).
 
+### Tests et validation
+
+Une batterie de tests unitaires et E2E sera déployée grâce aux outils de test de Flutter pour le client, et un framework plus classique pour la partie serveur. Cela permettra de garantir le bon fonctionnement du projet, et de pouvoir détecter les éventuels bugs et problèmes de sécurité avant même de déployer l'application. Ces tests seront automatiquement exécutés avec la pipeline CI/CD, afin de garantir que chaque commit est fonctionnel.
+
+### Maintenance
+
+La maintenance de l'application sera assurée grâce à des mises à jour automatiquement publiées sur les app stores grâce à fastlane. Cela permettra de garantir la sécurité des utilisateur·rice·s, et de corriger les éventuels bugs qui pourraient être découverts.
+
 ## Technologies utilisées
 
 ### Flutter
