@@ -26,10 +26,6 @@ Le serveur ne stockera jamais d'autres informations que les informations de conn
 
 L’application doit être compatible avec les principales plateformes mobiles (iOS / Android), ainsi que les différentes plateformes bureautiques (Windows macOS Linux). Le choix de Flutter permettra de garder une seule base qui permettra ensuite de build automatiquement l’application, notamment grâce à fastlane.
 
-### Synchronisation entre périphériques
-
-L'application doit pouvoir permettre de synchroniser différents périphériques entre eux. Pour ce faire, un mécanisme de QR code sera mis en place, comme on peut le retrouver sur un grand nombre d'applications de messagerie. L'utilisateur·rice pourra scanner le QR code de son appareil principal avec un autre appareil, et ainsi synchroniser les conversations et les messages entre les deux appareils.
-
 ### Hébergement
 
 Les différents serveurs de l’application seront hébergés sur les serveurs / VPS de chez Infomaniak. Cette dernière étant basée sur la confidentialité des données, le choix d’un hébergeur suisse est donc crucial même pour ce projet, où les données ne seront conservées que sur le client.
