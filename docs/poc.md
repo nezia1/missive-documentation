@@ -4,7 +4,7 @@ Un *Proof Of Concept* (POC) est un processus qui permet de commencer le travail 
 
 ## Objectifs
 
-Réaliser une application qui permet à l'utilisateur de se connecter à un serveur, et de recevoir des messages de la part d'autres utilisateurs (non chiffrés). Cela permettra de tester la communication entre le client et le serveur, ainsi que la communication en temps réel entre les utilisateurs avec WebSocket.
+Réaliser une application qui permet à l'utilisateur de se connecter à une API, à l'aide d'une application Flutter. Cela permettra de tester l'autorisation entre le client et le serveur, qui est un point qui m'a toujours rendu perplexe.
 
 L'API sera sécurisée avec les mécanismes classiques du web (JWT, HTTPS, CORS). La connexion utilisateur sera également possible avec un jeton TOTP (*Time-based One-Time Password*), et qui sera possible de relier à une application d'authentification comme Google Authenticator ou Authy.
 
@@ -13,7 +13,6 @@ Les objectifs de ce POC sont donc les suivants:
 - Tester Flutter
 - Tester Typescript
 - Tester la communication entre le client et le serveur
-- Tester la communication en temps réel entre les utilisateurs
 - Implémenter une API sécurisée
   - JWT
   - CORS
@@ -44,6 +43,20 @@ Prisma sera mon ORM de choix pour ce projet. J'ai aussi utilisé ce dernier pend
 
 Je vais finalement utiliser Bun pour le développement ainsi que l'hébergement de l'application : ce dernier est récemment sorti en version 1.0.0, et est donc stable. Il est également très rapide, offrant des performances supérieures à NodeJS et permet de développer des applications en TypeScript sans avoir à passer par le transpileur officiel. De plus, le *runtime* lui-même offre une API permettant la réalisation d'un serveur de WebSocket, ce qui me permettra de ne pas avoir à utiliser une bibliothèque externe quand je réaliserais mon travail de diplôme (il sera également utilisé dans le projet de PDA), afin de pouvoir gérer la communication en temps réel. Ce dernier offre également des performances supérieures à Socket.io ou autres bibliothèques similaires.
 
-Après avoir choisi les différentes technologies, je décide de m'attaquer à la planification des routes : idéalement,
+Après avoir choisi les différentes technologies, je décide de m'attaquer à la planification des routes : j'ai pensé à réaliser une API REST, avec les routes suivantes :
+
+| Méthode | Route     | Description                                            |
+|---------|-----------|--------------------------------------------------------|
+| POST    | /users    | Permet à l'utilisateur de créer un compte              |
+| GET     | /users/me | Permet à l'utilisateur de récupérer son profil         |
+| DEL     | /users/me | Permet à l'utilisateur de supprimer son compte         |
+| POST    | /tokens   | Permet à l'utilisateur de s'authentifier               |
+| PUT     | /tokens   | Permet à l'utilisateur de rafraichir son jeton d'accès |
 
 ### Jeudi 7 décembre 2023
+
+Aujourd'hui, je commence à travailler sur la partie API. J'ai commencé par implémenter les différentes routes, en commençant par la création de compte. J'ai fait le choix de stocker le mot de passe de l'utilisateur avec un hash Argon2, qui est recommandé par OWASP comme algorithme de hachage. Après avoir fini la création de compte, j'ai commencé à réfléchir au schéma d'authentification de l'utilisateur : l'idée est d'avoir un système qui soit simple d'utilisation et d'implémentation, mais assez robuste pour pouvoir lui faire confiance.
+
+J'ai décidé de me tourner vers un système d'authentification à deux jetons, un jeton d'accès et de rafraîchissement en JWT. Le choix du JWT est dû à sa protection grâce à un secret sur le serveur, qui signe ce dernier et empêche qui que ce soit de le modifier. Le jeton d'accès sera utilisé pour les requêtes à l'API, et sera valide pendant 15 minutes. Le jeton de rafraîchissement sera utilisé pour rafraîchir le jeton d'accès, et sera valide pendant 7 jours. Le jeton de rafraîchissement sera stocké dans un cookie HTTPOnly, ce qui empêchera le client d'y accéder, et donc de le voler. Le jeton d'accès sera stocké dans le *local storage* du client, ce qui permettra de le récupérer facilement lors des requêtes à l'API.
+
+### Jeudi 14 décembre 2023
