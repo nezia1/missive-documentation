@@ -1,5 +1,5 @@
-# \[Secure Messaging App\]
+# Missive
 
-\[Secure Messaging App\] est une application de messagerie sécurisée, chiffrée de bout en bout. L'idée est de proposer une solution de messagerie multi-plateformes et respectueuse des données de l'utilisateur·rice, tout en proposant une expérience utilisateur·rice agréable et intuitive. Elle sera disponible sur Windows, macOS, Linux, Android et iOS.
+Missive est une application de messagerie sécurisée, chiffrée de bout en bout. L'idée est de proposer une solution de messagerie multi-plateformes et respectueuse des données de l'utilisateur·rice, tout en proposant une expérience utilisateur·rice agréable et intuitive. Elle sera disponible sur Windows, macOS, Linux, Android et iOS.
 
 L'application utiliserait des serveurs mais uniquement comme "mandataire", permettant de connecter les utilisateur·rice·s entre eux en utilisant WebSocket, et ne stockerait aucune information à part les informations de connexions, les clés publiques et les messages envoyés dans le cas où le destinataire serait hors ligne (qui seront supprimés dès la réception).
