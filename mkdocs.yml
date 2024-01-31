@@ -72,7 +72,13 @@ plugins:
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
   - glightbox
-
+  - build_plantuml:
+      render: 'server'
+      server: 'http://www.plantuml.com/plantuml' # official plantuml server
+      output_format: 'svg' # or "png"
+      diagram_root: 'docs/assets/diagrams' # should reside under docs_dir
+      output_folder: 'out'
+      input_folder: 'src'
 # Extensions
 markdown_extensions:
   - abbr
