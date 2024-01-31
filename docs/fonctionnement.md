@@ -10,5 +10,5 @@ La clé privée sera stockée localement sur l'appareil, protégée par les méc
 
 <figure markdown>
 ![Diagramme de séquence de la connexion à l'application](assets/diagrams/out/login-sequence.svg){ width=800 loading=lazy }
-<figcaption>Diagramme de séquence de la connexion à l'application</figcaption>
+<figcaption>Diagramme de séquence de la création d'un compte utilisateur</figcaption>
 </figure>
