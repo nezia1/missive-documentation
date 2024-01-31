@@ -14,7 +14,7 @@ copyright: Copyright &copy; 2023 - 2024 Anthony Rodriguez
 # Configuration
 theme:
   name: material
-  custom_dir: custom_theme/
+  custom_dir: custom_templates/
   features:
     - announce.dismiss
     - content.action.edit
