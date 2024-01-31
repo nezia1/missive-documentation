@@ -71,6 +71,7 @@ plugins:
       cover_subtitle: Cahier des charges de mon travail de diplôme de technicien ES
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
+  - glightbox
 
 # Extensions
 markdown_extensions:
