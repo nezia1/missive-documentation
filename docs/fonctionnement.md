@@ -9,6 +9,6 @@ Au premier lancement de l'application, l'utilisateur·rice devra créer un compt
 La clé privée sera stockée localement sur l'appareil, protégée par les mécanismes de sécurité du système d'exploitation (ie. Keychain sur iOS, KeyStore sur Android, etc.).
 
 <figure markdown>
-![Diagramme de séquence de la connexion à l'application](./assets/img/login-sequence.png){ width=800 loading=lazy }
+![Diagramme de séquence de la connexion à l'application](assets/diagrams/out/login-sequence.svg){ width=800 loading=lazy }
 <figcaption>Diagramme de séquence de la connexion à l'application</figcaption>
 </figure>
