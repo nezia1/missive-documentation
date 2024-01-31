@@ -1,4 +1,4 @@
-@startuml login_sequence
+@startuml login-sequence
 title Création de compte utilisateur
 actor Utilisateur as User
 entity "Application" as Client
