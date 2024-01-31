@@ -1,0 +1,29 @@
+@startuml Login sequence
+title Création de compte utilisateur
+actor Utilisateur as User
+entity "Application" as Client
+entity API
+database "Base de données" as Database
+
+User -> Client : Création de compte
+Client -> Client : Vérification des données 
+alt Données client valides
+    Client -> API : Envoi des informations de\n création de compte
+    API -> API : Vérification des données
+    alt Données serveur valides 
+        API -> Database : Stockage des données de compte
+        Database -> API : Confirmation de stockage
+        API -> Client : Confirmation de création de compte
+        Client -> Client : Génération des clés publiques et privées
+        Client -> API : Envoi des clés publiques
+        API -> Database : Stockage des clés publiques
+        Database -> API : Confirmation de stockage
+        API -> Client : Confirmation de stockage des clés publiques
+        Client -> User : Redirection vers la page d'accueil
+    else Données invalides 
+        API -> Client : Erreur de création de compte
+    end
+else Données client invalides 
+    Client -> User : Erreur de création de compte
+end
+@enduml
