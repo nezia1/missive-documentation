@@ -1,16 +1,17 @@
 image: python:3.8-buster
 
 variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PIP_CACHE_DIR: '$CI_PROJECT_DIR/.cache/pip'
 
 before_script:
+  - 'apt-get install libpango-1.0-0 libpangoft2-1.0-0'
   - 'python3 -m venv venv'
   - 'source venv/bin/activate'
   - 'pip install --upgrade pip'
   - 'pip install -r requirements.txt'
 
 cache:
-  key: "$CI_COMMIT_REF_SLUG"
+  key: '$CI_COMMIT_REF_SLUG'
   paths:
     - '.cache/pip'
 
