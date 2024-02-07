@@ -8,6 +8,24 @@ Durant la deuxième et dernière année du diplôme de technicien ES en dévelop
 
 L'objectif principal de ce projet est de développer une application de messagerie sécurisée qui garantit la confidentialité des messages échangés entre les utilisateur·rice·s grâce à l'implémentation du protocole de chiffrement Signal. L'application sera conçue pour fonctionner sur la majorité des plateformes (iOS, Android, Windows, macOS, Linux). Elle permettra aux utilisateur·rice·s de communiquer en temps réel de manière sécurisée, de synchroniser leurs conversations entre plusieurs appareils, et d'être disponible sur les principaux app stores. De plus, l'application sera hébergée chez Infomaniak pour garantir la disponibilité et la sécurité des données des utilisateur·rice·s.
 
+## Analyse  de l'existant
+
+Les applications de chat étant nombreuses, j'ai décidé de me pencher sur deux de ces applications qui utilisent la sécurité comme un de leurs arguments principaux. Ces deux applications sont *Telegram* et *Signal*.
+
+### Telegram
+
+Telegram est une application de messagerie sécurisée qui utilise le protocole MTProto, qui est un protocole de chiffrement de bout en bout. Cependant, cette application stocke les messages sur son serveur, ce qui peut potentiellement poser problème en ce qui concerne la confidentialité des messages.
+
+De plus, Telegram n'est pas chiffré de bout en bout par défaut, et il est nécessaire de créer un chat secret pour pouvoir bénéficier de cette fonctionnalité. Cela peut poser problème, car il est possible que les utilisateur·rice·s ne soient pas au courant de cette fonctionnalité, et que leurs messages passent dont en clair sur les serveurs de Telegram.
+
+### Signal
+
+Signal est l'application qui se rapproche le plus de la sécurité, car elle utilise le protocole Signal, qui est un protocole de chiffrement de bout en bout, et qui est open source.
+
+Un de ses points forts est le fait que Signal ne stocke aucunement les messages de l'utilisateur·rice, et que ces derniers sont chiffrés de bout en bout par défaut. Le seul cas où le message va être stocké sur le serveur est de manière temporaire, en attente de réception par le destinataire dans le cas où ce dernier est hors-ligne.
+
+Cependant, Signal n'est malheureusement pas complètement open-source (une partie des serveurs est propriétaire). Cela peut poser quelques soucis en ce qui concerne la confiance des utilisateurs, malgré la réputation très sûre et positive de l'organisation. De plus, Signal est hébergée par Amazon Web Services, qui est une entreprise américaine, et qui est donc soumise à la législation américaine, qui n'est pas forcément la plus respectueuse de la vie privée (pays membre du traité de *14 eyes* / UKUSA).
+
 ## Spécifications techniques
 
 ### Messagerie sécurisée
