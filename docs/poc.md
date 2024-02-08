@@ -59,4 +59,6 @@ Aujourd'hui, je commence à travailler sur la partie API. J'ai commencé par imp
 
 J'ai décidé de me tourner vers un système d'authentification à deux jetons, un jeton d'accès et de rafraîchissement en JWT. Le choix du JWT est dû à sa protection grâce à un secret sur le serveur, qui signe ce dernier et empêche qui que ce soit de le modifier. Le jeton d'accès sera utilisé pour les requêtes à l'API, et sera valide pendant 15 minutes. Le jeton de rafraîchissement sera utilisé pour rafraîchir le jeton d'accès, et sera valide pendant 7 jours. Le jeton de rafraîchissement sera stocké dans un cookie HTTPOnly, ce qui empêchera le client d'y accéder avec du code, et donc de le voler. Le jeton d'accès sera stocké dans le *local storage* du client, ce qui permettra de le récupérer facilement lors des requêtes à l'API.
 
-### Jeudi 14 décembre 2023
+### 8 février 2024
+
+Aujourd'hui, j'ai rencontré des problèmes avec le client Flutter. En effet, l'une des dépendances que j'utilise pour faire des requêtes HTTP, Dio, rencontre malheureusement des soucis avec les exceptions, qui ne peuvent pas être géréees. J'ai décidé de changer de bibliothèque pour faire mes requêtes HTTP, et j'ai choisi de me tourner vers la bibliothèque HTTP de Flutter, qui est très bien documentée et qui est beaucoup plus stable.
