@@ -62,3 +62,7 @@ J'ai décidé de me tourner vers un système d'authentification à deux jetons, 
 ### 8 février 2024
 
 Aujourd'hui, j'ai rencontré des problèmes avec le client Flutter. En effet, l'une des dépendances que j'utilise pour faire des requêtes HTTP, Dio, rencontre malheureusement des soucis avec les exceptions, qui ne peuvent pas être géréees. J'ai décidé de changer de bibliothèque pour faire mes requêtes HTTP, et j'ai choisi de me tourner vers la bibliothèque HTTP de Flutter, qui est très bien documentée et qui est beaucoup plus stable.
+
+J'ai fini par régler le souci, et j'ai réussi à migrer toute la logique d'authentification de l'application vers la nouvelle bibliothèque. J'ai également réglé quelques problèmes de logique de connexion, il ne me reste plus qu'à nettoyer le code, et éventuellement commencer à créer des widgets séparés afin de rendre le code plus lisible.
+
+J'ai également réalisé un schéma de l'architecture globale de l'application, que vous pouvez retrouver sur la page [Fonctionnement](fonctionnement.md).
