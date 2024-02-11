@@ -66,3 +66,27 @@ Aujourd'hui, j'ai rencontré des problèmes avec le client Flutter. En effet, l'
 J'ai fini par régler le souci, et j'ai réussi à migrer toute la logique d'authentification de l'application vers la nouvelle bibliothèque. J'ai également réglé quelques problèmes de logique de connexion, il ne me reste plus qu'à nettoyer le code, et éventuellement commencer à créer des widgets séparés afin de rendre le code plus lisible.
 
 J'ai également réalisé un schéma de l'architecture globale de l'application, que vous pouvez retrouver sur la page [Fonctionnement](fonctionnement.md).
+
+### 11 février 2024
+
+Aujourd'hui, j'ai travaillé sur mon POC depuis chez moi. J'ai refait la structure du projet afin de passer sur une structure *feature-first*, qui sera plus adaptée dans le cas du projet final. Elle ressemble actuellement à ça :
+
+```tree
+├── constants/
+├── features/
+│   ├── authentication/
+│   │   ├── auth_service.dart
+│   │   ├── login_screen.dart
+│   │   └── totp_modal.dart
+│   └── home/
+│       └── home_screen.dart
+└── main.dart
+```
+
+J'ai également commencé à refactor le code de l'application, dont l'ajout d'un routeur et la composition de widgets indépendants et séparés par fonctionnalité. Je suis également en train de commencer à regarder pour passer sur un système de gestion d'état global comme BLoC, qui pourrait permettre de rendre la gestion de l'état de l'application plus standard, sachant que beaucoup de données seront partagées entre les différentes parties de l'application / widgets, et que cela pourrait devenir compliqué à gérer avec le temps.
+
+L'idée de BLoC est de composer des Cubit ou des Blocs, qui utilisent des *streams* afin de pouvoir réagir aux changements d'état. Ces classes permettent de gérer l'état de l'application, et de notifier les widgets qui écoutent les changements de cet état. Cela permet de rendre l'application plus prévisible, et de gérer l'état de manière plus standardisée. Voici un diagramme du fonctionnement de BLoC :
+<figure markdown>
+![Diagramme de fonctionnement de BLoC](assets/img/bloc_architecture.png)
+<figcaption>Diagramme de fonctionnement de BLoC</figcaption>
+</figure>
