@@ -90,3 +90,13 @@ L'idée de BLoC est de composer des Cubit ou des Blocs, qui utilisent des *strea
 ![Diagramme de fonctionnement de BLoC](assets/img/bloc_architecture.png)
 <figcaption>Diagramme de fonctionnement de BLoC</figcaption>
 </figure>
+
+J'ai finalement décidé de partir sur [Provider](https://pub.dev/packages/provider), qui est une bibliothèque de gestion d'était qui est plus adaptée à mon cas d'utilisation. Elle est plus simple à utiliser, et permet de gérer l'état de manière plus simple.
+
+Cette bibliothèque fonctionne en créeant des classes qui étendent `ChangeNotifier`, qui donne accès à une fonction notifyListeners(). Quand elle est appelée, elle permet de notifier tous les widgets qui sont en train d'écouter les changements d'états.
+
+Cette dernière est ensuite passée à un `ChangeNotifierProvider`, qui permet à tous les widgets en dessous de ce dernier de pouvoir se servir de l'état ainsi que d'écouter les changements.
+
+Dans mon cas, c'est extrêmement pertinent, car je peux m'en servir afin que mon authentification soit globale à toute l'application, permettant de gérer l'état de connexion de manière complètement indépendante de la couche de présentation. De plus, mon travail de diplôme encapsulant énormément de *business logic* globale, je pense que cette bibliothèque sera très utile. Cependant, à voir par le futur  si je ne devrais pas passer sur BLoC / Riverpod, qui sont plus adaptées à des applications plus complexes. Mais dans ce cas-là, Provider est parfait.
+
+J'ai pu donc refactor mon application pour utiliser cette bibliothèque, et j'ai pu ajouter une redirection vers la page de connexion si l'utilisateur n'est pas connecté. J'ai eu énormément de soucis avec Provider, car je ne comprenais pas comment l'utiliser, dont comment l'intégrer avec le routeur que j'utilise, go_router, mais je pense avoir commencé à le maîtriser. J'ai également créé une page d'accueil, qui est pour l'instant un simple placeholder, mais qui sera utilisée pour afficher les paramètres de compte une fois connecté.
