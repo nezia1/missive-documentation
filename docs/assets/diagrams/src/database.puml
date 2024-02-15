@@ -1,0 +1,22 @@
+@startuml database
+entity "User" as user {
+    * id : number <<generated>>
+    username : text 
+    password : text
+    --
+    + phone_number : text
+    + created_at : date <<generated>>
+    + updated_at : date <<generated>>
+}
+
+entity "PendingMessage" as pendingMessage {
+    * id : number <<generated>>
+    text : text
+    --
+    * user_id : number <<FK>>
+    + created_at : date <<generated>>
+    + updated_at : date <<generated>>
+}
+
+user ||--o{ pendingMessage
+@enduml
