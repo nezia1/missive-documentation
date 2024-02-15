@@ -26,6 +26,14 @@ Un de ses points forts est le fait que Signal ne stocke aucunement les messages 
 
 Cependant, Signal n'est malheureusement pas complètement open-source (une partie des serveurs est propriétaire). Cela peut poser quelques soucis en ce qui concerne la confiance des utilisateurs, malgré la réputation très sûre et positive de l'organisation. De plus, Signal est hébergée par Amazon Web Services, qui est une entreprise américaine, et qui est donc soumise à la législation américaine, qui n'est pas forcément la plus respectueuse de la vie privée (pays membre du traité de *14 eyes* / UKUSA).
 
+## Plus value
+
+Après avoir analysé les applications actuelles de messagerie sécurisée, il y a quelques points qui pourraient être améliorés, et qui pourraient apporter une plus-value à l'application que je souhaite réaliser :
+
+- Confidentialité des messages : Les messages seront chiffrés de bout en bout par défaut, et ne seront jamais stockés sur le serveur (seulement de manière temporaire en cas de non-réception par le destinataire)
+- Open-source : L'application sera complètement open-source, ce qui permettra de garantir la confiance des utilisateur·rice·s, et de permettre à des tiers de vérifier la sécurité de l'application et de l'améliorer
+- Hébergement en Suisse : L'application sera hébergée chez Infomaniak, qui est une entreprise suisse, et qui est donc soumise à la législation suisse, qui est beaucoup plus respectueuse de la vie privée que la législation américaine
+
 ## Spécifications techniques
 
 ### Messagerie sécurisée
