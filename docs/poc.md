@@ -106,3 +106,5 @@ J'ai pu donc refactor mon application pour utiliser cette bibliothèque, et j'ai
 Aujourd'hui, je n'ai pas eu autant de temps pour travailler car nous avons eu les présentations du cahier des charges. Néanmoins, j'ai pu prendre des notes des améliorations à effectuer sur le cahier des charges.
 
 J'ai également pu travailler un peu sur mon POC. Je me suis chargé de refactor la manière dont les erreurs sont gérées, afin de rendre les providers plus propres, en vérifiant les types au lieu de vérifier une propriété status, qui sont mieux intégrés au langage.
+
+J'ai aussi pu implémenter la déconnexion de l'utilisateur, en supprimant les différents jetons de son périphérique. Dans le futur, il faudrait aussi supprimer les jetons du serveur, mais pour l'instant, je n'ai pas encore implémenté cette fonctionnalité. Ou alors, il faudrait les supprimer automatiquement après un certain temps d'inactivité (il faudrait également rajouter un champ `last_used` dans la base de données pour pouvoir gérer cette fonctionnalité). Cependant, cela rajouterait des informations sensibles dans la base de données, et je ne suis pas sûr que ce soit une bonne idée.
