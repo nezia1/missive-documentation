@@ -100,3 +100,9 @@ Cette dernière est ensuite passée à un `ChangeNotifierProvider`, qui permet �
 Dans mon cas, c'est extrêmement pertinent, car je peux m'en servir afin que mon authentification soit globale à toute l'application, permettant de gérer l'état de connexion de manière complètement indépendante de la couche de présentation. De plus, mon travail de diplôme encapsulant énormément de *business logic* globale, je pense que cette bibliothèque sera très utile. Cependant, à voir par le futur  si je ne devrais pas passer sur BLoC / Riverpod, qui sont plus adaptées à des applications plus complexes. Mais dans ce cas-là, Provider est parfait.
 
 J'ai pu donc refactor mon application pour utiliser cette bibliothèque, et j'ai pu ajouter une redirection vers la page de connexion si l'utilisateur n'est pas connecté. J'ai eu énormément de soucis avec Provider, car je ne comprenais pas comment l'utiliser, dont comment l'intégrer avec le routeur que j'utilise, go_router, mais je pense avoir commencé à le maîtriser. J'ai également créé une page d'accueil, qui est pour l'instant un simple placeholder, mais qui sera utilisée pour afficher les paramètres de compte une fois connecté.
+
+### 15 février 2024
+
+Aujourd'hui, je n'ai pas eu autant de temps pour travailler car nous avons eu les présentations du cahier des charges. Néanmoins, j'ai pu prendre des notes des améliorations à effectuer sur le cahier des charges.
+
+J'ai également pu travailler un peu sur mon POC. Je me suis chargé de refactor la manière dont les erreurs sont gérées, afin de rendre les providers plus propres, en vérifiant les types au lieu de vérifier une propriété status, qui sont mieux intégrés au langage.
