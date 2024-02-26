@@ -1,12 +1,12 @@
-site_name: Documentation travail de diplôme
-site_url: https://anthony-rdrgz.docs.ictge.ch/documentation-projet
+site_name: Documentation Missive
+site_url: https://anthony-rdrgz.docs.ictge.ch/missive
 site_author: Anthony Rodriguez
 site_description: >-
-  Cahier des charges de mon travail de diplôme de technicien ES
+  Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
 
 # Repository
-repo_name: anthony-rdrgz/documentation-projet
-repo_url: https://gitlab.ictge.ch/anthony-rdrgz/documentation-projet
+repo_name: anthony-rdrgz/missive-documentation
+repo_url: https://gitlab.ictge.ch/anthony-rdrgz/missive-documentation
 
 # Copyright
 copyright: Copyright &copy; 2023 - 2024 Anthony Rodriguez
@@ -66,10 +66,11 @@ plugins:
       separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
   - with-pdf:
       author: Anthony Rodriguez
-      credits: Cfpt informatique
+      credits: CFPT Informatique
       cover: true
-      cover_title: Cahier des charges
-      cover_subtitle: Cahier des charges de mon travail de diplôme de technicien ES
+      cover_title: Documentation Missive
+      cover_subtitle: 
+        Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
   - glightbox
