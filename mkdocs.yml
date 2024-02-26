@@ -5,8 +5,8 @@ site_description: >-
   Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
 
 # Repository
-repo_name: anthony-rdrgz/missive-documentation
-repo_url: https://gitlab.ictge.ch/anthony-rdrgz/missive-documentation
+repo_name: anthony-rdrgz/missive
+repo_url: https://gitlab.ictge.ch/anthony-rdrgz/missive
 
 # Copyright
 copyright: Copyright &copy; 2023 - 2024 Anthony Rodriguez
@@ -69,8 +69,7 @@ plugins:
       credits: CFPT Informatique
       cover: true
       cover_title: Documentation Missive
-      cover_subtitle: 
-        Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
+      cover_subtitle: Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
   - glightbox
