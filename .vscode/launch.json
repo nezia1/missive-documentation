@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Serve MkDocs",
+      "request": "launch",
+      "type": "debugpy",
+      "program": "${workspaceFolder}/venv/bin/mkdocs",
+      "args": ["serve"],
+      "python": "${workspaceFolder}/venv/bin/python"
+    }
+  ]
+}
