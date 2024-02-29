@@ -108,3 +108,11 @@ Aujourd'hui, je n'ai pas eu autant de temps pour travailler car nous avons eu le
 J'ai également pu travailler un peu sur mon POC. Je me suis chargé de refactor la manière dont les erreurs sont gérées, afin de rendre les providers plus propres, en vérifiant les types au lieu de vérifier une propriété status, qui sont mieux intégrés au langage.
 
 J'ai aussi pu implémenter la déconnexion de l'utilisateur, en supprimant les différents jetons de son périphérique. Dans le futur, il faudrait aussi supprimer les jetons du serveur, mais pour l'instant, je n'ai pas encore implémenté cette fonctionnalité. Ou alors, il faudrait les supprimer automatiquement après un certain temps d'inactivité (il faudrait également rajouter un champ `last_used` dans la base de données pour pouvoir gérer cette fonctionnalité). Cependant, cela rajouterait des informations sensibles dans la base de données, et je ne suis pas sûr que ce soit une bonne idée.
+
+### 22 février 2024
+
+Aujourd'hui, j'ai principalement passé du temps à polir le code, la structure étant maintenant bien en place. J'ai passé un bon moment sur le debugging, car il y avait encore quelques soucis, mais j'ai finalement réussi à les régler.
+
+### 29 février 2024
+
+Aujourd'hui, j'ai commencé à écrire les tests unitaires. J'ai commencé par écrire les tests pour l'application mobile, que je n'ai pas encore terminés car je voulais d'abord réaliser les tests de l'API. Cependant, j'ai remarqué un bug assez gênant dans Bun, qui m'empêche d'utiliser un des plugins dont dépend Fastify pour réaliser les tests. J'ai trouvé une issue sur le GitHub de Bun, avec une implémentation fonctionnelle d'un contributeur. Cependant, il faudrait le réimplémenter en code natif, ce qui est faisable. Je vais regarder si je pourrais m'en occuper, car l'impossibilité d'effectuer des tests unitaires sur mon API serait un gros problème.
