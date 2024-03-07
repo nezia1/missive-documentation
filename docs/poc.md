@@ -116,3 +116,9 @@ Aujourd'hui, j'ai principalement passé du temps à polir le code, la structure 
 ### 29 février 2024
 
 Aujourd'hui, j'ai commencé à écrire les tests unitaires. J'ai commencé par écrire les tests pour l'application mobile, que je n'ai pas encore terminés car je voulais d'abord réaliser les tests de l'API. Cependant, j'ai remarqué un bug assez gênant dans Bun, qui m'empêche d'utiliser un des plugins dont dépend Fastify pour réaliser les tests. J'ai trouvé une issue sur le GitHub de Bun, avec une implémentation fonctionnelle d'un contributeur. Cependant, il faudrait le réimplémenter en code natif, ce qui est faisable. Je vais regarder si je pourrais m'en occuper, car l'impossibilité d'effectuer des tests unitaires sur mon API serait un gros problème.
+
+### 7 mars 2024
+
+Aujourd'hui, je me suis concentré sur la documentation. J'ai également migré sur Node.JS de manière temporaire, le temps que Bun implémente la fonctionnalité qui me manque pour réaliser les tests unitaires.
+
+J'ai réussi à migrer sur node sans problème, et j'ai pu commencer à réaliser les tests unitaires de mon API.
