@@ -38,7 +38,7 @@ Après avoir analysé les applications actuelles de messagerie sécurisée, il y
 
 ### Messagerie sécurisée
 
-L'application doit permettre aux utilisateur·rice·s d'envoyer des messages chiffrés de bout en bout à d'autres personnes. Ce chiffrement sera assuré par le protocole Signal. Ce dernier a été retenu car il est tout d'abord open-source (il est très facile de trouver des implémentations dans différents langages), et la documentation du protocole est extrêmement bien fournie. Une explication de ce protocole est disponible [sur ce document](./protocole-signal.md).
+L'application doit permettre aux utilisateur·rice·s d'envoyer des messages chiffrés de bout en bout à d'autres personnes. Ce chiffrement sera assuré par le protocole Signal. Ce dernier a été retenu car il est tout d'abord open-source (il est très facile de trouver des implémentations dans différents langages), et la documentation du protocole est extrêmement bien fournie. Une explication de ce protocole est disponible [sur la documentation de Signal](https://signal.org/docs/).
 
 #### Communication en temps réel
 
