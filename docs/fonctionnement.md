@@ -6,7 +6,7 @@ Le fonctionnement de Missive repose sur l'efficacité du protocole Signal, qui e
 
 L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API, pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket, pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
 <figure markdown>
-![Schéma de l'architecture de l'application](assets/diagrams/architecture.svg)
+![Schéma de l'architecture de l'application](assets/diagrams/Missive.svg)
 <figcaption>Schéma de l'architecture de l'application</figcaption>
 </figure>
 
