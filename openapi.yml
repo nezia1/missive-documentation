@@ -24,9 +24,6 @@ paths:
                       accessToken:
                         type: string
                         description: The access JWT that will be passed to subsequent requests
-                      refreshToken:
-                        type: string
-                        description: The refresh JWT that will be used to refresh the access token when it expires
           headers:
             Set-Cookie:
               description: Sets the refresh token as an HTTP only cookie
@@ -57,6 +54,7 @@ paths:
                       accessToken:
                         type: string
     delete:
+      summary: Revoke a refresh token
       security:
         - bearerAuth: []
       responses:
