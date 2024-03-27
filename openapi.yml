@@ -2,6 +2,10 @@ openapi: '3.0.2'
 info:
   title: Missive
   version: '1.0'
+servers:
+  - url: https://missive.nezia.dev/api/v1
+security:
+  - bearerAuth: []
 paths:
   /tokens:
     summary: Represents access and refresh tokens
@@ -38,6 +42,22 @@ paths:
                   $ref: '#/components/schemas/Error'
         '202':
           description: The user has enabled 2FA, they will need to login again including their one-time password
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    properties:
+                      status:
+                        type: string
+                        description: A status informing the consumer that TOTP is required
+                        example: totp_required
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
     put:
       summary: Refresh access token 
       parameters:
