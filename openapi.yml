@@ -74,6 +74,27 @@ paths:
             type: string
           required: true
           description: Unique ID (UUIDv4) of the user 
+      get:
+        summary: Get a user's data (can only be fetched by the user it belongs to)
+        security: 
+          - bearerAuth: []
+        responses:
+          '200':
+            description: Profile successfully fetched 
+            content:
+              application/json:
+                schema:
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/User"
+          '403':
+            description: Lacks permission to fetch profile
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
+        
+
 components:
   securitySchemes:
     bearerAuth:
