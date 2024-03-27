@@ -4,6 +4,9 @@ info:
   version: '1.0'
 paths:
   /tokens:
+    summary: Represents access and refresh tokens
+    description: |
+      This resource represents the access and refresh tokens of the user. They allow to handle authentication, as well as authorization.
     post:
       summary: Authenticate the user and provide an access and refresh token
       security:
@@ -38,7 +41,39 @@ paths:
                   $ref: '#/components/schemas/Error'
         '202':
           description: The user has enabled 2FA, they will need to login again including their one-time password
-
+    put:
+      summary: Refresh access token 
+      parameters:
+        - $ref: '#/components/parameters/RefreshCookie'
+      responses:
+        '200':
+          description: Access token refreshed successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    properties:
+                      accessToken:
+                        type: string
+    delete:
+      security:
+        - bearerAuth: []
+      responses:
+        '204':
+          description: Refresh token has been successfully revoked
+  /users/{id}:
+      summary: Represents a user
+      description: |
+        This represents an individual user.
+        Each user is identified by a numeric `id`.
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Unique ID (UUIDv4) of the user 
 components:
   securitySchemes:
     bearerAuth:
@@ -68,3 +103,11 @@ components:
         error:
           type: string
           description: A message describing the error in a human-readable format
+  parameters:
+    RefreshCookie:
+      required: true
+      in: cookie
+      name: refreshToken
+      description: The refresh token used to authenticate and refresh the access token
+      schema:
+        type: string
