@@ -1,22 +1,46 @@
 @startuml database
 entity "User" as user {
-    * id : number <<generated>>
-    username : text 
-    password : text
+    * id : string <<generated>>
     --
-    + phone_number : text
-    + created_at : date <<generated>>
-    + updated_at : date <<generated>>
+    * username : text 
+    * password : text
+    phone_number : text
+    created_at : date <<generated>>
+    updated_at : date <<generated>>
 }
 
-entity "PendingMessage" as pendingMessage {
-    * id : number <<generated>>
-    text : text
+entity "Temporary Message" as temporaryMessage {
+    * id : string <<generated>>
     --
+    * text : text
     * user_id : number <<FK>>
-    + created_at : date <<generated>>
-    + updated_at : date <<generated>>
+    created_at : date <<generated>>
+    updated_at : date <<generated>>
 }
 
-user ||--o{ pendingMessage
+entity "Refresh Token" as refreshToken {
+    * user_id : string <<FK>>
+    --
+    * token : text
+}
+
+entity "PreKey" as preKey {
+    * id: string <<generated>>
+    --
+    * user_id : string <<FK>>
+    * public_key : text
+}
+
+entity "Signed PreKey" as signedPreKey {
+    * id: string <<generated>>
+    --
+    * user_id : string <<FK>>
+    * public_key : text
+    * signature : text
+}
+
+user }o--|| temporaryMessage
+user }o--|| refreshToken
+user }o--|| preKey
+user |o--|| signedPreKey
 @enduml
