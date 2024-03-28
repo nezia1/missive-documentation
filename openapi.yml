@@ -266,7 +266,32 @@ components:
           type: object
           properties:
           $ref: "#/components/schemas/SignedPreKey"
-        
+    TemporaryMessage: 
+      type: object
+      properties:
+        id:
+          type: string
+          example: a3461864-2829-44b0-ae9e-79c83837cc0d
+          description: The identfier of the message
+        sender:
+          type: string
+          example: bc5d0adb-d3cc-46b2-952c-a3fc14edc3c7
+          description: The identifier of the sender
+        content:
+          type: string
+          example: encrypted-message
+          description: The encrypted content of the message
+        sentAt: 
+          type: string
+          format: date-time
+          example: 1711626224
+          description: The date and time when the message was sent
+    TemporaryMessages:
+      properties:
+        messages: 
+          type: array
+          items:
+            $ref: "#/components/schemas/TemporaryMessage"
   parameters:
     RefreshCookie:
       required: true
