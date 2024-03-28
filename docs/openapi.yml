@@ -207,6 +207,8 @@ paths:
       They are only accessible if the user it belongs to is authenticated, and are to be automatically deleted after being successfully received.
     get:
       summary: Fetches all pending temporary messages
+      description: | 
+        This route gets all temporary messages in ordered to be processed by the client. The messages should be deleted after being fetched, or at least marked as received in order for the database / server to automatically clean up.
       tags: 
         - Temporary messages
       responses:
