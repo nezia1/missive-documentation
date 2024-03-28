@@ -80,6 +80,7 @@ plugins:
       diagram_root: 'docs/assets/diagrams' # should reside under docs_dir
       output_folder: 'out'
       input_folder: 'src'
+  - swagger-ui-tag
 # Extensions
 markdown_extensions:
   - abbr
@@ -123,6 +124,7 @@ markdown_extensions:
 nav:
   - Accueil: index.md
   - Cahier des charges: cahier-des-charges.md
-  - Fonctionnement: fonctionnement.md
-  - Proof of concept: poc.md
   - Journal de bord: journal.md
+  - Fonctionnement: fonctionnement.md
+  - API: api.md
+  - Proof of concept: poc.md
