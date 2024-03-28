@@ -39,11 +39,7 @@ paths:
                 type: string
                 example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLWlkIiwibmFtZSI6IkFsaWNlIiwiaWF0IjoxNTE2MjM5MDIyfQ.MBcZYxbqmQX5lajIHrD87pA5yY6EqfRWLiugHDMxY40; Path=/; HttpOnly
         '401':
-          description: Invalid credentials
-          content:
-            application/json:
-              schema:
-                  $ref: '#/components/schemas/Error'
+          $ref: "#/components/responses/UnauthorizedResponse"
         '202':
           description: The user has enabled 2FA, they will need to login again including their one-time password
           content:
@@ -219,6 +215,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/TemporaryMessages"
         '401':
+          $ref: "#/components/responses/UnauthorizedResponse"
+        '403':
           $ref: "#/components/responses/ForbiddenResponse"
 components:
   securitySchemes:
@@ -327,9 +325,7 @@ components:
             type: object
             properties:
             $ref: "#/components/schemas/Error"
-          examples:
-            unauthorizedExample:
-              value:
+          example:
                 error: "User is not authenticated"
     ForbiddenResponse:
       description: Authentication has succeeded but user is not allowed to access resource
@@ -339,9 +335,7 @@ components:
             type: object
             properties:
             $ref: "#/components/schemas/Error"
-          examples:
-            forbiddenExample:
-              value:
+          example:
                 error: "User does not have permission to access resource"
     NotFoundResponse:
       description: Resource has not been found
@@ -351,7 +345,5 @@ components:
             type: object
             properties:
             $ref: "#/components/schemas/Error"
-          examples:
-            notFoundExample:
-              value:
+          example:
                 error: "The resource you are trying to access has not been found"
