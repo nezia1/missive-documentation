@@ -32,12 +32,13 @@ paths:
                       accessToken:
                         type: string
                         description: The access JWT that will be passed to subsequent requests
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMGQ0ZjJmMC0wNGViLTQwM2MtYTgyMS1mMjU5MjcwNWMyYTQiLCJuYW1lIjoiYWxpY2UiLCJjbGFpbXMiOlsicHJvZmlsZTpyZWFkIiwicHJvZmlsZTp3cml0ZSIsInByZWtleXM6cmVhZCIsInByZWtleXM6d3JpdGUiXSwiaWF0IjoxNzExNjM3MzMyfQ.L0lsydNVdOvxA7t-UjYfqJsVKn8bWp7RftTt-OMhnkQ
           headers:
             Set-Cookie:
               description: Sets the refresh token as an HTTP only cookie
               schema:
                 type: string
-                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLWlkIiwibmFtZSI6IkFsaWNlIiwiaWF0IjoxNTE2MjM5MDIyfQ.MBcZYxbqmQX5lajIHrD87pA5yY6EqfRWLiugHDMxY40; Path=/; HttpOnly
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMGQ0ZjJmMC0wNGViLTQwM2MtYTgyMS1mMjU5MjcwNWMyYTQiLCJuYW1lIjoiYWxpY2UiLCJpYXQiOjE3MTE2MzcxMTJ9.FEKisYDqc7i0KF0DXx2ict6xX3O-FQsfSKJBMufyV-; Path=/; HttpOnly
         '401':
           $ref: "#/components/responses/UnauthorizedResponse"
         '202':
@@ -81,6 +82,8 @@ paths:
                     properties:
                       accessToken:
                         type: string
+                        description: The new access JWT
+                        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMGQ0ZjJmMC0wNGViLTQwM2MtYTgyMS1mMjU5MjcwNWMyYTQiLCJuYW1lIjoiYWxpY2UiLCJjbGFpbXMiOlsicHJvZmlsZTpyZWFkIiwicHJvZmlsZTp3cml0ZSIsInByZWtleXM6cmVhZCIsInByZWtleXM6d3JpdGUiXSwiaWF0IjoxNzExNjM3MzU2fQ.2QIhzXBKB31TXrf7g1i_VXSMre74kcLXHqG0WJJGyZ8
         '401':
           description: Refresh token missing 
           content:
@@ -119,6 +122,7 @@ paths:
             type: string
           required: true
           description: Unique ID (UUIDv4) of the user 
+          example: a0d4f2f0-04eb-403c-a821-f2592705c2a4
       get:
         summary: Get a user's data 
         description: This route allows to fetch a user's data. You need to be logged in to retrieve any sort of information from this. Additionally, you can only retrieve your own data.
@@ -243,7 +247,7 @@ components:
         id:
           type: string
           description: The unique id of the user
-          example: 560ee887-5f84-41ef-981d-a4435fa19927
+          example: a0d4f2f0-04eb-403c-a821-f2592705c2a4"
         name:
           type: string
           description: The unique user's username
@@ -295,7 +299,7 @@ components:
           description: The identfier of the message
         sender:
           type: string
-          example: bc5d0adb-d3cc-46b2-952c-a3fc14edc3c7
+          example: a0d4f2f0-04eb-403c-a821-f2592705c2a4
           description: The identifier of the sender
         content:
           type: string
@@ -304,7 +308,7 @@ components:
         sentAt: 
           type: string
           format: date-time
-          example: 1711626224
+          example: 1711637404
           description: The date and time when the message was sent
     TemporaryMessages:
       properties:
@@ -320,6 +324,7 @@ components:
       description: The refresh token used to authenticate and refresh the access token
       schema:
         type: string
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMGQ0ZjJmMC0wNGViLTQwM2MtYTgyMS1mMjU5MjcwNWMyYTQiLCJuYW1lIjoiYWxpY2UiLCJpYXQiOjE3MTE2MzcxMTJ9.FEKisYDqc7i0KF0DXx2ict6xX3O-FQsfSKJBMufyV-o
   responses:
     UnauthorizedResponse:
       description: Authentication is required and has failed or is missing
