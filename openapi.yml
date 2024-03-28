@@ -22,8 +22,11 @@ paths:
             application/json:
               schema:
                 type: object
+                additionalProperties: false
                 properties:
                   data:
+                    type: object
+                    additionalProperties: false
                     properties:
                       accessToken:
                         type: string
@@ -45,8 +48,12 @@ paths:
           content:
             application/json:
               schema:
+                type: object
+                additionalProperties: false
                 properties:
                   data:
+                    type: object
+                    additionalProperties: false
                     properties:
                       status:
                         type: string
@@ -73,6 +80,24 @@ paths:
                     properties:
                       accessToken:
                         type: string
+        '401':
+          description: Refresh token missing 
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: Refresh token is missing
+        '403':
+          description: Refresh token invalid
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: Refresh token is invalid
     delete:
       summary: Revoke a refresh token
       security:
@@ -85,6 +110,7 @@ paths:
       description: |
         This represents an individual user.
         Each user is identified by a numeric `id`.
+        Users are only able to carry out operations belonging to their own profile. This is handled by the JWT, containing a user id.
       parameters:
         - in: path
           name: id
@@ -93,7 +119,7 @@ paths:
           required: true
           description: Unique ID (UUIDv4) of the user 
       get:
-        summary: Get a user's data (can only be fetched by the user it belongs to)
+        summary: Get a user's data 
         security: 
           - bearerAuth: []
         responses:
@@ -102,16 +128,64 @@ paths:
             content:
               application/json:
                 schema:
+                  type: object
                   properties:
                     data:
                       $ref: "#/components/schemas/User"
+          '401':
+            description: User is not authenticated
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Error"
           '403':
             description: Lacks permission to fetch profile
             content:
               application/json:
                 schema:
                   $ref: "#/components/schemas/Error"
-        
+          '404':
+            description: Profile has not been found
+            content:
+              application/json: 
+                schema:
+                  $ref: "#/components/schemas/Error"
+      delete:
+        summary: Delete a user's profile
+        responses:
+          '204':
+             description: User successfully deleted
+          '401':
+            $ref: "#/components/responses/UnauthorizedResponse"
+  /users/{id}/keys:
+    summary: Represents the user's public cryptography keys
+    description: | 
+      This resource represents the entirety of the user's public keys. It contains:
+        - Pre keys
+        - Signed pre key
+    parameters:
+      - in: path
+        name: id 
+        description: Unique ID (UUIDv4) of the user
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Fetches all public keys related to this user
+      responses:
+        '200':
+          description: Public keys successfully fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  data:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                    $ref: "#/components/schemas/PreKeys"
 
 components:
   securitySchemes:
@@ -126,6 +200,7 @@ components:
   schemas:
     User:
       type: object
+      additionalProperties: false
       required:
         - id
         - name
@@ -138,10 +213,43 @@ components:
           description: The unique user's username
     Error:
       type: object
+      additionalProperties: false
       properties:
         error:
           type: string
           description: A message describing the error in a human-readable format
+    UnsignedPreKey:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type: integer
+          description: Public key id
+        key:
+          type: string
+          description: Public key
+    SignedPreKey:
+      type: object
+      additionalProperties: false
+      allOf:
+        - $ref: "#/components/schemas/UnsignedPreKey"
+      properties:
+       signature:
+        type: string
+        description: The pre key's signature
+    PreKeys:
+      type: object
+      additionalProperties: false
+      properties:
+        preKeys: 
+          type: array
+          items:
+            $ref: "#/components/schemas/UnsignedPreKey"
+        signedPreKey:
+          type: object
+          properties:
+          $ref: "#/components/schemas/SignedPreKey"
+        
   parameters:
     RefreshCookie:
       required: true
@@ -150,3 +258,17 @@ components:
       description: The refresh token used to authenticate and refresh the access token
       schema:
         type: string
+  responses:
+    UnauthorizedResponse:
+      description: Authentication is required and has failed or is missing
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+            $ref: "#/components/schemas/Error"
+          examples:
+            unauthorizedExample:
+              value:
+                error: "User is not authenticated"
+            
