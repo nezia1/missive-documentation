@@ -269,7 +269,7 @@ components:
         id:
           type: string
           description: The unique id of the user
-          example: a0d4f2f0-04eb-403c-a821-f2592705c2a4"
+          example: a0d4f2f0-04eb-403c-a821-f2592705c2a4
         name:
           type: string
           description: The unique user's username
@@ -318,7 +318,7 @@ components:
         id:
           type: string
           example: a3461864-2829-44b0-ae9e-79c83837cc0d
-          description: The identfier of the message
+          description: The identifier of the message
         sender:
           type: string
           example: a0d4f2f0-04eb-403c-a821-f2592705c2a4
