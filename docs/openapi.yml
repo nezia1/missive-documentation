@@ -68,6 +68,8 @@ paths:
         - Authentication
       parameters:
         - $ref: '#/components/parameters/RefreshCookie'
+      security: [] # No security since we're simply checking for the refresh token (the fact that the user has one meant they are logged in)
+      
       responses:
         '200':
           description: Access token refreshed successfully
