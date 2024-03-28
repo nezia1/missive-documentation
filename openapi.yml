@@ -133,23 +133,11 @@ paths:
                     data:
                       $ref: "#/components/schemas/User"
           '401':
-            description: User is not authenticated
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Error"
+            $ref: "#/components/responses/UnauthorizedResponse"
           '403':
-            description: Lacks permission to fetch profile
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Error"
+            $ref: "#/components/responses/ForbiddenResponse"
           '404':
-            description: Profile has not been found
-            content:
-              application/json: 
-                schema:
-                  $ref: "#/components/schemas/Error"
+            $ref: "#/components/responses/NotFoundResponse"
       delete:
         summary: Delete a user's profile
         responses:
@@ -171,7 +159,7 @@ paths:
           type: string
         required: true
     get:
-      summary: Fetches all public keys related to this user
+      summary: Fetch all public keys related to this user
       responses:
         '200':
           description: Public keys successfully fetched
@@ -208,9 +196,11 @@ components:
         id:
           type: string
           description: The unique id of the user
+          example: 560ee887-5f84-41ef-981d-a4435fa19927
         name:
           type: string
           description: The unique user's username
+          example: alice
     Error:
       type: object
       additionalProperties: false
@@ -271,4 +261,27 @@ components:
             unauthorizedExample:
               value:
                 error: "User is not authenticated"
-            
+    ForbiddenResponse:
+      description: Authentication has succeeded but user is not allowed to access resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+            $ref: "#/components/schemas/Error"
+          examples:
+            forbiddenExample:
+              value:
+                error: "User does not have permission to access resource"
+    NotFoundResponse:
+      description: Resource has not been found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+            $ref: "#/components/schemas/Error"
+          examples:
+            notFoundExample:
+              value:
+                error: "The resource you are trying to access has not been found"
