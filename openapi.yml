@@ -12,6 +12,8 @@ paths:
     description: |
       This resource represents the access and refresh tokens of the user. They allow to handle authentication, as well as authorization.
     post:
+      tags:
+        - Authentication
       summary: Authenticate the user and provide an access and refresh token
       security: [] # Login route is public
       responses:
@@ -66,6 +68,8 @@ paths:
                 $ref: "#/components/schemas/Error"
     put:
       summary: Refresh access token 
+      tags: 
+        - Authentication
       parameters:
         - $ref: '#/components/parameters/RefreshCookie'
       responses:
@@ -99,6 +103,8 @@ paths:
                     example: Refresh token is invalid
     delete:
       summary: Revoke a refresh token
+      tags: 
+        - Authentication
       responses:
         '204':
           description: Refresh token has been successfully revoked
@@ -117,6 +123,9 @@ paths:
           description: Unique ID (UUIDv4) of the user 
       get:
         summary: Get a user's data 
+        description: This route allows to fetch a user's data. You need to be logged in to retrieve any sort of information from this. Additionally, you can only retrieve your own data.
+        tags:
+            - Users
         security: 
           - bearerAuth: []
         responses:
@@ -137,6 +146,9 @@ paths:
             $ref: "#/components/responses/NotFoundResponse"
       delete:
         summary: Delete a user's profile
+        description: This route allows a user to delete their profile completely, deleting all keys related to them in the process.
+        tags:
+          - Users
         responses:
           '204':
              description: User successfully deleted
@@ -156,10 +168,12 @@ paths:
           type: string
         required: true
     get:
-      summary: | 
-        Fetch all public pre-keys related to this user.
-        
-        Everyone can fetch everybody else's public keys, as long as they're authenticated, but only the user owning the signed public pre-key can update it
+      summary:  Fetch all public pre-keys related to this user
+      description: | 
+        This route allows the currently authenticated user to retrieve public keys from the app users.
+        Everyone can fetch everybody else's public keys, as long as they're authenticated, but only the user owning the signed public pre-key can update it.
+      tags:
+       - Users 
       responses:
         '200':
           description: Public pre-keys successfully fetched
@@ -178,6 +192,9 @@ paths:
           $ref: "#/components/responses/UnauthorizedResponse"
     patch:
       summary: Update the signed pre-key
+      description: This allows the user to update their own signed pre-key. It is recommended that this is updated at least once a month.
+      tags:
+        - Users
       responses:
         '204':
           description: Signed public pre-key successfully updated
