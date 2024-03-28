@@ -13,8 +13,7 @@ paths:
       This resource represents the access and refresh tokens of the user. They allow to handle authentication, as well as authorization.
     post:
       summary: Authenticate the user and provide an access and refresh token
-      security:
-        - bearerAuth: []
+      security: [] # Login route is public
       responses:
         '200':
           description: Successfully authenticated the user
@@ -100,8 +99,6 @@ paths:
                     example: Refresh token is invalid
     delete:
       summary: Revoke a refresh token
-      security:
-        - bearerAuth: []
       responses:
         '204':
           description: Refresh token has been successfully revoked
@@ -159,10 +156,13 @@ paths:
           type: string
         required: true
     get:
-      summary: Fetch all public keys related to this user
+      summary: | 
+        Fetch all public pre-keys related to this user.
+        
+        Everyone can fetch everybody else's public keys, as long as they're authenticated, but only the user owning the signed public pre-key can update it
       responses:
         '200':
-          description: Public keys successfully fetched
+          description: Public pre-keys successfully fetched
           content:
             application/json:
               schema:
@@ -174,7 +174,17 @@ paths:
                     additionalProperties: false
                     properties:
                     $ref: "#/components/schemas/PreKeys"
-
+        '401':
+          $ref: "#/components/responses/UnauthorizedResponse"
+    patch:
+      summary: Update the signed pre-key
+      responses:
+        '204':
+          description: Signed public pre-key successfully updated
+        '401':
+          $ref: "#/components/responses/UnauthorizedResponse"
+        '403':
+          $ref: "#/components/responses/ForbiddenResponse"
 components:
   securitySchemes:
     bearerAuth:
