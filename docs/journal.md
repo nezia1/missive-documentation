@@ -29,3 +29,7 @@ Pour la base de données, j'ai décidé de partir sur un schéma qui sépare les
 J'ai mis à jour le schéma de base de données afin d'inclure ces nouvelles tables et relations.
 
 Je me suis aussi occupé de rajouter des exemples de tokens dans la spécification OpenAPI, afin de simplifier la compréhension globale du projet. Journée finalement très productive, je suis content de mon avancement et me sens prêt à attaquer la suite, qui sera l'implémentation de l'API. Cependant, avant de m'y mettre, je vais encore peaufiner la documentation, et m'assurer que tout soit bien clair et défini.
+
+## 2024-03-29
+
+Aujourd'hui, ayant terminé le design de mon api et de ma base de données, je m'occupe de copier ce que j'avais pour le POC, qui va me servir de base, et de l'adapter un peu pour coller à ce que j'ai défini dans mes spécifications. Je me charge maintenant de modifier la base de données afin de coller à ce que j'ai défini dans mon diagramme.
