@@ -192,9 +192,9 @@ paths:
           type: string
         required: true
     get:
-      summary:  Fetch all public pre-keys related to this user
+      summary:  Fetch pre-keys related to this user
       description: | 
-        This route allows the currently authenticated user to retrieve public keys from the app users.
+        This route allows the currently authenticated user to retrieve public keys from the app users. It's going to return one regular pre-key, and the signed pre-key. This will also effectively delete the pre-key that was used (the Signal protocol specification requires them to be one-time only).
         Everyone can fetch everybody else's public keys, as long as they're authenticated, but only the user owning the signed public pre-key can update it.
       tags:
        - Users 
@@ -304,8 +304,8 @@ components:
       type: object
       additionalProperties: false
       properties:
-        preKeys: 
-          type: array
+        preKey: 
+          type: object
           items:
             $ref: "#/components/schemas/UnsignedPreKey"
         signedPreKey:
