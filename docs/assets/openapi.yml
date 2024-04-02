@@ -231,6 +231,14 @@ paths:
     description: |
       This resource represents the user's temporary messages.
       They are only accessible if the user it belongs to is authenticated, and are to be automatically deleted after being successfully received.
+    parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: Unique ID (UUIDv4) of the user 
+          example: a0d4f2f0-04eb-403c-a821-f2592705c2a4
     get:
       summary: Fetches all pending temporary messages
       description: | 
