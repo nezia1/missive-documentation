@@ -28,8 +28,24 @@ Pour la base de données, j'ai décidé de partir sur un schéma qui sépare les
 
 J'ai mis à jour le schéma de base de données afin d'inclure ces nouvelles tables et relations.
 
+Voici le résultat :
+<figure markdown="span">
+    ![Schéma initial de la base de données](./assets/diagrams/out/database.svg)
+    <figcaption>Schéma initial de la base de données</figcaption>
+</figure>
+
 Je me suis aussi occupé de rajouter des exemples de tokens dans la spécification OpenAPI, afin de simplifier la compréhension globale du projet. Journée finalement très productive, je suis content de mon avancement et me sens prêt à attaquer la suite, qui sera l'implémentation de l'API. Cependant, avant de m'y mettre, je vais encore peaufiner la documentation, et m'assurer que tout soit bien clair et défini.
 
 ## 2024-03-29
 
 Aujourd'hui, ayant terminé le design de mon api et de ma base de données, je m'occupe de copier ce que j'avais pour le POC, qui va me servir de base, et de l'adapter un peu pour coller à ce que j'ai défini dans mes spécifications. Je me charge maintenant de modifier la base de données afin de coller à ce que j'ai défini dans mon diagramme.
+
+## 2024-05-02
+
+Aujourd'hui, je m'attaque à la programmation des routes. Ayant déjà une route fonctionnelle pour les tokens, je vais juste m'assurer que tout soit bien en ordre, et je vais ensuite m'attaquer aux routes /users.
+
+Les routes /tokens sont maintenant en ordre. J'ai dû changer quelques détails, par rapport à la structure qui a été définie dans ma spécification. Je m'attaque maitenant aux routes /users, plus précisément à /users/{id}/keys. J'aimerais pouvoir mettre en place la gestion de clés publiques pour les utilisateurs, et je vais commencer par implémenter la route GET /users/{id}/keys, qui permettra de récupérer les clés publiques d'un utilisateur.
+
+J'ai réussi à implémenter la route GET /users/{id}/keys, qui récupère la première clé publique non signée et la supprime après l'avoir récupérée, et la clé signée d'un utilisateur. J'ai rajouté un sous plugin Fastify dans mon plugin utilisateurs, qui me permet de séparer tout ça proprement. J'ai dû également rajouter une permission KEYS:READ, qui donne le droit à un utilisateur de lire les clés publiques d'un autre utilisateur.
+
+Il va me falloir mettre à jour ma spécification, car je me suis rendu compte que la structure n'était pas tout à fait juste par rapport à mon implémentation. Je pense surtout à ma route GET /users/{id}/keys, qui ne renvoie pas un tableau de clés, mais bien un objet contenant une clé signée et une clé non signée. Je vais également mettre à jour les exemples pour cette route.
