@@ -306,7 +306,7 @@ components:
       properties:
         preKey: 
           type: object
-          items:
+          properties:
             $ref: "#/components/schemas/UnsignedPreKey"
         signedPreKey:
           type: object
