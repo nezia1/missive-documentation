@@ -109,6 +109,24 @@ paths:
       responses:
         '204':
           description: Refresh token has been successfully revoked
+  /users:
+      post:
+        summary: Create a user account
+        description: |
+          This route allows the user to sign themselves up. If the process is successful, it will return an access token, alongside a refresh token as a cookie.
+        tags: 
+         - Users
+        responses:
+          '204': 
+            description: Account creation successful
+            content:
+              application/json:
+                schema:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    data:
+                      additionalProperties: false
   /users/{id}:
       summary: Represents a user
       description: |
@@ -123,30 +141,6 @@ paths:
           required: true
           description: Unique ID (UUIDv4) of the user 
           example: a0d4f2f0-04eb-403c-a821-f2592705c2a4
-      post:
-        summary: Create a user account
-        description: |
-          This route allows the user to sign themselves up. If the process is successful, it will return an access token, alongside a refresh token as a cookie.
-        tags: 
-         - Users
-        responses:
-          '201': 
-            description: Account creation successful
-            content:
-              application/json:
-                schema:
-                  type: object
-                  additionalProperties: false
-                  properties:
-                    data:
-                      additionalProperties: false
-                      properties:
-                        accessToken:
-                          description: The new access JWT
-                          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhMGQ0ZjJmMC0wNGViLTQwM2MtYTgyMS1mMjU5MjcwNWMyYTQiLCJuYW1lIjoiYWxpY2UiLCJjbGFpbXMiOlsicHJvZmlsZTpyZWFkIiwicHJvZmlsZTp3cml0ZSIsInByZWtleXM6cmVhZCIsInByZWtleXM6d3JpdGUiXSwiZXhwIjo5MDAsImlhdCI6MTcxMTU1MDk1Nn0.iwGGAdIWev-BaZjrFv7H4tRkuxQpNLyHH9Q-PedpCmI
-                      
-                    
-                    
       get:
         summary: Get a user's data 
         description: This route allows to fetch a user's data. You need to be logged in to retrieve any sort of information from this. Additionally, you can only retrieve your own data.
