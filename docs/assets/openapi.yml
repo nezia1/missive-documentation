@@ -127,6 +127,8 @@ paths:
         summary: Create a user account
         description: |
           This route allows the user to sign themselves up. If the process is successful, it will return an access token, alongside a refresh token as a cookie.
+        tags: 
+         - Users
         responses:
           '201': 
             description: Account creation successful
@@ -191,6 +193,37 @@ paths:
         schema:
           type: string
         required: true
+    post:
+      summary: Store a pre-key bundle
+      description: This route allows to store a pre-key bundle, with an optional signed pre-key if it's the first time the user uses the application.
+      tags:
+        - Pre-keys
+      requestBody: 
+        required: true
+        content:
+          application/json:
+            schema: 
+              required:
+                - "oneTimePreKeys"
+              type: object
+              additionalProperties: false
+              properties:
+                oneTimePreKeys:
+                  type: array
+                  additionalProperties: false
+                  items:
+                    $ref: "#/components/schemas/OneTimePreKey"
+                signedPreKey:
+                  type: object
+                  additionalProperties: false
+                  properties:
+                  $ref: "#/components/schemas/SignedPreKey"
+        description: The `signedPreKey` is optional and only needs to be included if it is the first time the user is using the application (at account setup).
+              
+      responses:
+        '204':
+          description: Pre-key bundle successfully stored
+
     get:
       summary:  Fetch pre-keys related to this user
       description: | 
