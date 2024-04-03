@@ -197,7 +197,7 @@ paths:
         This route allows the currently authenticated user to retrieve public keys from the app users. It's going to return one regular pre-key, and the signed pre-key. This will also effectively delete the pre-key that was used (the Signal protocol specification requires them to be one-time only).
         Everyone can fetch everybody else's public keys, as long as they're authenticated, but only the user owning the signed public pre-key can update it.
       tags:
-       - Users 
+       - Pre-keys 
       responses:
         '200':
           description: Public pre-keys successfully fetched
@@ -218,7 +218,7 @@ paths:
       summary: Update the signed pre-key
       description: This allows the user to update their own signed pre-key. It is recommended that this is updated at least once a month.
       tags:
-        - Users
+        - Pre-keys
       responses:
         '204':
           description: Signed public pre-key successfully updated
@@ -289,7 +289,7 @@ components:
         error:
           type: string
           description: A message describing the error in a human-readable format
-    UnsignedPreKey:
+    OneTimePreKey:
       type: object
       additionalProperties: false
       properties:
@@ -303,7 +303,7 @@ components:
       type: object
       additionalProperties: false
       allOf:
-        - $ref: "#/components/schemas/UnsignedPreKey"
+        - $ref: "#/components/schemas/OneTimePreKey"
       properties:
        signature:
         type: string
@@ -315,7 +315,7 @@ components:
         preKey: 
           type: object
           properties:
-          $ref: "#/components/schemas/UnsignedPreKey"
+          $ref: "#/components/schemas/OneTimePreKey"
         signedPreKey:
           type: object
           properties:
