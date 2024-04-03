@@ -24,7 +24,7 @@ entity "Refresh Token" as refreshToken {
     * token : text
 }
 
-entity "PreKey" as preKey {
+entity "One Time PreKey" as oneTimePreKey {
     * id: string <<generated>>
     --
     * user_id : string <<FK>>
@@ -41,6 +41,6 @@ entity "Signed PreKey" as signedPreKey {
 
 user }o--|| temporaryMessage
 user }o--|| refreshToken
-user }o--|| preKey
+user }o--|| oneTimePreKey
 user |o--|| signedPreKey
 @enduml
