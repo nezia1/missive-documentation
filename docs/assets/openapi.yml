@@ -219,10 +219,13 @@ paths:
                   properties:
                   $ref: "#/components/schemas/SignedPreKey"
         description: The `signedPreKey` is optional and only needs to be included if it is the first time the user is using the application (at account setup).
-              
       responses:
         '204':
           description: Pre-key bundle successfully stored
+        '401':
+          $ref: "#/components/responses/UnauthorizedResponse"
+        '403':
+          $ref: "#/components/responses/ForbiddenResponse"
 
     get:
       summary:  Fetch pre-keys related to this user
