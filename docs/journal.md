@@ -65,3 +65,7 @@ Aujourd'hui, je décide de m'intéresser de plus près à l'implémentation en e
 </figure>
 
 Je met donc à jour ma spécification API, afin de coller à ce que j'ai vu dans l'exemple. La première chose que je vais faire est de renommer mon champ preKey en oneTimePreKey afin d'éviter les ambiguïtés.
+
+## 2024-05-04
+
+Aujourd'hui, je me suis occupé d'écrire la spécification pour la route `POST /users/{id}/messages`, qui permettra au serveur WebSocket de stocker les messages chiffrés pour un utilisateur, si son périphérique est déconnecté.
