@@ -24,16 +24,19 @@ La base de données est gérée par Prisma, qui est un ORM (Object-Relational Ma
 
 ### Serveur WebSocket
 
-Le serveur WebSocket est un serveur en TypeScript, qui permet de gérer la communication en temps réel entre les utilisateur·rice·s. Il permet de gérer les messages, les contacts, et les utilisateurs. La bibliothèque utilisée pour ce dernier sera la bibliothèque interne à Bun, qui encapsule déjà tout le protocole WebSocket avec des performances nettement supérieures à des bibliothèques comme ws et Socket.io.
+Le serveur WebSocket est un serveur en TypeScript, qui permet de gérer la communication en temps réel entre les utilisateur·rice·s. Il permet de gérer l'envoi des messages, ainsi que leur stockage si nécéssaire. La bibliothèque utilisée pour ce dernier est un plugin Fastify, [@fastify/websocket](https://www.npmjs.com/package/@fastify/websocket), qui encapsule le protocole WebSocket et permet d'utiliser les fonctionnalités de Fastify.
 
 ### Base de données
 
 La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateurs, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
 <figure markdown>
-![Schéma de la base de données](assets/diagrams/out/database.svg)
+![Schéma de la base de données](assets/diagrams/database.svg)
 <figcaption>Schéma de la base de données</figcaption>
 </figure>
-## Premier lancement
+
+## Cas d'utilisation
+
+### Premier lancement
 
 Au premier lancement de l'application, l'utilisateur·rice devra créer un compte. Pour cela, il lui suffira de choisir un nom d'utilisateur·rice, et de saisir un mot de passe. L'application générera ensuite les différentes clés, et enverra également les clés publiques au serveur (requête HTTPS classique). Ces dernières sont cruciales pour le fonctionnement de l'application, car elles permettent la communication initiale des utilisateur·rice·s entre eux·lles.
 
