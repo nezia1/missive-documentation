@@ -22,6 +22,21 @@ L'API est une API REST en TypeScript, qui permet de gérer l'authentification, l
 
 La base de données est gérée par Prisma, qui est un ORM (Object-Relational Mapping) permettant de gérer les différentes tables de manière efficace, et de gérer les relations entre les différentes tables. Il permet également de gérer les migrations de manière efficace, et de gérer les différentes versions de la base de données (ce qui sera crucial durant le processus de développement).
 
+#### Authentification
+
+Le système d'authentification de l'API repose sur un système de jetons JWT. Ces derniers permettent une gestion de l'authentification complètement découplée du serveur (ce qui est important pour une API REST, qui doit rester *stateless*).
+
+Après la connexion à l'application (route `POST /users`), l'utilisateur·rice reçoit :
+
+- Jeton d'accès : permet de s'authentifier sur les différentes routes de l'API. Il est valide pendant 15 minutes, et contient les différentes permissions de l'utilisateur·rice. Il est envoyé dans le corps de la réponse, et doit être stocké localement de manière sécurisée.
+- Jeton de rafraîchissement : permet de rafraîchir le jeton d'accès. Il est valide pendant 30 jours, et permet de générer un nouveau jeton d'accès sans avoir à se reconnecter. Il permet également de révoquer la connexion en cas de perte ou de vol du compte. Il est envoyé dans un cookie sécurisé HTTPOnly, et doit être stocké localement de manière sécurisée.
+
+Vous pouvez voir [sur ce lien](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiJ9.eyJzY29wZSI6WyJwcm9maWxlOnJlYWQiLCJwcm9maWxlOndyaXRlIiwia2V5czpyZWFkIiwibWVzc2FnZXM6cmVhZCJdLCJpYXQiOjE3MTI2NjA5NzEsInN1YiI6ImFlZDA2MGFjLTc1ZDUtNDRkZi1hODJlLTc2MGIzZDFkNjYzNiIsImV4cCI6MTcxMjY2MTg3MX0.heFr_h9vINm4qUAI55alSFL52CVBz26IbaxyEmqH8rz-m7vHhV1ccolj_OogP4lMYeyfE7jINioLEUR6JkBePPkTMoU2XYXg1rc2yaXSYfti8zyQYEPF8PzN-Njz4GbszzrriKqNxsV8JjKLdTWEcYRvDXmBGLNJJar3bZWyNWwrc6gpfOfa0tX5CN66Riu5tK2kirEmY1xaPpNtEukyUXUQANvY75RYmJUBSyOGuHrp0uGdsNT5GQ7JVgQtWuVw34fHVi72psfHsRTsh_KOhpbXkUndWDtogwKR6Pyli8acwlacEGuuCbz5pLQ9G-nXuTqPEgkIvi2h7M0g9PHRsg) à quoi ressemble le contenu d'un jeton d'accès.
+
+Le jeton de rafraîchissement contient uniquement l'identifiant unique de l'utilisateur, ainsi que sa date d'expiration.
+
+Ces derniers étant signés cryptographiquement via une clé privée, il est impossible de les modifier sans la clé privée correspondante. Cela permet de garantir l'intégrité des jetons, et de garantir que l'utilisateur·rice est bien celui·celle qu'il·elle prétend être. Cela permet également d'avoir à gérer des sessions côté serveur, et laisse au client la responsabilité de gérer son propre état.
+
 ### Serveur WebSocket
 
 Le serveur WebSocket est un serveur en TypeScript, qui permet de gérer la communication en temps réel entre les utilisateur·rice·s. Il permet de gérer l'envoi des messages, ainsi que leur stockage si nécéssaire. La bibliothèque utilisée pour ce dernier est un plugin Fastify, [@fastify/websocket](https://www.npmjs.com/package/@fastify/websocket), qui encapsule le protocole WebSocket et permet d'utiliser les fonctionnalités de Fastify.
