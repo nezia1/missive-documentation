@@ -119,3 +119,30 @@ Aujourd'hui, je me suis occupé de nettoyer un peu le code de certaines fonction
 Aujourd'hui, journée documentation. Je m'occupe de documenter le travail qui a été fait durant ces derniers jours, afin de s'assurer que tout soit bien clair. Je vais également commencer à réfléchir à un plan de tests.
 
 J'ai également réussi à faire fonctionner un déploiement sur un VPS Amazon Lightsail à l'aide du `docker-compose.yml`. J'ai eu un peu de peine, car j'avais eu des soucis de versions, notamment liés au générateur automatique de fichier dbdiagram que j'avais mis en place, mais après être repassé sur le générateur Prisma par défaut, tout fonctionne. J'ai donc rajouté un reverse proxy sur le `docker-compose.yml` pour rediriger les requêtes vers le bon service.
+
+## 2024-05-12
+
+Aujourd'hui, j'ai travaillé sur l'envoi des messages entre différents utilisateurs. J'ai commencé par créer la connexion WebSocket en la stockant dans une Map qui contient en clé, l'id de l'utilisateur à qui elle appartient, et en valeur, la connexion WebSocket. Cela me permettra de directement envoyer des messages à un utilisateur spécifique si il est connecté.
+
+Ensuite, j'ai implémenté la logique derrière l'envoi. Elle fonctionne comme ceci:
+
+1. L'envoyeur envoie un message à un destinataire (après avoir vérifié son identité)
+2. Le serveur vérifie si l'envoyeur est connecté
+3. Si l'utilisateur est connecté, le serveur envoie le message directement au destinataire et informe l'envoyeur que le message a bien été reçu
+4. Si l'utilisateur n'est pas connecté, le serveur stocke le message dans la base de données, et informe l'envoyeur du statut du message dès qu'il est stocké
+5. Après stockage du message, le serveur WebSocket envoie une notification push au destinataire, qui lui permettra de récupérer le message. Le statut du message change également en "remis", et l'envoyeur est informé. (cette étape n'est pas encore implémentée)
+
+<figure markdown="span">
+  ![Envoi d'un message à un utilisateur connecté via Postman](./assets/img/communication-example-online-20240412.png)
+  <figcaption>Envoi d'un message à un utilisateur connecté via Postman</figcaption>
+</figure>
+<figure markdown="span">
+  ![Envoi d'un message à un utilisateur hors-ligne via Postman](./assets/img/communication-example-offline-20240412.png)
+  <figcaption>Envoi d'un message à un utilisateur hors-ligne via Postman</figcaption>
+</figure>
+J'ai rencontré quelques soucis avec cette approche, et quelques points qui ne sont pour l'instant pas encore clairs:
+
+- Si le destinataire récupère le message depuis la base de données, comment informer l'envoyeur que le message a bien été reçu ? En sachant que l'idée de base était de récupérer avec une route dédiée dans l'API, et non directement dans le serveur WebSocket.
+- Si l'envoyeur envoie un message à un utilisateur et ferme ensuite son application, il y a une forte possibilité pour que le statut du message ne soit jamais mis à jour, car il compte sur la connexion WebSocket pour être informé du statut du message.
+
+Je pense que ces deux problèmes pourront être réglés en ajoutant le statut du message dans la base de données. Cependant, il faudrait quand-même tester, car il est possible que cela ne soit pas suffisant.
