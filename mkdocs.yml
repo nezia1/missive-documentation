@@ -125,6 +125,7 @@ extra_css:
 nav:
   - Accueil: index.md
   - Cahier des charges: cahier-des-charges.md
+  - Plan de tests: testing.md
   - Journal de bord: journal.md
   - Fonctionnement: fonctionnement.md
   - API: api.md
