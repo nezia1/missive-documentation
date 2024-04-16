@@ -72,7 +72,7 @@ plugins:
       cover_subtitle: Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
-      output_path: pdf/anthony-rdrgz-documentation.pdf
+      output_path: pdf/anthony-rdrgz-documentation-missive.pdf
   - glightbox
   - build_plantuml:
       render: 'server'

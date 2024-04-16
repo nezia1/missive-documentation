@@ -6,4 +6,4 @@ Elle a été réalisée dans le cadre de mon travail de diplôme au sein du CFPT
 
 Vous trouverez sur ce site la documentation complète de l'application, qui détaille son fonctionnement, son architecture, son plan de tests, ainsi que les différentes fonctionnalités implémentées. Cette documentation présente également mon *Proof of Concept*, un travail complémentaire au travail réalisé au premier semestre.
 
-[Télécharger la documentation en PDF](pdf/anthony-rdrgz-documentation.pdf){ .md-button }
+[Télécharger la documentation en PDF](pdf/anthony-rdrgz-documentation-missive.pdf){ .md-button }
