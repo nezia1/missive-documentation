@@ -102,11 +102,47 @@ Ce dernier utilise le même système d'authentification que l'API (jeton d'accè
 
 Il permet d'envoyer des messages à un utilisateur•trice en utilisant son identifiant, ainsi que d'en recevoir et de gérer les statuts de lecture et de réception.
 
+#### Authentification / autorisation
+
+Comme expliqué auparavant, le serveur de Websocket emploie le même procédé de vérification d'identité et de permissions que l'API. Les jetons étant signés avec une clé privée propre au serveur, la vérification de l'identité utilise la même clé publique que l'API. Ce dernier a également accès à la même base de données, car l'instance de Prisma est partagée entre les deux parties du serveur.
+
+#### Création du WebSocket
+
+Le WebSocket est créé en effectuant une requête HTTP classique à la route `/`, qui est ensuite transformée en WebSocket. Cette route est protégée par le hook `authenticationHook`, qui vérifie l'authentification de l'utilisateur·rice. Si l'utilisateur·rice est authentifié·e, le serveur accepte la connexion, et permet à l'utilisateur·rice de communiquer en temps réel avec les autres utilisateur·rice·s.
+
+#### Envoi et réception de messages
+
+Une fois la connexion établie, l'utilisateur·rice peut envoyer des messages à un autre utilisateur·rice en utilisant son identifiant unique. Le serveur vérifie que l'utilisateur·rice est bien connecté·e, et que l'utilisateur·rice destinataire est également connecté·e. Le corps du message qui doit être envoyé ressemble à ceci :
+
+```json
+{
+    "receiverId": "5443f5ef-9b6d-438b-9c0f-e00298725d13",
+    "content": "This is an encrypted test message"
+}
+```
+
+Des informations sont ensuite ajoutées au message :
+
+- L'identifiant de l'expéditeur
+- L'heure d'envoi
+
+Si l'utilisateur est connecté, le message est envoyé directement à l'utilisateur·rice destinataire, sans passer par la base de données. Un message de confirmation est ensuite à l'expéditeur pour lui indiquer que le message a bien été remis.
+
+Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé.
+
+La sécurité des messages est garantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une double sécurité. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
+
+<figure markdown>
+![Diagramme du processus d'envoi d'un message](assets/diagrams/out/sending-message.svg)
+<figcaption>Diagramme du processus d'envoi d'un message</figcaption>
+</figure>
+
 ### Base de données
 
 La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateurs, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
+
 <figure markdown>
-![Schéma de la base de données](assets/diagrams/database.svg)
+![Schéma de la base de données](assets/diagrams/database.svg){ width=800 loading=lazy }
 <figcaption>Schéma de la base de données</figcaption>
 </figure>
 
@@ -119,6 +155,6 @@ Au premier lancement de l'application, l'utilisateur·rice devra créer un compt
 La clé privée sera stockée localement sur l'appareil, protégée par les mécanismes de sécurité du système d'exploitation (ie. Keychain sur iOS, KeyStore sur Android, etc.).
 
 <figure markdown>
-![Diagramme de séquence de la connexion à l'application](assets/diagrams/out/login-sequence.svg){ width=800 loading=lazy }
+![Diagramme de séquence de la création d'un compte utilisateur](assets/diagrams/out/login-sequence.svg){ width=800 loading=lazy }
 <figcaption>Diagramme de séquence de la création d'un compte utilisateur</figcaption>
 </figure>
