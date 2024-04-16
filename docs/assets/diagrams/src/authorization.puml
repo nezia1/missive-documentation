@@ -1,0 +1,15 @@
+@startuml authorization
+entity "Application" as Client
+entity API
+database "Base de données" as Database
+
+Client -> API : GET /users/{id}
+API -> API : Vérification des permissions du jeton d'accès (user:read dans ce cas)
+alt Permissions présentes et valides
+    API -> Database : Requête des données de compte
+    Database -> API : Envoi des données de compte
+    API -> Client : Envoi des données de compte
+else Permissions absentes ou invalides
+    API -> Client : Envoi d'une erreur 403 Forbidden
+end
+@enduml
