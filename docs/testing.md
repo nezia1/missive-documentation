@@ -29,6 +29,7 @@ Toutes les requêtes nécessitent une authentification par token Bearer, sauf la
 | GET /users/{id}/keys     | GET     | Récupérer les pré-clés d'un utilisateur            | Vérifier la récupération des pré-clés              | 200 OK         | X      | Moyen  |
 | PATCH /users/{id}/keys   | PATCH   | Mettre à jour la pré-clé signée d'un utilisateur   | Vérifier la mise à jour de la pré-clé signée       | 204 No Content | X      | Moyen  |
 | GET /users/{id}/messages | GET     | Récupérer les messages en attente d'un utilisateur | Vérifier la récupération des messages en attente   | 200 OK         | X      | Moyen  |
+| GET /users/{id}/messages | GET     | Récupérer les messages en attente d'un utilisateur | Vérifier la suppression après récupération         | 200 OK         | X      | Moyen  |
 
 #### Notes supplémentaires
 
@@ -42,3 +43,26 @@ Toutes les requêtes nécessitent une authentification par token Bearer, sauf la
 ### Automatisation des tests
 
 - Envisager l'automatisation de ces tests à l'aide de Postman ou d'autres frameworks d'automatisation pour intégrer dans un pipeline CI/CD.
+
+## Serveur WebSocket
+
+### Introduction
+
+Ce plan détaille les tests fonctionnels prévus pour valider les fonctionnalités du serveur WebSocket de Missive, qui gère l'envoi et la réception des messages en temps réel ainsi que la gestion des statuts des messages.
+
+### URL
+
+**WebSocket Server** : `wss://missive.nezia.dev`
+
+### Scénarios de Test
+
+| Description                                                 | Objectif                                             | Code Attendu            | Statut | Impact |
+| ----------------------------------------------------------- | ---------------------------------------------------- | ----------------------- | ------ | ------ |
+| Établir une connexion WebSocket                             | Vérifier l'établissement de la connexion             | 101 Switching Protocols | OK     | Élevé  |
+| Envoyer un message à un utilisateur spécifique              | Vérifier l'envoi du message                          | 200 OK                  | OK     | Élevé  |
+| Recevoir un message de l'utilisateur                        | Vérifier la réception du message                     | 200 OK                  | OK     | Élevé  |
+| Stocker le message si le récepteur est hors ligne           | Vérifier le stockage temporaire des messages         | 200 OK                  | OK     | Élevé  |
+| Envoyer le message directement si le récepteur est en ligne | Vérifier l'envoi en temps réel                       | 200 OK                  | OK     | Élevé  |
+| Mettre à jour le statut du message à 'envoyé'               | Vérifier la mise à jour du statut après l'envoi      | 200 OK                  | OK     | Moyen  |
+| Mettre à jour le statut du message à 'reçu'                 | Vérifier la mise à jour du statut après la réception | 200 OK                  | OK     | Moyen  |
+| Mettre à jour le statut du message à 'lu'                   | Vérifier la mise à jour du statut après lecture      | 200 OK                  | X      | Moyen  |
