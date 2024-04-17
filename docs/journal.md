@@ -180,3 +180,5 @@ Aujourd'hui, j'ai continué à travailler sur les maquettes. Je commence à avoi
   ![Maquette des écrans de conversation](./assets/img/wireframe-conversations.png)
   <figcaption>Maquette des écrans de conversation</figcaption>
 </figure>
+
+Il me reste encore à m'occuper des maquettes de l'écran de paramètres.
