@@ -168,3 +168,15 @@ J'ai rajouté un plan de tests dans ma documentation. J'ai également programmé
 Aujourd'hui, j'ai encore travaillé sur la documentation. J'ai rajouté des explications ainsi que des diagrammes sur le fonctionnement de l'API et du serveur WebSocket.
 
 Maintenant, je suis en train de m'attaquer aux maquettes de l'application mobile, qui me permettront de mieux visualiser comment l'application va fonctionner. J'ai décidé de partir sur un design simple, qui reprend les éléments de base de ce qu'on attend d'une application de messagerie. J'ai également décidé de partir sur un design Material, qui est bien documenté et qui me permettra de gagner du temps. Il est aussi intégré directement dans Flutter.
+
+## 2024-05-17
+
+Aujourd'hui, j'ai continué à travailler sur les maquettes. Je commence à avoir quelque chose qui ressemble à ce que je veux, en ce qui concerne l'authentification et les conversations. Voici des captures d'écran des maquettes:
+<figure markdown="span">
+  ![Maquette de l'authentification](./assets/img/wireframe-authentication.png)
+  <figcaption>Maquette de l'authentification</figcaption>
+</figure>
+<figure markdown="span">
+  ![Maquette des écrans de conversation](./assets/img/wireframe-conversations.png)
+  <figcaption>Maquette des écrans de conversation</figcaption>
+</figure>
