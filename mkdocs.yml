@@ -74,6 +74,7 @@ plugins:
       enabled_if_env: ENABLE_PDF_EXPORT
       output_path: pdf/anthony-rdrgz-documentation-missive.pdf
       exclude_pages: 
+        - /
         - api
   - glightbox
   - build_plantuml:
