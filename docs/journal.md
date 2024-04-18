@@ -205,3 +205,16 @@ Il permet aussi de le stocker et de les retrouver de manière sécurisée, en ut
 Maintenant, après avoir continué à coder, je me suis rendu compte que je n'avais pas implémenté la fonctionnalité pour rafrâichir le jeton d'accès : j'ai donc décidé d'utiliser Dio à la place, qui est un autre client HTTP(S) en Dart. Il permet d'avoir une configuration globale, et de plus facilement gérer mes requêtes.
 
 J'ai finalement réussi à implémenter le rafraîchissement automatique du jeton, en mettant la logique dans le getter accessToken. Cela me permet d'abstraire complètement le processus.
+
+Je suis en train de m'occuper du stockage des pré clés, je viens de me rendre compte de quelque chose : il faudra également synchroniser les clés publiques avec le serveur. Il sera important de s'assurer que l'état entre le client et le serveur soit le même, car les clés publiques sont utilisées par un utilisateur qui souhaiterait nous envoyer un message, afin de réaliser son Diffie-Hellman. Il faudra donc implémenter une méthode qui permet de synchroniser les clés publiques avec le serveur, qui devra être appelée à chaque modification des clés publiques. Il faudra peut-être que ça fonctionne dans le cas où on perd la connexion.
+
+Je viens de finir d'implémenter le store des pré clés signées. Il faudra maintenant tester un peu tout ça, voir si il est possible de chiffrer un message.
+
+Je viens également de me rendre compte de quelque chose : au niveau du serveur, ma manière de stocker les clés publiques n'est pas bonne. En effet, pour une application Signal, il faut stocker ce qu'on appelle un "pre key bundle", qui contient :
+
+- La clé publique d'identité
+- La pré-clé publique signée
+- La signature de la pré clé publique signée
+- (optionnel) une pré clé à usage unique
+
+Malheureusement, avec l'API que j'ai actuellement, il n'y a pas moyen de récupérer tout ça simplement. Il faudra donc que je réfléchisse à comment je vais gérer ça, potentiellement réorganiser certaines de mes routes. Je verrais tout ça demain.
