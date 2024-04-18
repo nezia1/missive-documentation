@@ -10,7 +10,17 @@ L'application comporte trois parties distinctes : le client, qui est l'applicati
 <figcaption>Schéma de l'architecture de l'application</figcaption>
 </figure>
 
-Le fonctionnement des différentes parties est détaillé plus bas.
+1. Le client envoie un message à un•e utilisateur•trice via son application. Ce message est chiffré au niveau de l'application grâce au protocole Signal.
+2. Le message est envoyé grâce à une connexion WebSocket au serveur.
+3. Le serveur vérifie l'authentification et les permissions de l'utilisateur•trice grâce au jeton d'accès, puis regarde si la•le destinataire est connecté•e.
+
+    - Si la•le destinataire est connecté•e, le message est envoyé directement à l'utilisateur•trice.
+    - Si la•le destinataire n'est pas connecté•e, le message est stocké dans la base de données, et sera envoyé dès que la•le destinataire se connectera. Une notification est également envoyée.
+
+4. L'utilisateur•trice reçoit le message, qui est déchiffré au niveau de l'application grâce au protocole Signal.
+    1. Au démarrage de l'application, l'utilisateur•trice se connecte à l'API pour récupérer les messages en attente.
+
+Le fonctionnement technique de ces différentes parties est détaillé ci-dessous.
 
 ### Concepts Fastify
 
