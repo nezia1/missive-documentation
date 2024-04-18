@@ -130,6 +130,6 @@ nav:
   - Accueil: index.md
   - Cahier des charges: cahier-des-charges.md
   - Fonctionnement: fonctionnement.md
-  - Proof of concept: poc.md
+  - API: api.md
   - Plan de tests: testing.md
   - Journal de bord: journal.md
