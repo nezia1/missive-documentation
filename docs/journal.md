@@ -235,3 +235,18 @@ Ces champs peuvent être stockés dans la table des utilisateurs. Je vais donc m
 - Une route pour effectuer la rotation des clés uniques
 
 Je me suis également rendu compte qu'un setup avec plusieurs appareils rajouterait beaucoup trop de complexité. Nous allons donc assumer un ID de périphérique de 1 pour tous les utilisateurs, qui va simplifier énormément la tâche (ID utilisé dans la documentation du protocole Signal en Dart).
+
+J'ai énormément travaillé ce matin. J'ai pu tout d'abord implémenter la page de création de compte, ce qui m'a obligé à faire une landing page pour l'application afin de pouvoir soit se créer un compte, soit se connecter.
+
+Ensuite j'ai mis à jour ma spécification OpenAPI, mon schéma Prisma, ainsi que mon API pour prendre en compte les nouveaux champs. J'ai modifié la route pour créer le bundle de clés afin d'inclure tous les champs nécéssaires, j'ai modifié la route pour récupérer un bundle de la même manière. J'ai aussi réglé quelques problèmes de permissions qui étaient mal configurées (les utilisateurs n'avaient pas la permission `keys:write` par défaut).
+
+J'ai aussi changé la manière dont je stockais les clés publiques dans le client Signal, afin de pouvoir stocker un bundle de clés, qui contient la clé publique d'identité, la clé publique signée, la signature de la clé publique signée, et une clé publique à usage unique. J'ai également rajouté un champ pour stocker le registrationID, qui est également nécéssaire pour notre implémentation.
+
+Ensuite, j'ai fini par implémenter mon flow de création de compte au niveau du client. Il fonctionne de cette manière :
+
+1. L'utilisateur rentre son nom d'utilisateur et son mot de passe
+2. L'application génère une paire de clés d'identité, un registrationID, ainsi qu'une clé publique signée
+3. L'application stocke les clés dans le SecureStorage
+4. L'application envoie ces clés au serveur, qui les stocke (les clés publiques sont sérialisées, puis encodées en base64)
+
+J'ai du créer un nouveau Provider, qui me permet de gérer ce processus de manière globale à l'application. Je pourrais également m'en servir quand j'aurais besoin de réactivité (quand on créé une session, par exemple).
