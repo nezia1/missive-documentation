@@ -220,3 +220,18 @@ Je viens également de me rendre compte de quelque chose : au niveau du serveur,
 Malheureusement, avec l'API que j'ai actuellement, il n'y a pas moyen de récupérer tout ça simplement. Il faudra donc que je réfléchisse à comment je vais gérer ça, potentiellement réorganiser certaines de mes routes. Je verrais tout ça demain.
 
 Il faudra également aussi stocker le registrationID de l'utilisateur ainsi que son deviceID. Il est souvent recommandé de faire une table à part pour les appareils, mais je pense que pour l'instant, je vais sûrement le mettre dans la table des utilisateurs. Si on voudrait améliorer le système dans le futur et le rendre multi-appareils, il faudra réfléchir à le séparer.
+
+## 2024-05-19
+
+Aujourd'hui, je vais commencer à revoir un peu la manière dont fonctionne mon API. Il faut que je rajoute différents champs à la création de l'utilisateur :
+
+- registrationID
+- identityKey
+
+Ces champs peuvent être stockés dans la table des utilisateurs. Je vais donc mettre à jour ma spécification OpenAPI, et mon schéma Prisma afin de refléter ces changements. J'aimerais implémenter :
+
+- Une route pour créer un bundle de clés
+- Une route pour récupérer un bundle de clés d'un utilisateur
+- Une route pour effectuer la rotation des clés uniques
+
+Je me suis également rendu compte qu'un setup avec plusieurs appareils rajouterait beaucoup trop de complexité. Nous allons donc assumer un ID de périphérique de 1 pour tous les utilisateurs, qui va simplifier énormément la tâche (ID utilisé dans la documentation du protocole Signal en Dart).
