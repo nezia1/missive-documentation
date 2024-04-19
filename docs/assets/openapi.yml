@@ -116,6 +116,12 @@ paths:
           This route allows the user to sign themselves up. If the process is successful, it will return an access token, alongside a refresh token as a cookie.
         tags: 
          - Users
+        requestBody: 
+          required: true
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/CreateUserRequest'
         responses:
           '204': 
             description: Account creation successful
@@ -126,7 +132,11 @@ paths:
                   additionalProperties: false
                   properties:
                     data:
+                      type: object
                       additionalProperties: false
+                      properties:
+                        accessToken:
+                          type: string
   /users/{id}:
       summary: Represents a user
       description: |
@@ -198,11 +208,11 @@ paths:
           application/json:
             schema: 
               required:
-                - "oneTimePreKeys"
+                - "preKeys"
               type: object
               additionalProperties: false
               properties:
-                oneTimePreKeys:
+                preKeys:
                   type: array
                   additionalProperties: false
                   items:
@@ -241,7 +251,8 @@ paths:
                     type: object
                     additionalProperties: false
                     properties:
-                    $ref: "#/components/schemas/PreKeys"
+                    $ref: "#/components/schemas/PreKeyBundle"
+                      
         '401':
           $ref: "#/components/responses/UnauthorizedResponse"
     patch:
@@ -312,6 +323,14 @@ components:
           type: string
           description: The unique user's username
           example: alice
+        password:
+          type: string
+          description: The user's password (hashed and salted)
+          example: $argon2i$v=19$m=16,t=2,p=1$IGRrY2trZGtma29zZmZnamRzbGt0cmx3NGVqZXJ0ZXJrbHdza3J0amlrb2w0ZSwuNGVyc2dzZnhn$mOamRmIP06Ny7IXXnv8OSg
+        registrationId:
+          type: string
+          description: The user's unique registration ID (generated from the Signal application)
+          example: 654556789
     Error:
       type: object
       additionalProperties: false
@@ -338,10 +357,16 @@ components:
        signature:
         type: string
         description: The pre key's signature
-    PreKeys:
+    PreKeyBundle:
       type: object
       additionalProperties: false
       properties:
+        registrationId:
+          type: string
+          description: The user's registration ID
+        identityKey:
+          type: string
+          description: The user's public identity key
         preKey: 
           type: object
           properties:
@@ -380,6 +405,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PendingMessage"
+    CreateUserRequest:
+      properties:
+        name:
+          type: string
+          description: The user's unique username
+          example: alice
+        password:
+          type: string
+          description: Password for the user account
+          example: Super
+        registrationId:
+          type: string
+          description: The user's registration ID (generated using the Signal protocol)
+          example: 321312456
+        identityKey:
+          type: string
+          description: The user's public identity key (generated using the Signal protocol, base64 encoded)
   parameters:
     RefreshCookie:
       required: true
