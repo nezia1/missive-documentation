@@ -184,7 +184,7 @@ paths:
              description: User successfully deleted
           '401':
             $ref: "#/components/responses/UnauthorizedResponse"
-  /users/{id}/keys:
+  /users/{name}/keys:
     summary: Represents the user's public cryptography keys
     description: | 
       This resource represents the entirety of the user's public keys. It contains:
@@ -192,11 +192,12 @@ paths:
         - Signed pre key
     parameters:
       - in: path
-        name: id 
-        description: Unique ID (UUIDv4) of the user
+        name: name 
+        description: User's unique name
         schema:
           type: string
         required: true
+        example: alice
     post:
       summary: Store a pre-key bundle
       description: This route allows to store a pre-key bundle, with an optional signed pre-key if it's the first time the user uses the application.
