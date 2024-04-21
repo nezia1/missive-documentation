@@ -259,3 +259,27 @@ Aujourd'hui, j'ai pu me rendre compte de quelques soucis dans mon implémentatio
 - Mon API ne permettait pas de récupérer un bundle avec le nom d'utilisateur (ce qui est la seule donnée que l'on a à ce moment-là)
 
 J'ai donc changé ma spécification OpenAPI afin de prendre en compte ces changements, et j'ai modifié mon API pour qu'elle prenne un nom d'utilisateur pour les clés. Au niveau du client, j'ai rajouté une méthode pour récupérer un bundle de clés. J'ai aussi du modifier mon implémentation de SignedPreKeys. Il faudra modifier les autres fichiers afin de tout bien stocker en base64 car sérialiser ne suffit pas, vu que SecureStorage ne prend que des chaînes de caractères. Les stocker juste en Uint8List ne permettrait donc pas de le déserialiser, car la représentation en chaîne de caractères est stockée et non les données en elles-mêmes.
+
+J'ai quand même décidé de continuer à travailler sur la création de sesssions, avec une méthode de SignalProvider, buildSession. Cette dernière prend un nom d'utilisateur, un jeton d'accès et permet de créer une session chiffrée avec un autre utilisateur. Tout avait l'air de fonctionner, donc je suis passé sur la fonction d'envoi de message. C'est là que j'ai rencontré un problème : je n'arrivais pas à chiffrer le message, car j'avais énormément d'erreurs de type, et certaines valeurs manquantes.
+
+Je me suis donc penché sur le problème, et j'ai réalisé que les sessions étaient mal sérialisées :
+
+```dart
+@override
+  Future<void> storeSession(
+      SignalProtocolAddress address, SessionRecord record) async {
+    final sessions = await _getSessions();
+
+    if (sessions == null) return;
+
+    sessions[address.toString()] = base64Encode(record.serialize());
+
+    await _secureStorage.write(key: 'sessions', value: jsonEncode(sessions));
+  }
+```
+
+Je ne m'étais pas rendu compte de mon erreur, mais le `if (sessions == null) return;` empêchait de stocker les sessions si elles n'étaient pas déjà stockées. J'ai donc enlevé cette ligne, et initialisé une Map vide si les sessions n'étaient pas déjà stockées. J'ai également rajouté une méthode pour récupérer les sessions, qui permet de les désérialiser correctement.
+
+Vu que la librairie est vraiment bien faite, après avoir implémenté toutes ces interfaces, il suffit juste de les passer dans le SessionBuilder, puis dans le SessionCipher pour chiffrer un message. La librairie s'occupe toute seule d'appeler les différentes méthodes afin de gérer l'état de la session.
+
+J'ai testé la création de session avec l'utilisateur actuellement connecté, car je n'ai pas encore pu tester avec un autre utilisateur. Il me semble que tout fonctionne, je n'ai pas eu d'exceptions après avoir réglé le souci de sessions ! Il faudrait tester avec un autre utilisateur demain, afin de s'assurer que les clés soient les bonnes valeurs, car si ne serait-ce que l'une des clés est mauvaise, le déchiffrement ne pourra pas fonctionner.
