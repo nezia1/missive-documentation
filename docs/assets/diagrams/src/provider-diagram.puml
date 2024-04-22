@@ -6,8 +6,10 @@
 ** SignalProvider
 *** Interface de haut niveau pour le protocole Signal
 *** Communication avec le serveur pour la rotation et le stockage des clés
-** Implémentation du protocole Signal
-*** Gestion du stockage
-*** Génération des clés
-*** Chiffrement / Déchiffrement des messages
+*** Chiffrement et déchiffrement des messages
+*** Récupération des bundles de pré clés
+** ChatProvider
+*** Gestion des messages
+*** Envoi et réception
+*** Communique avec le serveur WebSocket
 @endmindmap

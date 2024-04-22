@@ -40,11 +40,57 @@ Pour Missive, deux Provider sont disponibles :
 
 - `AuthProvider` : permet de gérer l'authentification de l'utilisateur·rice, ainsi que son compte utilisateur.
 - `SignalProvider` : propose une interface plus haut niveau de mon implémentation du protocole Signal, et permet de chiffrer, déchiffrer, et signer les messages. Il interagit également avec le SecureStorage pour stocker les clés de manière sécurisée (sérialisation / désérialisation).
+- `ChatProvider` : permet de gérer la communication en temps réel avec le serveur de WebSocket.
 
 <figure markdown="span">
     ![Mindmap du fonctionnement des Provider](assets/diagrams/out/provider-diagram.svg)
-    <figcaption>Mindmap du fonctionnement des Provider</figcaption>
+    <figcaption>Mindmap de l'architecture des Provider</figcaption>
 </figure>
+
+##### flutter_secure_storage
+
+flutter_secure_storage est une bibliothèque Flutter qui permet de persister des données de manière sécurisée dans le stockage sécurisé du système d'exploitation (Keychain pour iOS, Keystore pour Android, libsecret pour les systèmes Linux). Elle est une partie extrêmement cruciale de Missive, car elle est utilisée dans les stores de mon implémentation du protocole Signal afin de récupérer les clés, sessions et autres données sensibles.
+
+Les données sont stockées en base64 après avoir été sérialisées, car le stockage sécurisé ne permet que le stockage de chaînes de caractères. Il y a donc tout un travail de sérialisation/désérialisation à faire pour stocker des objets plus complexes, sur lequel nous allons revenir plus tard.
+
+#### Arborescence
+
+```sh
+client/lib
+├── common
+│   └── http.dart
+├── constants
+│   └── api.dart
+├── features
+│   ├── authentication
+│   │   ├── landing_screen.dart
+│   │   ├── login_screen.dart
+│   │   ├── models
+│   │   │   └── user.dart
+│   │   ├── providers
+│   │   │   └── auth_provider.dart
+│   │   ├── register_screen.dart
+│   │   └── totp_modal.dart
+│   ├── chat
+│   │   └── providers
+│   │       └── chat_provider.dart
+│   ├── encryption
+│   │   ├── providers
+│   │   │   └── signal_provider.dart
+│   │   ├── secure_storage_identity_key_store.dart
+│   │   ├── secure_storage_pre_key_store.dart
+│   │   ├── secure_storage_session_store.dart
+│   │   └── secure_storage_signed_pre_key_store.dart
+│   └── home
+│       └── screens
+│           ├── home_screen.dart
+│           └── settings_screen.dart
+└── main.dart
+```
+
+Comme vous pouvez le voir, l'application est divisée en plusieurs parties, en utilisant l'approche *feature-first* : chaque fonctionnalité a son propre dossier, et est organisée de la même manière, avec les écrans séparés des providers. Cela permet de voir rapidement les différentes parties de l'application, de séparer au maximum la logique de l'interface, et m'a beaucoup aidé lors du développement.
+
+Ces différentes parties sont ensuites importées dans le fichier `main.dart`, qui est le point d'entrée de l'application. Il contient le routeur, importe tous les providers afin d'y avoir accès dans toute l'application, et redirige les utilisateurs par rapport à leur état de connexion.
 
 ### Serveur
 
