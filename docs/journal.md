@@ -283,3 +283,9 @@ Je ne m'étais pas rendu compte de mon erreur, mais le `if (sessions == null) re
 Vu que la librairie est vraiment bien faite, après avoir implémenté toutes ces interfaces, il suffit juste de les passer dans le SessionBuilder, puis dans le SessionCipher pour chiffrer un message. La librairie s'occupe toute seule d'appeler les différentes méthodes afin de gérer l'état de la session.
 
 J'ai testé la création de session avec l'utilisateur actuellement connecté, car je n'ai pas encore pu tester avec un autre utilisateur. Il me semble que tout fonctionne, je n'ai pas eu d'exceptions après avoir réglé le souci de sessions ! Il faudrait tester avec un autre utilisateur demain, afin de s'assurer que les clés soient les bonnes valeurs, car si ne serait-ce que l'une des clés est mauvaise, le déchiffrement ne pourra pas fonctionner.
+
+## 2024-05-22
+
+Aujourd'hui, je me suis attaqué à la connexion WebSocket quand l'utilisateur se connecte à l'application. J'ai pour cela commencé à créer un Provider qui me permet de gérer la communication en temps réel, et je me suis rendu compte que mon serveur WebSocket prenait malheureusement un ID au lieu d'un nom d'utilisateur. Il va donc falloir modifier ça, car il est seulement possible d'envoyer un message avec des données qu'on connaît déjà (l'ID est généré par le serveur, et n'est pas connu de l'utilisateur).
+
+En tout cas, le lancement de l'application sur l'ordinateur de l'école marche correctement ! J'ai eu quelques soucis liés au cache de l'application qui était encore présent de l'ancienne version, mais après avoir tout nettoyé, tout fonctionne correctement. Il faudra rajouter de la gestion d'erreurs, car pour l'instant, l'application crash si on lui fournit un nom d'utilisateur qui n'existe pas à la récupération du bundle de pré clés.
