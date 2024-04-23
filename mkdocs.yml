@@ -97,7 +97,6 @@ markdown_extensions:
   - md_in_html
   - toc:
       permalink: true
-      title: Table des matières
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.betterem:
