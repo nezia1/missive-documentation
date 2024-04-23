@@ -298,3 +298,9 @@ J'ai réussi à faire fonctionner le chiffrement de bout-en-bout !! Voici une ca
 </figure>
 
 Malheureusement, en essayant d'ajouter un StreamBuilder afin de visualiser le flux des messages en temps réel, je me suis heurté à un problème : ayant du marquer les variables en "late", ce qui signifie qu'elles seront initialisées plus tard dans le code, mon interface n'attend pas la connexion au WebSocket et crashe complètement. Il sera possible de régler ça avec un FutureBuilder, un widget qui permet d'attendre la fin d'un Future avant de construire le widget. Cela nous permettra aussi d'avoir un écran de chargement pendant le processus de génération des clés, ce qui sera beaucoup plus agréable et propre pour l'expérience utilisateur.
+
+## 2024-05-23
+
+Aujourd'hui, je me suis rendu compte de quelques soucis sur l'application :
+
+- Quand on se déconnecte, puis se reconnecte à l'application, les clés peuvent changer dans le cas où l'utilisateur a créé un nouveau compte entre temps. Il faudrait potentiellement stocker toutes les clés des utilisateurs qui se sont déjà connectés, et utiliser les bonnes clés en fonction de l'utilisateur. Pour l'instant, ce n'est pas un problème car on teste sans jamais se déconnecter, mais cela serait une amélioration future cruciale. Il suffirait simplement d'implémenter la bonne logique dans les stores Signal.
