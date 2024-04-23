@@ -1,0 +1,15 @@
+@startuml registration
+actor "Utilisateur" as User
+entity "Application" as Client
+entity "API" as API
+database "Base de données" as DB
+
+User -> Client : Crée son compte
+Client -> Client : génère un ID d'enregistrement \n+ paire de clés d'identité
+Client -> API : Envoie les données
+API -> API : Traite les données (hachage du mot de passe)
+API -> DB : Envoie les données
+DB -> API : Confirme l'enregistrement
+API -> Client : Renvoie jeton d'accès et de rafraîchissement
+Client -> User : Redirection vers la page d'accueil 
+@enduml
