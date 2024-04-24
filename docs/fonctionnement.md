@@ -4,6 +4,12 @@ Le fonctionnement de Missive repose sur l'efficacité du protocole Signal, qui e
 
 ## Cas d'utilisation
 
+Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'utilisation typique, de la création du compte utilisateur à l'envoi et la réception d'un message. Voici un diagramme qui résume les différentes actions que l'utilisateur peut entreprendre au sein de l'application :
+<figure markdown="span">
+![Cas d'utilisation de Missive](assets/diagrams/out/use-case.svg)
+<figcaption>Cas d'utilisation de Missive</figcaption>
+</figure>
+
 ### Création du compte
 
 La création du compte s'effectue de la manière suivante : l'utilisateur rentre ses informations, et les confirme. Un ID d'enregistrement et une paire de clés d'identités sont générées. Toutes ces informations sont ensuite envoyées à l'API (seulement la partie publique de la clé). L'API vérifie que les informations sont correctes, puis crée un compte utilisateur. Après la confirmation de la création du compte, Le reste des clés nécéssaires au fonctionnement du protocole sont ensuite générées, envoyées à l'API, et stockées en base de données.
@@ -231,9 +237,7 @@ Des informations sont ensuite ajoutées au message :
 
 Si l'utilisateur est connecté, le message est envoyé directement à l'utilisateur·rice destinataire, sans passer par la base de données. Un message de confirmation est ensuite à l'expéditeur pour lui indiquer que le message a bien été remis.
 
-Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé.
-
-La sécurité des messages est garantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une double sécurité. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
+Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé.missive-use-caseantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une double sécurité. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
 
 <figure markdown>
 ![Diagramme du processus d'envoi d'un message](assets/diagrams/out/sending-message.svg)
