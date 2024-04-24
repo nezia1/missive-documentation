@@ -310,3 +310,9 @@ J'ai réussi à faire fonctionner tout ça : j'ai simplement rajouté une classe
 Maintenant que tout fonctionne, il va falloir s'occuper du stockage des messages. En effet, le protocole Signal s'occupant uniquement du chiffrement, il va falloir trouver une solution pour persister les messages déchiffrés sur le périphérique.
 
 Après avoir cherché un peu et étudié les différentes solutions, je pense partir sur Hive, qui est une implémentation d'une base de données NoSQL en Dart. Elle est rapide, simple d'utilisation, et permet également de créer des bases de données chiffrées. Je pense que stocker les messages dans le secure storage serait une assez mauvaise idée, car les requêtes pourraient rapidement devenir lentes et peu performantes. Il faudra donc que je réfléchisse à comment je vais gérer tout ça.
+
+## 2024-05-24
+
+Aujourdhui, j'ai commencé à m'occuper du stockage persistant des messages, qui pour l'instant sont seulement stockés dans la mémoire vive de l'application : l'idée est de tout stocker sur Hive à la réception d'un message, ou d'une mise à jour de statut, et de les chiffrer grâce au chiffrement qui est prodigué par Hive.
+
+J'ai eu beaucoup de mal à comprendre comment le tout fonctionnait, et j'ai également pu régler quelques bugs, mettre un peu à jour l'apparence de l'application. Il faudra continuer à travailler sur ce stockage demain. J'ai eu des soucis de type, qui ont été quasiment réglés par l'utilisation de ce que Hive appelle un adapteur, qui permet de typer les données stockées dans la base de données. Malheureusement, en essayant de stocker directement mon message, je me suis heurté à un souci de cast qui ne fonctionnait pas bien. Il faudra que je réfléchisse à tout ça demain.
