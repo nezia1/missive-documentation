@@ -326,3 +326,11 @@ J'ai aussi rajouté une configuration VSCode afin de pouvoir lancer les deux cli
 On peut maintenant utiliser `--dart-define=API_URL=http://localhost:3000` pour changer l'URL de l'API, et `--dart-define=WEB_SOCKET_URL=ws://localhost:3000` pour changer l'URL du serveur WebSocket. Ces dernières sont déjà configurées dans le `launch.json`, afin de fonctionner avec un serveur qui est lancé en local.
 
 J'ai réussi à régler les soucis de type avec Hive ! J'utilisais mal les génériques en Dart, car Hive ne supporte pas les génériques imbriquées pour le type de la Box. Le stockage fonctionne maintenant parfaitement !! Il me reste juste à l'implémenter pour l'envoi des messages, donc à la réception d'une mise à jour de statut. Il faudrait également récupérer les messages temporaires au démarrage de l'application, ainsi que de les stocker comme il faut. Il faudrait également résoudre le souci de la mise à jour des statuts dans le cas où l'une des deux personnes n'est pas connectée au WebSocket. Je pense qu'on pourrait le faire dès qu'un utilisateur se reconnecte au WebSocket, et de le stocker en base de données en attendant que l'autre se reconnecte, mais pour l'instant, ce n'est pas la priorité.
+
+## 2024-05-26
+
+Aujourd'hui, j'ai modernisé le look de mon application. J'ai essayé différentes palettes que j'ai généré grâce à ChatGPT, et j'ai finalement trouvé une palette qui me plaisait. J'ai donc changé les couleurs de l'application, et j'ai également mis à jour l'apparence de mes boutons, mes entrées texte afin d'avoir une apparence un peu plus agréable et fluide.
+
+J'ai également implémenté le stockage des messages envoyés en local, dans la conversation du destinataire.
+
+Il faudra également rajouter un ID au message, généré depuis le client, afin de pouvoir mettre à jour les statuts (envoyé, reçu, lu) de manière correcte. Il faudra également rajouter un champ pour stocker le statut du message, qui sera mis à jour en fonction des événements reçus du serveur WebSocket. Il faudra encore s'assurer que même si l'un des deux utilisateurs est déconnecté, le statut du message sera mis à jour au démarrage de l'application.
