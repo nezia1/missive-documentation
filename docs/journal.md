@@ -336,3 +336,9 @@ J'ai également implémenté le stockage des messages envoyés en local, dans la
 Il faudra également rajouter un ID au message, généré depuis le client, afin de pouvoir mettre à jour les statuts (envoyé, reçu, lu) de manière correcte. Il faudra également rajouter un champ pour stocker le statut du message, qui sera mis à jour en fonction des événements reçus du serveur WebSocket. Il faudra encore s'assurer que même si l'un des deux utilisateurs est déconnecté, le statut du message sera mis à jour au démarrage de l'application.
 
 J'ai également rajouté un écran de chargement qui prend tout l'écran pendant le chargement des clés, afin de ne pas laisser l'utilisateur dans le flou, et de rendre le tout plus agréable à utiliser.
+
+## 2024-05-28
+
+Aujourd'hui, j'ai procédé à un léger refactor de mes Provider : j'ai remarqué que l'interface était légèrement trop couplée avec la logique de mon application, et je n'aimais pas la manière dont on injectait AuthProvider dans ChatProvider. J'ai donc décidé de retirer les arguments qui dépendaient de AuthProvider, comme name, qui était le nom de l'utilisateur actuellement connecté, et j'ai décidé d'utiliser une fonctionnalité de Provider, ProxyProvider, qui permet d'utiliser d'autres providers dans un autre.
+
+Cela me permet d'avoir une meilleure séparation des responsabilités, et de pouvoir directement dépendre de la valeur de AuthProvider sans avoir à la passer en argument, tout en conservant la réactivé de l'application. Cela retire encore un peu de complexité de l'interface, que j'aimerais garder la plus "pure" possible.
