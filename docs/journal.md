@@ -337,6 +337,14 @@ Il faudra également rajouter un ID au message, généré depuis le client, afin
 
 J'ai également rajouté un écran de chargement qui prend tout l'écran pendant le chargement des clés, afin de ne pas laisser l'utilisateur dans le flou, et de rendre le tout plus agréable à utiliser.
 
+<figure markdown>
+  ![Écran d'accueil](./assets/img/ui/2024-05-26/landing-page.png){ width="400" }
+  ![Écran de connexion - informations vides](./assets/img/ui/2024-05-26/login-empty.png){ width="400" }
+  ![Écran de connexion - informations remplies](./assets/img/ui/2024-05-26/login-info-filled.png){ width="400" }
+  ![Écran de chargement](./assets/img/ui/2024-05-26/loading-screen.png){ width="400" }
+  <figcaption>Captures d'écran de l'application</figcaption>
+</figure>
+
 ## 2024-05-28
 
 Aujourd'hui, j'ai procédé à un léger refactor de mes Provider : j'ai remarqué que l'interface était légèrement trop couplée avec la logique de mon application, et je n'aimais pas la manière dont on injectait AuthProvider dans ChatProvider. J'ai donc décidé de retirer les arguments qui dépendaient de AuthProvider, comme name, qui était le nom de l'utilisateur actuellement connecté, et j'ai décidé d'utiliser une fonctionnalité de Provider, ProxyProvider, qui permet d'utiliser d'autres providers dans un autre.

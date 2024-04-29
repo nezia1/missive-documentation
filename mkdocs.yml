@@ -125,7 +125,8 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 extra_css:
-  - disable-sidebar.css
+  - stylesheets/disable-sidebar.css
+  - stylesheets/inline-figures.css
 # Page tree
 nav:
   - Accueil: index.md
