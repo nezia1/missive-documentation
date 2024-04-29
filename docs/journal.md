@@ -344,3 +344,9 @@ Aujourd'hui, j'ai procédé à un léger refactor de mes Provider : j'ai remarqu
 Cela me permet d'avoir une meilleure séparation des responsabilités, et de pouvoir directement dépendre de la valeur de AuthProvider sans avoir à la passer en argument, tout en conservant la réactivé de l'application. Cela retire encore un peu de complexité de l'interface, que j'aimerais garder la plus "pure" possible.
 
 Finalement, j'ai pu régler un de mes derniers soucis : l'un de mes Provider utilisé dans ProxyProvider, ChatProvider, me donnait une erreur Flutter, car il était apparemment déjà "disposed", c'est-à-dire qu'il avait déjà été détruit. Je me suis donc rendu compte que je recrééais un Provider à chaque fois qu'il se mettait à jour, ce qui déclenchait cette erreur (on ne peut pas réutiliser un Provider déjà déconstruit en Flutter). J'ai donc créé des fonctions internes pour gérer les dépendances, et tout fonctionne comme avant maintenant !
+
+## 2024-05-29
+
+Aujourd'hui, j'ai réglé un souci que j'avais depuis l'implémentation du stockage des messages : quand on changeait de compte, on restait encore sur l'ancienne connexion WebSocket. C'était en fait dû à la manière dont j'initialisais Hive : je le faisais dans le initState de mon écran d'accueil, au lieu de le faire dans le main de l'application. J'ai donc déplacé tout ça, et tout fonctionne maintenant comme prévu.
+
+J'ai aussi rajouté un ID au message généré depuis le client, afin d'avoir un moyen de mettre à jour les statuts des messages dans le futur.
