@@ -374,3 +374,5 @@ Aujourd'hui, j'ai décidé de m'attaquer à la création d'un écran afin de pou
 J'ai donc cherché une autre solution de base de données, et j'ai vu que sqflite avait un support pour la pagination, et le chiffrement avec sqflite_cipher. Malheureusement, ce dernier fonctionne seulement avec Android et iOS. Je ne peux donc pas l'utiliser car l'application doit fonctionner également sur Linux / Windows / macOS.
 
 Après avoir effectué mes recherches, j'ai découvert Realm, une solution de base de données locale NoSQL publiée par MongoDB. Elle est rapide (les objets sont *lazy loaded*), simple d'utilisation, et supporte le chiffrement. Elle est également multi-plateforme, ce qui est un énorme avantage pour moi. J'ai donc décidé de l'implémenter dans mon application. Je vais effectuer des tests aujourd'hui pour voir si elle correspond à mes besoins.
+
+J'ai finalement réussi à tout passer sur Realm ! J'ai même pu gagner en performance par rapport à Hive, grâce au *lazy loading*. Je me charge maintenant de créer l'écran de conversation.
