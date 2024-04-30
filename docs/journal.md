@@ -376,3 +376,5 @@ J'ai donc cherché une autre solution de base de données, et j'ai vu que sqflit
 Après avoir effectué mes recherches, j'ai découvert Realm, une solution de base de données locale NoSQL publiée par MongoDB. Elle est rapide (les objets sont *lazy loaded*), simple d'utilisation, et supporte le chiffrement. Elle est également multi-plateforme, ce qui est un énorme avantage pour moi. J'ai donc décidé de l'implémenter dans mon application. Je vais effectuer des tests aujourd'hui pour voir si elle correspond à mes besoins.
 
 J'ai finalement réussi à tout passer sur Realm ! J'ai même pu gagner en performance par rapport à Hive, grâce au *lazy loading*. Je me charge maintenant de créer l'écran de conversation.
+
+J'ai créé un composant MessageBubble qui me permet d'afficher les messages de manière agréable. J'ai réussi à récupérer tous les messages comme il faut, et à les afficher dans l'ordre. Il faudra maintenant que je m'occupe d'ajouter une boite de texte pour envoyer des messages, ainsi que d'afficher l'heure de réception des messages.
