@@ -378,3 +378,9 @@ Après avoir effectué mes recherches, j'ai découvert Realm, une solution de ba
 J'ai finalement réussi à tout passer sur Realm ! J'ai même pu gagner en performance par rapport à Hive, grâce au *lazy loading*. Je me charge maintenant de créer l'écran de conversation.
 
 J'ai créé un composant MessageBubble qui me permet d'afficher les messages de manière agréable. J'ai réussi à récupérer tous les messages comme il faut, et à les afficher dans l'ordre. Il faudra maintenant que je m'occupe d'ajouter une boite de texte pour envoyer des messages, ainsi que d'afficher l'heure de réception des messages.
+
+## 2024-06-01
+
+J'ai réussi à implémenter l'écran de conversations sans aucun problèmes aujourd'hui. Il m'a suffit de rajouter un TextField pour envoyer des messages, et de rajouter un bouton pour envoyer le message. La communication a fonctionné directement de manière fluide et bidirectionnelle, ce qui est très rassurant pour la suite.
+
+Il faudrait maintenant réfléchir à un moyen de trouver comment envoyer le premier message, car il n'y a pas de liste de contacts pour l'instant. Je pensais rajouter un bouton en haut à droite de l'écran d'accueil afin de pouvoir taper un nom d'utilisateur et envoyer un message directement. Ce n'est pas la solution la plus pratique, il faudrait idéalement avoir une liste de contacts quelque part ainsi que la possibilité d'ajouter un utilisateur en tant que contact / ami.
