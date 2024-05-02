@@ -396,3 +396,5 @@ Ensuite, j'ai créé une page qui permet de rechercher un utilisateur, et à cha
 ![Écran de recherche](./assets/img/ui/2024-06-02/user-search-screen.png)
 <figcaption>Écran de recherche</figcaption>
 </figure>
+
+Maintenant que la communication initiale peut être établie au niveau de l'interface, j'aimerais m'occuper de la récupération des messages temporaires au démarrage de l'application. Je pense rajouter une méthode dans mon ChatProvider, qui permet de récupérer ces messages, créer une session au besoin, et les stocker dans la base de données locale.
