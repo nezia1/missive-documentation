@@ -388,3 +388,11 @@ Il faudrait maintenant réfléchir à un moyen de trouver comment envoyer le pre
 ## 2024-06-02
 
 Aujourd'hui, je vais commencer à implémenter une recherche d'utilisateurs. J'aimerais avoir une barre de recherche, qui permet de rechercher un utilisateur par son nom. Tout d'abord, je vais implémenter une simple route à GET /users qui permet de récupérer tous les utilisateurs, puis je vais rajouter un paramètre de recherche qui permet de filtrer les utilisateurs par leur nom.
+
+J'ai réussi à implémenter cette recherche. J'ai rajouté ma route `GET /users`, qui permet de récupérer le nom des utilisateurs que l'on recherche (sauf l'utilisateur connecté, pour éviter de pouvoir s'envoyer des messages à soi-même). J'ai également rajouté un paramètre `search` qui permet de filtrer les utilisateurs par leur nom.
+
+Ensuite, j'ai créé une page qui permet de rechercher un utilisateur, et à chaque fois que l'on tape quelque chose dans la barre de recherche, une requête est envoyée au serveur pour récupérer les utilisateurs correspondants (j'ai mis un timeout de 500ms avec une classe Debouncer, qui prend un temps en millisecondes et qui empêche de pouvoir être lancée avant la fin de ce timer). Quand on clique sur l'utilisateur auquel on souhaite envoyer un message, une session est créée avec lui grâce au SignalProvider, et l'écran de conversation est affiché.
+<figure markdown>
+![Écran de recherche](./assets/img/ui/2024-06-02/user-search-screen.png)
+<figcaption>Écran de recherche</figcaption>
+</figure>
