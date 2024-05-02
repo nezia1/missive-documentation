@@ -398,3 +398,5 @@ Ensuite, j'ai créé une page qui permet de rechercher un utilisateur, et à cha
 </figure>
 
 Maintenant que la communication initiale peut être établie au niveau de l'interface, j'aimerais m'occuper de la récupération des messages temporaires au démarrage de l'application. Je pense rajouter une méthode dans mon ChatProvider, qui permet de récupérer ces messages, créer une session au besoin, et les stocker dans la base de données locale.
+
+J'ai aussi réglé un bug assez gênant qui faisait qu'un utilisateur s'envoyait un message à lui-même au premier message. Ce bug était causé par le fait que Flutter ne disposait pas du ChatProvider après le logout, car on ne le recréeait pas. J'y ai passé énormément de temps, ça m'a pris toute la journée, mais j'ai finalement réussi à régler le problème en retournant un nouveau ChatProvider quand le statut isLoggedIn devient false, dans mon update. Tout fonctionne maintenant !
