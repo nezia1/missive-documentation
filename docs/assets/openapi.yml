@@ -137,6 +137,25 @@ paths:
                       properties:
                         accessToken:
                           type: string
+      get:
+        parameters:
+          - in: path
+            name: search
+            schema:
+              type: string
+            description: Allow to search for users using their name
+            required: true
+        responses:
+          '200':
+            description: Successfully fetched users 
+            content: 
+              application/json:
+                schema: 
+                  type: object
+                  properties:
+                    data:
+                      $ref: "#/components/schemas/User"
+            
   /users/{id}:
       summary: Represents a user
       description: |
