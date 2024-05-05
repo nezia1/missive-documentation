@@ -409,3 +409,7 @@ Aujourd'hui, j'ai principalement passé du temps sur quelques fioritures au nive
 ![Poster de Missive](./assets/img/missive-poster-v1.png){ width="500" }
 <figcaption>Poster de Missive</figcaption>
 </figure>
+
+## 2024-06-05
+
+Aujourd'hui, je me suis concentré sur la documentation de mon code. Dart possède une fonctionnalité très intéressante, les docstrings, qui permettent de documenter le code de manière très simple et efficace. J'ai donc passé la journée à documenter tout mon code, afin de pouvoir le rendre plus lisible et compréhensible. Il est également possible de générer une documentation en ligne à partir de ces docstrings, ce qui permet de rendre le tout encore plus accessible, et de le publier sur un site internet. Je vais m'en servir pour générer la documentation API de mon client.
