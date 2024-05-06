@@ -423,3 +423,5 @@ En parallèle, j'ai commencé à regarder comment je pourrais implémenter les n
 Il faudra également mettre à jour la base de données après la connexion / déconnexion, un ID OneSignal appartenant à un seul périphérique en même temps (sachant qu'on ne peut avoir qu'un compte connecté en même temps). Il faudra donc mettre à jour ma route `PUT /users/{id}` pour mettre à jour ce champ.
 
 Pour l'instant, je me suis remis sur les tests unitaires car c'est la priorité pour l'instant. Je regarderais plus tard cette histoire de notifications, car il faudra également implémenter les reçus de messages.
+
+J'ai un petit souci avec mon gitlab CI : la documentation ne se met pas à jour automatiquement. Il faudra que je regarde pourquoi, car c'est un peu embêtant pour le moment. Je pense que c'est lié au fait qu'elle soit un submodule, donc je ne peux pas vérifier le contenu de ce dernier comme je le ferais pour un dossier.
