@@ -425,3 +425,11 @@ Il faudra également mettre à jour la base de données après la connexion / d�
 Pour l'instant, je me suis remis sur les tests unitaires car c'est la priorité pour l'instant. Je regarderais plus tard cette histoire de notifications, car il faudra également implémenter les reçus de messages.
 
 J'ai un petit souci avec mon gitlab CI : la documentation ne se met pas à jour automatiquement. Il faudra que je regarde pourquoi, car c'est un peu embêtant pour le moment. Je pense que c'est lié au fait qu'elle soit un submodule, donc je ne peux pas vérifier le contenu de ce dernier comme je le ferais pour un dossier.
+
+J'ai trouvé comment faire ! Il me suffisait simplement de tester les changements sur le nom du submodule, au lieu de son contenu. Voici un exemple fonctionnel :
+
+```yml
+rules:
+  - changes:
+    - documentation
+```
