@@ -413,3 +413,7 @@ Aujourd'hui, j'ai principalement passé du temps sur quelques fioritures au nive
 ## 2024-06-05
 
 Aujourd'hui, je me suis concentré sur la documentation de mon code. Dart possède une fonctionnalité très intéressante, les docstrings, qui permettent de documenter le code de manière très simple et efficace. J'ai donc passé la journée à documenter tout mon code, afin de pouvoir le rendre plus lisible et compréhensible. Il est également possible de générer une documentation en ligne à partir de ces docstrings, ce qui permet de rendre le tout encore plus accessible, et de le publier sur un site internet. Je vais m'en servir pour générer la documentation API de mon client.
+
+## 2024-06-06
+
+Aujourd'hui, vu que le code est bien avancé, je suis en train de me concentrer sur la partie DevOps du projet. Je suis en train d'implémenter des tests unitaires pour le client, en priorisant pour l'instant le test des fonctionnalités de chiffrement et de déchiffrement.
