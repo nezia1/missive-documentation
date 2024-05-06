@@ -133,5 +133,6 @@ nav:
   - Cahier des charges: cahier-des-charges.md
   - Fonctionnement: fonctionnement.md
   - API: api.md
+  - API client: https://anthony-rdrgz.docs.ictge.ch/missive/client-api
   - Plan de tests: testing.md
   - Journal de bord: journal.md
