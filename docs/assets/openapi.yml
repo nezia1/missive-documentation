@@ -323,7 +323,7 @@ paths:
       description: |
         This route allows users to fetch the current status of all messages they have sent. It is useful for synchronizing message statuses when the user logs back into the application after being offline.
       tags:
-        - Messages
+        - Pending messages
       parameters:
         - in: path
           name: id
