@@ -63,7 +63,7 @@ Une application front-end doit gérer un état global, qui permet de gérer les 
 
 Pour palier à ce problème, Flutter propose un système de gestion de l'état global, appelé Provider. Ce dernier permet de gérer l'état global de l'application, et de le partager entre les différentes parties de l'application. Un Provider est une classe, qui étend la classe `ChangeNotifier`, et qui permet de notifier les différentes parties de l'application lorsqu'un changement d'état a lieu.
 
-Pour Missive, deux Provider sont disponibles :
+Pour Missive, trois Provider sont disponibles :
 
 - `AuthProvider` : permet de gérer l'authentification de l'utilisateur·rice, ainsi que son compte utilisateur.
 - `SignalProvider` : propose une interface plus haut niveau de mon implémentation du protocole Signal, et permet de chiffrer, déchiffrer, et signer les messages. Il interagit également avec le SecureStorage pour stocker les clés de manière sécurisée (sérialisation / désérialisation).
@@ -74,13 +74,15 @@ Pour Missive, deux Provider sont disponibles :
     <figcaption>Mindmap de l'architecture des Provider</figcaption>
 </figure>
 
+Provider a été retenu pour sa simplicité, et la possibilité de séparer clairement la logique de l'interface de manière efficace.
+
 ##### flutter_secure_storage
 
 flutter_secure_storage est une bibliothèque Flutter qui permet de persister des données de manière sécurisée dans le stockage sécurisé du système d'exploitation (Keychain pour iOS, Keystore pour Android, libsecret pour les systèmes Linux). Elle est une partie extrêmement cruciale de Missive, car elle est utilisée dans les stores de mon implémentation du protocole Signal afin de récupérer les clés, sessions et autres données sensibles.
 
 Les données sont stockées en base64 après avoir été sérialisées, car le stockage sécurisé ne permet que le stockage de chaînes de caractères. Il y a donc tout un travail de sérialisation/désérialisation à faire pour stocker des objets plus complexes, sur lequel nous allons revenir plus tard.
 
-Il permet également de stocker les clés de plusieurs utilisateurs, car il préfixe chaque clé avec le nom de l'utilisateur. Cela permet de gérer plusieurs comptes sur la même application, et de les isoler les uns des autres afin d'éviter les problèmes et les conflits.
+Il permet également de stocker les clés de plusieurs utilisateurs, car il préfixe chaque clé avec le nom de l'utilisateur grâce à `NamespacedSecureStorage`, une classe dérivée de `flutter_secure_storage`. Cela permet de gérer plusieurs comptes sur la même application, et de les isoler les uns des autres afin d'éviter les problèmes et les conflits.
 
 #### Arborescence
 
@@ -120,6 +122,119 @@ client/lib
 Comme vous pouvez le voir, l'application est divisée en plusieurs parties, en utilisant l'approche *feature-first* : chaque fonctionnalité a son propre dossier, et est organisée de la même manière, avec les écrans séparés des providers. Cela permet de voir rapidement les différentes parties de l'application, de séparer au maximum la logique de l'interface, et m'a beaucoup aidé lors du développement.
 
 Ces différentes parties sont ensuites importées dans le fichier `main.dart`, qui est le point d'entrée de l'application. Il contient le routeur, importe tous les providers afin d'y avoir accès dans toute l'application, et redirige les utilisateurs par rapport à leur état de connexion.
+
+#### Protocole Signal
+
+Le protocole Signal, qui a été retenu pour sa fiabilité, son excellente documentation en ligne ainsi que ses implémentations en un grand nombre de différents langages, est implémenté grâce à la bibliothèque `libsignal_protocol_dart`. Cette dernière nous permet d'avoir une implémentation personnalisée du protocole, dans le sens où elle nous permet de gérer le stockage des différentes clés et sessions de la manière que l'on souhaite.
+
+Cette bibliothèque fonctionne en deux parties :
+
+##### Implémentation des stores
+
+ Premièrement, il faut s'occuper d'implémenter les stores. Ces derniers sont les classes qui vont interagir avec le stockage de notre choix. Des classes abstraites sont fournies, `IdentityKeyStore`, `PreKeyStore`, `SessionStore`, `SignedPreKeyStore`, qui détaillent les différentes méthodes à implémenter afin que le protocole puisse fonctionner. Une fois ces dernières fonctionnelles, il est possible de les passer en paramètre à d'autres classes, sur lesquelles nous allons revenir plus tard.
+
+ Dans le  cas de Missive, le stockage qui a été choisi est `flutter_secure_storage`, qui permet de stocker les clés de manière sécurisée dans le stockage sécurisé du système d'exploitation. Il est important de noter que les clés sont sérialisées en base64 avant d'être stockées, car le stockage sécurisé ne permet que le stockage de chaînes de caractères.
+
+Prenons l'exemple de `PreKeyStore`, qui permet de gérer les pré-clés, à savoir les clés qui sont utilisées pour établir une session de chiffrement avec un autre utilisateur. Dans la version en Dart, il est nécéssaire d'avoir une classe qui implémente les méthodes suivantes :
+
+- `containsPreKey` : permet de vérifier si une pré-clé est déjà stockée
+- `loadPreKey` : permet de charger une pré-clé stockée
+- `removePreKey` : permet de supprimer une pré-clé stockée
+- `storePreKey` : permet de stocker une pré-clé
+
+Voici un exemple d'implémentation de `PreKeyStore`, plus précisément de la méthode loadPreKey :
+
+```dart
+class SecureStoragePreKeyStore implements PreKeyStore {
+  final SecureStorage _secureStorage;
+
+  SecureStoragePreKeyStore(SecureStorage secureStorage)
+      : _secureStorage = secureStorage;
+
+
+  /// Loads a serialized [PreKeyRecord] from [SecureStorage] and returns it as a [PreKeyRecord].
+  /// Throws an [InvalidKeyIdException] if the pre key is not found.
+  @override
+  Future<PreKeyRecord> loadPreKey(int preKeyId) async {
+    final preKeys = await _loadKeys();
+
+    if (preKeys == null) {
+      throw InvalidKeyIdException('There are no preKeys stored');
+    }
+
+    final preKey = preKeys[preKeyId.toString()];
+    if (preKey == null) {
+      throw InvalidKeyIdException('PreKey with id $preKeyId not found');
+    }
+
+    // Decode the base64 string and deserialize it as a PreKeyRecord
+    return PreKeyRecord.fromBuffer(base64Decode(preKey));
+  }
+
+  /// Loads all pre keys from the secure storage
+  /// Returns a [Map] of [PreKeyRecord]s
+  Future<Map<String, dynamic>?> _loadKeys() async {
+    final preKeysJson = await _secureStorage.read(key: 'preKeys');
+    if (preKeysJson == null) return null;
+    final preKeys = jsonDecode(preKeysJson);
+
+    return preKeys;
+  }
+
+  // Autres méthodes (storePreKey, removePreKey, containsPreKey)...
+}
+```
+
+Comme vous pouvez le voir, la méthode loadPreKey s'occupe de désérialiser les clés depuis le stockage sécurisé, et de les renvoyer sous forme de PreKeyRecord, qui est un objet de la bibliothèque `libsignal_protocol_dart`.
+
+##### Utilisation des stores
+
+Une fois les stores implémentés, il est possible de les utiliser dans les différentes parties de l'application. `libsignal_protocol_dart` fournit des classes qui permettent d'être instanciées en utilisant les stores, ce qui assure une cohérence dans l'application, ainsi qu'une grande facilité d'utilisation une fois les stores fonctionnels.
+
+Missive simplifie l'utilisation de ces classes en utilisant un Provider, `SignalProvider`, qui permet de gérer le chiffrement et le déchiffrement de messages. Nous allons voir un exemple d'utilisation de `SignalProvider` pour chiffrer un message :
+
+```dart
+class SignalProvider extends ChangeNotifier {
+    late SecureStorageIdentityKeyStore _identityKeyStore;
+    late SecureStoragePreKeyStore _preKeyStore;
+    late SecureStorageSignedPreKeyStore _signedPreKeyStore;
+    late SecureStorageSessionStore _sessionStore;
+
+    Future<void> initialize(
+      {required bool installing,
+      required String name,
+      String? accessToken}) async {
+        // Initialisation des stores (cette méthode doit être appelée avant d'utiliser les autres méthodes)
+        ...
+      }
+      
+    Future<CiphertextMessage> encrypt(
+      {required String name, required String message}) async {
+        final remoteAddress = SignalProtocolAddress(name, 1);
+        final sessionCipher = SessionCipher(_sessionStore, _preKeyStore,
+            _signedPreKeyStore, _identityKeyStore, remoteAddress);
+
+        final cipherText = await sessionCipher.encrypt(utf8.encode(message));
+        return cipherText;
+    }
+}
+```
+
+Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores pour chiffrer un message, en instanciant un `SessionCipher`. Cette classe est la classe principale de la bibliothèque, et permet de chiffrer / déchiffrer les messages en utilisant les différentes clés stockées dans les stores. Il s'occupe automatiquement d'utiliser les différentes méthodes des stores pour récupérer les clés nécessaires, et de les utiliser pour chiffrer le message.
+
+#### Fonctionnalités
+
+##### Authentification
+
+L'authentification de Missive est gérée par le provider `AuthProvider`. Ce dernier permet de connecter l'utilisateur, en interagissant avec l'API afin de récupérer les jetons d'accès et de rafraîchissement. Il permet aussi de gérer la création de compte, et la déconnexion.
+
+La connexion et la création de compte s'effectue en envoyant une requête à l'API (`POST /users` pour la création de compte, `POST /tokens` pour la connexion). Si la connexion est réussie, les jetons d'accès et de rafraîchissement sont stockés dans le stockage sécurisé, et l'utilisateur est redirigé vers la page des conversations.
+
+Si la connexion échoue, une erreur est affichée à l'utilisateur, et il lui est demandé de réessayer.
+
+##### Communication en temps réel
+
+La communication en temps réel est gérée par le provider `ChatProvider`. Ce dernier permet de gérer la connexion au serveur de WebSocket, ainsi que l'envoi et la réception des messages. Il permet également de gérer les différentes erreurs qui peuvent survenir lors de la communication. Il dépend de `SignalProvider` pour chiffrer et déchiffrer les messages, ainsi que de `AuthProvider` pour récupérer les jetons d'accès, comme par exemple afin d'établir la connexion au serveur WebSocket, ou pour récupérer les messages en attente.
 
 ### Serveur
 
