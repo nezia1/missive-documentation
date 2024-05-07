@@ -206,6 +206,8 @@ class SecureStoragePreKeyStore implements PreKeyStore {
 
 Comme vous pouvez le voir, la méthode loadPreKey s'occupe de désérialiser les clés depuis le stockage sécurisé, et de les renvoyer sous forme de PreKeyRecord, qui est un objet de la bibliothèque `libsignal_protocol_dart`.
 
+Les différents stores sont disponibles dans le dossier `client/features/encryption`.
+
 ##### Utilisation des stores
 
 Une fois les stores implémentés, il est possible de les utiliser dans les différentes parties de l'application. `libsignal_protocol_dart` fournit des classes qui permettent d'être instanciées en utilisant les stores, ce qui assure une cohérence dans l'application, ainsi qu'une grande facilité d'utilisation une fois les stores fonctionnels.
