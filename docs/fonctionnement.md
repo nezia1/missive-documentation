@@ -29,6 +29,25 @@ Une fois que l'utilisateur arrive sur la page d'accueil, que ce soit après la c
     <figcaption>Diagramme de séquence de la génération des clés</figcaption>
 </figure>
 
+### Récupération des messages
+
+Une fois le protocole initialisé, une vérification des messages en attente est effectuée. Si l'utilisateur a des messages en attente, ils sont récupérés depuis l'API, déchiffrés, et affichés à l'utilisateur. Cela permet de garantir que l'utilisateur ne rate aucun message, même s'il n'était pas connecté à l'application.
+
+### Début de la conversation
+
+Quand un utilisateur•trice souhaite envoyer un message à un•e autre utilisateur•trice pour la première fois, il/elle dispose d'un bouton en haut à droite de l'application pour commencer une conversation. Il/elle rentre le nom de l'utilisateur•trice destinataire, qui sera cherché•e en temps réel dans la base de données. Une fois l'utilisateur•trice trouvé•e, une conversation est créée, stockée en local dans une base de données et l'utilisateur•trice peut envoyer un message. Cette dernière viendra également se rajouter sur la page d'accueil afin que l'utilisateur•trice puisse y accéder facilement.
+
+### Envoi du message
+
+Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en utilisant le protocole Signal, puis envoyé au serveur de WebSocket. Ce dernier vérifie que l'utilisateur est bien connecté, puis envoie le message à l'utilisateur destinataire. Si ce dernier est connecté, le message est directement envoyé à l'utilisateur•trice. Sinon, le message est stocké en base de données, et sera récupéré dès que l'utilisateur•trice se connectera.
+
+### Réception du message
+
+À la réception du message, il y a deux cas de figure :
+
+- Si l'utilisateur•trice est connecté•e, le message est directement affiché à l'utilisateur•trice apr·ès avoir été déchiffré.
+- Si l'utilisateur•trice n'est pas connecté•e, une notification sera envoyée et l'utilisateur•trice pourra récupérer le message dès qu'il/elle se connectera (le déchiffrement s'effectue donc après récupération des messages depuis le serveur).
+
 ## Architecture
 
 L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API, pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket, pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
