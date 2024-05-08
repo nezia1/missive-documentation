@@ -439,3 +439,9 @@ rules:
 Aujourd'hui, j'ai encore avancé sur la documentation. J'ai mis à jour la page fonctionnement, et passé beaucoup de temps sur le poster afin de s'assurer qu'il serait prêt pour la présentation. J'ai également commencé à travailler sur la mise à jour des statuts de message, qui permettra de savoir si un message a été envoyé, reçu, ou lu.
 
 J'ai rajouté un modèle MessageStatus dans mon modèle Prisma, lié au modèle PendingMessage. Il faudra maintenant implémenter au niveau des routes, et j'ai également rajouté une route `GET /messages/{id}/status` qui permet de récupérer le statut de tous les messages. Quand on récupère les messages au lancement de l'application, il faudra également rajouter la mise à jour des statuts de ces messages afin que l'envoyeur soit au courant de l'état de ses messages. Il faudra aussi s'occuper de le faire via le WebSocket, si l'autre utilisateur est connecté.
+
+## 2024-06-08
+
+Aujourd'hui, j'ai pu implémenter la mise à jour des statuts de messages. J'ai rajouté la route qui récupère les statuts des messages que l'utilisateur connecté a envoyé, et j'ai modifié ma route WebSocket afin de mettre à jour automatiquement les statuts à l'envoi (envoi direct si en ligne, sinon stockage temporaire).
+
+Au niveau du client, j'ai rajouté un champ `status` dans mon modèle `PlaintextMessage`, qui me permet de stocker ce dernier et de le mettre à jour en temps réel dans l'interface. Vu que Realm rend ça très simple et réactif, il m'a juste suffit de rajouter les bonnes icônes dans mon widget `MessageBubble`. Il ne me restera plus qu'à implémenter le statut "lu", qui sera un peu plus complexe à implémenter, sachant que ma route WebSocket devra gérer en plus d'un envoi de message classique, l'envoi d'une mise à jour de statut.
