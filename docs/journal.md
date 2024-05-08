@@ -445,3 +445,5 @@ J'ai rajouté un modèle MessageStatus dans mon modèle Prisma, lié au modèle 
 Aujourd'hui, j'ai pu implémenter la mise à jour des statuts de messages. J'ai rajouté la route qui récupère les statuts des messages que l'utilisateur connecté a envoyé, et j'ai modifié ma route WebSocket afin de mettre à jour automatiquement les statuts à l'envoi (envoi direct si en ligne, sinon stockage temporaire).
 
 Au niveau du client, j'ai rajouté un champ `status` dans mon modèle `PlaintextMessage`, qui me permet de stocker ce dernier et de le mettre à jour en temps réel dans l'interface. Vu que Realm rend ça très simple et réactif, il m'a juste suffit de rajouter les bonnes icônes dans mon widget `MessageBubble`. Il ne me restera plus qu'à implémenter le statut "lu", qui sera un peu plus complexe à implémenter, sachant que ma route WebSocket devra gérer en plus d'un envoi de message classique, l'envoi d'une mise à jour de statut.
+
+Je suis également passé sur un framework de logging, qui me permet de gérer les logs de manière plus propre et plus efficace. J'ai choisi `logging`, qui est une librairie très simple d'utilisation, développée par Google même.
