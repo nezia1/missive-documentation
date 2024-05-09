@@ -447,3 +447,9 @@ Aujourd'hui, j'ai pu implémenter la mise à jour des statuts de messages. J'ai 
 Au niveau du client, j'ai rajouté un champ `status` dans mon modèle `PlaintextMessage`, qui me permet de stocker ce dernier et de le mettre à jour en temps réel dans l'interface. Vu que Realm rend ça très simple et réactif, il m'a juste suffit de rajouter les bonnes icônes dans mon widget `MessageBubble`. Il ne me restera plus qu'à implémenter le statut "lu", qui sera un peu plus complexe à implémenter, sachant que ma route WebSocket devra gérer en plus d'un envoi de message classique, l'envoi d'une mise à jour de statut.
 
 Je suis également passé sur un framework de logging, qui me permet de gérer les logs de manière plus propre et plus efficace. J'ai choisi `logging`, qui est une librairie très simple d'utilisation, développée par Google même.
+
+## 2024-06-09
+
+J'ai commencé à implémenter le statut lu au niveau du client. J'utilise un package Flutter, `visibility_detector`, qui permet de détecter si un widget est visible à l'écran, et de mettre à jour le statut en conséquence.
+
+Au niveau du serveur, je réutilise une logique similaire à celle des messages en attente : je vérifie tout d'abord si le message qui a été envoyé est une mise à jour de statut. Si c'est le cas et que le receveur est connecté, cela lui envoie la mise à jour de statut via le WebSocket. Sinon, on stocke en base de données. Cela fonctionne quasiment, mais au niveau du serveur, vu que l'ID du message n'est pas forcément lié à un PendingMessage, la logique crashe car il y a une contrainte de clé étrangère sur MessageStatus avec PendingMessage. Il faudra régler tout ça demain.
