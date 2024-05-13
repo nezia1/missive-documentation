@@ -377,12 +377,37 @@ Des informations sont ensuite ajoutées au message :
 
 Si l'utilisateur est connecté, le message est envoyé directement à l'utilisateur·rice destinataire, sans passer par la base de données. Un message de confirmation est ensuite à l'expéditeur pour lui indiquer que le message a bien été remis.
 
-Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé.missive-use-caseantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une double sécurité. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
+Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé. La sécurité des données des utilisateur•trice•s est garantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une protection au niveau du contenu même du message et du transport. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
 
 <figure markdown>
 ![Diagramme du processus d'envoi d'un message](assets/diagrams/out/sending-message.svg)
 <figcaption>Diagramme du processus d'envoi d'un message</figcaption>
 </figure>
+
+##### Gestion des statuts de messages
+
+Au niveau du serveur, le WebSocket permet également de publier des mises à jour de statuts de messages, qui sont à ce format-ci :
+
+```json
+{
+    "messageId": "5443f5ef-9b6d-438b-9c0f-e00298725d13",
+    "state": "delivered",
+    "sender": "alice"
+}
+```
+
+Ces dernières permettent aux clients de mettre à jour le statut de leur message. Il y a trois états possibles :
+
+- `sent` : le message a été envoyé
+- `delivered` : le message a été reçu
+- `read` : le message a été lu
+
+Ils peuvent être soit envoyés directement depuis le serveur, dans le cas d'un envoi de message (afin d'avertir l'envoyeur que son message a bien été reçu), soit envoyés par le client, dans le cas de la lecture d'un message. Ces derniers sont soit :
+
+- Si l'utilisateur est en ligne, envoyés directement au client
+- Si l'utilisateur est hors-ligne, stockés en base de données, et récupérés dès que l'utilisateur se connecte
+
+C'est un processus qui est similaire à celui de l'envoi de messages, mais qui utilise une table complètement différente, à savoir `MessageStatus`, afin d'éviter de garder les messages en base de données. Cela permet d'augmenter encore plus la sécurité des données des utilisateur•trice•s.
 
 ### Base de données
 
