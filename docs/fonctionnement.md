@@ -404,14 +404,14 @@ Ces dernières permettent aux clients de mettre à jour le statut de leur messag
 
 Ils peuvent être soit envoyés directement depuis le serveur, dans le cas d'un envoi de message (afin d'avertir l'envoyeur que son message a bien été reçu), soit envoyés par le client, dans le cas de la lecture d'un message. Ces derniers sont soit :
 
-- Si l'utilisateur est en ligne, envoyés directement au client
-- Si l'utilisateur est hors-ligne, stockés en base de données, et récupérés dès que l'utilisateur se connecte
+- Si l'utilisateur•trice est en ligne, envoyés directement au client
+- Si l'utilisateur•trice est hors-ligne, stockés en base de données, et récupérés dès que l'utilisateur•trice se connecte
 
 C'est un processus qui est similaire à celui de l'envoi de messages, mais qui utilise une table complètement différente, à savoir `MessageStatus`, afin d'éviter de garder les messages en base de données. Cela permet d'augmenter encore plus la sécurité des données des utilisateur•trice•s.
 
 ### Base de données
 
-La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateurs, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
+La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateur•trice•s, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
 
 <figure markdown>
 ![Schéma de la base de données](assets/diagrams/database.svg){ width=800 loading=lazy }
