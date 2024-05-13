@@ -453,3 +453,12 @@ Je suis également passé sur un framework de logging, qui me permet de gérer l
 J'ai commencé à implémenter le statut lu au niveau du client. J'utilise un package Flutter, `visibility_detector`, qui permet de détecter si un widget est visible à l'écran, et de mettre à jour le statut en conséquence.
 
 Au niveau du serveur, je réutilise une logique similaire à celle des messages en attente : je vérifie tout d'abord si le message qui a été envoyé est une mise à jour de statut. Si c'est le cas et que le receveur est connecté, cela lui envoie la mise à jour de statut via le WebSocket. Sinon, on stocke en base de données. Cela fonctionne quasiment, mais au niveau du serveur, vu que l'ID du message n'est pas forcément lié à un PendingMessage, la logique crashe car il y a une contrainte de clé étrangère sur MessageStatus avec PendingMessage. Il faudra régler tout ça demain.
+
+## 2024-06-13
+
+J'ai enfin réussi à implémenter le statut lu ! J'ai réglé ce problème de clé étrangère, et je me suis aperçu que j'avais des problèmes au niveau du flux de mes données et de la logique de mon API, ce qui faisait que le mauvais ID était stocké dans la table MessageStatus (il fallait stocker l'ID de l'envoyeur du message, car c'est lui qui doit savoir si son message a été envoyé correctement). Tout a l'air de fonctionner pour l'instant. Il faudra maintenant rendre l'application un peu plus solide, notamment au niveau de la perte de connexion, car l'application crashe souvent si on perd la connexion au serveur WebSocket, ou les messages ne s'envoient jamais. Il faut implémenter :
+
+1. Un système de reconnexion automatique
+2. Un système de stockage temporaire des messages si l'utilisateur est déconnecté, et de les envoyer dès qu'il se reconnecte
+
+Je vais chercher le dépôt des librairies Flutter, pour voir si il existe déjà une dépendance qui pourrait me permettre d'implémenter une vérification du statut de connexion en temps réel. Il me semble déjà avoir vu quelque chose de la sorte, donc je vais creuser un peu.
