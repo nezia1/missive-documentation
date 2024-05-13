@@ -16,6 +16,7 @@ theme:
   name: material
   language: fr
   custom_dir: custom_templates/
+  logo: assets/img/missive_logo.png
   features:
     - announce.dismiss
     - content.action.edit
@@ -127,6 +128,7 @@ markdown_extensions:
 extra_css:
   - stylesheets/disable-sidebar.css
   - stylesheets/inline-figures.css
+  - stylesheets/increase-logo-size.css
 # Page tree
 nav:
   - Accueil: index.md

@@ -48,6 +48,10 @@ Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en util
 - Si l'utilisateur•trice est connecté•e, le message est directement affiché à l'utilisateur•trice apr·ès avoir été déchiffré.
 - Si l'utilisateur•trice n'est pas connecté•e, une notification sera envoyée et l'utilisateur•trice pourra récupérer le message dès qu'il/elle se connectera (le déchiffrement s'effectue donc après récupération des messages depuis le serveur).
 
+### Gestion des statuts de messages
+
+Lorsqu'un message est envoyé, une confirmation est envoyée à l'expéditeur pour lui indiquer que le message a bien été envoyé. Lorsque le message est reçu, une confirmation est envoyée à l'expéditeur pour lui indiquer que le message a bien été reçu, avec une notification push qui arrive directement sur son périphérique. Lorsque le message est lu, une confirmation est envoyée à l'expéditeur pour lui indiquer que le message a bien été lu. Toutes ces confirmations sont gérées par le serveur WebSocket, qui s'occupe de stocker la confirmation si l'utilisateur•trice n'est pas connecté•e.
+
 ## Architecture
 
 L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API, pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket, pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
