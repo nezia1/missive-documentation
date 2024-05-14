@@ -462,3 +462,9 @@ J'ai enfin réussi à implémenter le statut lu ! J'ai réglé ce problème de c
 2. Un système de stockage temporaire des messages si l'utilisateur est déconnecté, et de les envoyer dès qu'il se reconnecte
 
 Je vais chercher le dépôt des librairies Flutter, pour voir si il existe déjà une dépendance qui pourrait me permettre d'implémenter une vérification du statut de connexion en temps réel. Il me semble déjà avoir vu quelque chose de la sorte, donc je vais creuser un peu.
+
+## 2024-06-14
+
+Aujourd'hui, j'ai essayé d'ajouter des tests d'intégration. J'ai passé la matinée à essayer de le faire fonctionner avec mon application, mais je n'ai malheureusement pas réussi : j'ai des problèmes avec mon `MockAuthProvider`, qui refuse de mettre à jour le statut d'authentification de l'utilisateur ce qui rend la partie authentification impossible à tester pour l'instant.
+
+J'ai ajouté une fonctionnalité qui permet de se reconnecter automatiquement au WebSocket quand on perd la connexion. Il faudra maintenant le mettre en pause si l'utilisateur perd la connexion à internet, et reprendre les tentatives quand une connexion est retrouvée. Il faudra également rajouter un système de stockage temporaire des messages, qui permet de les envoyer dès que l'utilisateur se reconnecte.
