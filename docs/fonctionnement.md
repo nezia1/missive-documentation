@@ -14,11 +14,18 @@ Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'ut
 
 La création du compte s'effectue de la manière suivante : l'utilisateur rentre ses informations, et les confirme. Un ID d'enregistrement et une paire de clés d'identités sont générées. Toutes ces informations sont ensuite envoyées à l'API (seulement la partie publique de la clé). L'API vérifie que les informations sont correctes, puis crée un compte utilisateur. Après la confirmation de la création du compte, Le reste des clés nécéssaires au fonctionnement du protocole sont ensuite générées, envoyées à l'API, et stockées en base de données.
 
+<figure markdown="span">
+    ![Écran de création du compte](assets/img/examples/register-screen.png){ width="400" }
+    <figcaption>Écran de création du compte</figcaption>
+</figure>
 Un jeton d'accès et de rafraîchissement sont ensuite envoyés à l'utilisateur, qui lui permet de se connecter à l'application, ainsi que de rafraîchir son jeton d'accès, qui a une durée de vie de 15 minutes. Ce jeton de rafraîchissement est crucial car il est stocké en base de données avec l'ID de l'utilisateur, et peut donc être révoqué en cas de perte ou de vol du compte.
+
 <figure markdown="span">
     ![Diagramme de séquence de la création d'un compte](assets/diagrams/out/registration.svg)
     <figcaption>Diagramme de séquence de la création d'un compte</figcaption>
 </figure>
+
+Une fois le compte de l'utilisateur créé, il est redirigé sur la page d'accueil de l'application, d'où commence la prochaine étape, la génération des clés.
 
 ### Génération des clés
 
@@ -29,28 +36,44 @@ Une fois que l'utilisateur arrive sur la page d'accueil, que ce soit après la c
     <figcaption>Diagramme de séquence de la génération des clés</figcaption>
 </figure>
 
-### Récupération des messages
+En résumé, les différentes clés privées et publiques sont générées, stockées dans le stockage sécurisé du système d'exploitation, puis envoyées à l'API pour être stockées en base de données. Il est nécéssaire que tous les utilisateurs puissent avoir accès aux clés publiques d'un autre utilisateur afin d'établir une connexion  et autorisation initiale. Une fois que les clés sont stockées, l'utilisateur peut commencer à envoyer et recevoir des messages.
 
-Une fois le protocole initialisé, une vérification des messages en attente est effectuée. Si l'utilisateur a des messages en attente, ils sont récupérés depuis l'API, déchiffrés, et affichés à l'utilisateur. Cela permet de garantir que l'utilisateur ne rate aucun message, même s'il n'était pas connecté à l'application.
+<figure markdown="span">
+    ![Écran des conversations](assets/img/examples/conversations-screen.png){ width="400" }
+    <figcaption>Écran des conversations</figcaption>
+</figure>
 
 ### Début de la conversation
 
 Quand un utilisateur•trice souhaite envoyer un message à un•e autre utilisateur•trice pour la première fois, il/elle dispose d'un bouton en haut à droite de l'application pour commencer une conversation. Il/elle rentre le nom de l'utilisateur•trice destinataire, qui sera cherché•e en temps réel dans la base de données. Une fois l'utilisateur•trice trouvé•e, une conversation est créée, stockée en local dans une base de données et l'utilisateur•trice peut envoyer un message. Cette dernière viendra également se rajouter sur la page d'accueil afin que l'utilisateur•trice puisse y accéder facilement.
 
+<figure markdown="span">
+    ![Écran de recherche d'un utilisateur](assets/img/examples/user-search-screen.png){ width="400" }
+    <figcaption>Écran de recherche d'un utilisateur</figcaption>
+</figure>
+
 ### Envoi du message
 
 Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en utilisant le protocole Signal, puis envoyé au serveur de WebSocket. Ce dernier vérifie que l'utilisateur est bien connecté, puis envoie le message à l'utilisateur destinataire. Si ce dernier est connecté, le message est directement envoyé à l'utilisateur•trice. Sinon, le message est stocké en base de données, et sera récupéré dès que l'utilisateur•trice se connectera.
+<figure markdown="span">
+    ![Écran de conversation](assets/img/examples/conversation-unread.png){ width="400" }
+    <figcaption>Écran de conversation</figcaption>
+</figure>
+
+À la réception de ce message par le receveur (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé si il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au receveur pour lui indiquer qu'un nouveau message est disponible.
 
 ### Réception du message
 
-À la réception du message, il y a deux cas de figure :
+Maintenant que l'expéditeur a envoyé son message, il est temps pour le destinataire de le récupérer. Ce dernier se connecte sur son application, ou l'ouvre simplement si il est déjà connecté. Une vérification des messages en attente est effectuée à chaque démarrage de l'application. Si le destinataire a des messages en attente, ils sont récupérés depuis l'API, déchiffrés, et affichés à l'utilisateur. Cela permet de garantir que l'utilisateur ne rate aucun message, même s'il n'était pas connecté à l'application.
 
-- Si l'utilisateur•trice est connecté•e, le message est directement affiché à l'utilisateur•trice apr·ès avoir été déchiffré.
-- Si l'utilisateur•trice n'est pas connecté•e, une notification sera envoyée et l'utilisateur•trice pourra récupérer le message dès qu'il/elle se connectera (le déchiffrement s'effectue donc après récupération des messages depuis le serveur).
+<figure markdown="span">
+    ![Écrans de conversation - messages lus](assets/img/examples/conversation-read.png){ width="400" }
+    <figcaption>Écrans de conversation - messages lus</figcaption>
+</figure>
 
-### Gestion des statuts de messages
+Dans le cas où l'utilisateur était déjà présent sur l'application, le message lui est directement envoyé, et est traité en temps réel par l'application.
 
-Lorsqu'un message est envoyé, une confirmation est envoyée à l'expéditeur pour lui indiquer que le message a bien été envoyé. Lorsque le message est reçu, une confirmation est envoyée à l'expéditeur pour lui indiquer que le message a bien été reçu, avec une notification push qui arrive directement sur son périphérique. Lorsque le message est lu, une confirmation est envoyée à l'expéditeur pour lui indiquer que le message a bien été lu. Toutes ces confirmations sont gérées par le serveur WebSocket, qui s'occupe de stocker la confirmation si l'utilisateur•trice n'est pas connecté•e.
+Quand l'utilisateur lit le message (le message est affiché à l'écran, dans l'écran de conversation), un message de confirmation est envoyé à l'expéditeur pour lui indiquer que le message a bien été lu. Cette confirmation lui est soit envoyée directement si il est sur l'application, soit stockée en base de données si il n'est pas connecté, et sera récupéré dès qu'il se connectera.
 
 ## Architecture
 
