@@ -1,3 +1,4 @@
+
 # Fonctionnement
 
 Le fonctionnement de Missive repose sur l'efficacité du protocole Signal, qui est décrit [sur cette page](https://signal.org/docs/). Vous trouverez ci-dessous un schéma d'utilisation classique, de la création du compte utilisateur à l'envoi et la réception d'un message.
@@ -12,7 +13,7 @@ Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'ut
 
 ### Création du compte
 
-La création du compte s'effectue de la manière suivante : l'utilisateur rentre ses informations, et les confirme. Un ID d'enregistrement et une paire de clés d'identités sont générées. Toutes ces informations sont ensuite envoyées à l'API (seulement la partie publique de la clé). L'API vérifie que les informations sont correctes, puis crée un compte utilisateur. Après la confirmation de la création du compte, Le reste des clés nécéssaires au fonctionnement du protocole sont ensuite générées, envoyées à l'API, et stockées en base de données.
+La création du compte s'effectue de la manière suivante : l'utilisateur rentre ses informations, et les confirme. Un ID d'enregistrement et une paire de clés d'identités sont générées. Toutes ces informations sont ensuite envoyées à l'API (seulement la partie publique de la clé). L'API vérifie que les informations sont correctes, puis crée un compte utilisateur. Après la confirmation de la création du compte, le reste des clés nécessaires au fonctionnement du protocole sont ensuite générées, envoyées à l'API, et stockées en base de données.
 
 <figure markdown="span">
     ![Écran de création du compte](assets/img/examples/register-screen.png){ width="400" }
@@ -36,7 +37,7 @@ Une fois que l'utilisateur arrive sur la page d'accueil, que ce soit après la c
     <figcaption>Diagramme de séquence de la génération des clés</figcaption>
 </figure>
 
-En résumé, les différentes clés privées et publiques sont générées, stockées dans le stockage sécurisé du système d'exploitation, puis envoyées à l'API pour être stockées en base de données. Il est nécéssaire que tous les utilisateurs puissent avoir accès aux clés publiques d'un autre utilisateur afin d'établir une connexion  et autorisation initiale. Une fois que les clés sont stockées, l'utilisateur peut commencer à envoyer et recevoir des messages.
+En résumé, les différentes clés privées et publiques sont générées, stockées dans le stockage sécurisé du système d'exploitation, puis envoyées à l'API pour être stockées en base de données. Il est nécessaire que tous les utilisateurs puissent avoir accès aux clés publiques d'un autre utilisateur afin d'établir une connexion et autorisation initiale. Une fois que les clés sont stockées, l'utilisateur peut commencer à envoyer et recevoir des messages.
 
 <figure markdown="span">
     ![Écran des conversations](assets/img/examples/conversations-screen.png){ width="400" }
@@ -60,11 +61,11 @@ Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en util
     <figcaption>Écran de conversation</figcaption>
 </figure>
 
-À la réception de ce message par le receveur (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé si il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au receveur pour lui indiquer qu'un nouveau message est disponible.
+À la réception de ce message par le receveur (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé s'il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au receveur pour lui indiquer qu'un nouveau message est disponible.
 
 ### Réception du message
 
-Maintenant que l'expéditeur a envoyé son message, il est temps pour le destinataire de le récupérer. Ce dernier se connecte sur son application, ou l'ouvre simplement si il est déjà connecté. Une vérification des messages en attente est effectuée à chaque démarrage de l'application. Si le destinataire a des messages en attente, ils sont récupérés depuis l'API, déchiffrés, et affichés à l'utilisateur. Cela permet de garantir que l'utilisateur ne rate aucun message, même s'il n'était pas connecté à l'application.
+Maintenant que l'expéditeur a envoyé son message, il est temps pour le destinataire de le récupérer. Ce dernier se connecte sur son application, ou l'ouvre simplement s'il est déjà connecté. Une vérification des messages en attente est effectuée à chaque démarrage de l'application. Si le destinataire a des messages en attente, ils sont récupérés depuis l'API, déchiffrés, et affichés à l'utilisateur. Cela permet de garantir que l'utilisateur ne rate aucun message, même s'il n'était pas connecté à l'application.
 
 <figure markdown="span">
     ![Écrans de conversation - messages lus](assets/img/examples/conversation-read.png){ width="400" }
@@ -73,11 +74,11 @@ Maintenant que l'expéditeur a envoyé son message, il est temps pour le destina
 
 Dans le cas où l'utilisateur était déjà présent sur l'application, le message lui est directement envoyé, et est traité en temps réel par l'application.
 
-Quand l'utilisateur lit le message (le message est affiché à l'écran, dans l'écran de conversation), un message de confirmation est envoyé à l'expéditeur pour lui indiquer que le message a bien été lu. Cette confirmation lui est soit envoyée directement si il est sur l'application, soit stockée en base de données si il n'est pas connecté, et sera récupéré dès qu'il se connectera.
+Quand l'utilisateur lit le message (le message est affiché à l'écran, dans l'écran de conversation), un message de confirmation est envoyé à l'expéditeur pour lui indiquer que le message a bien été lu. Cette confirmation lui est soit envoyée directement s'il est sur l'application, soit stockée en base de données s'il n'est pas connecté, et sera récupérée dès qu'il se connectera.
 
 ## Architecture
 
-L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API, pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket, pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
+L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
 <figure markdown>
 ![Schéma de l'architecture de l'application](assets/diagrams/Missive.svg)
 <figcaption>Schéma de l'architecture de l'application</figcaption>
@@ -97,7 +98,9 @@ Le fonctionnement technique de ces différentes parties est détaillé ci-dessou
 
 ### Client
 
-Le client est l'application mobile, réalisée en Flutter. Il est le point d'entrée de l'utilisateur·rice, et permet de communiquer avec l'API et le serveur de WebSocket. Il permet aussi de gérer le chiffrement, le déchiffrement, et la signature des messages. Flutter a été retenu pour sa rapidité de développement, son expérience développeur, sa facilité de déploiement, et sa capacité à gérer les différentes plateformes (iOS, Android, Web, Desktop). Il permet également de gérer les mises à jour de manière efficace, et de gérer les différentes versions de l'application.
+Le client est l'application mobile, réalisée en Flutter. Il est le point d'entrée de l'utilisateur·rice, et permet de communiquer avec l'API et le serveur de WebSocket. Il permet aussi de gérer le chiffrement, le déchiffrement, et la signature des messages. Flutter
+
+ a été retenu pour sa rapidité de développement, son expérience développeur, sa facilité de déploiement, et sa capacité à gérer les différentes plateformes (iOS, Android, Web, Desktop). Il permet également de gérer les mises à jour de manière efficace, et de gérer les différentes versions de l'application.
 
 #### Concepts Flutter
 
@@ -105,7 +108,7 @@ Avant de commencer à parler du fonctionnement de l'application, il est importan
 
 ##### Provider
 
-Une application front-end doit gérer un état global, qui permet de gérer les différentes parties de l'application. Par exemple, dans le cas de Missive, il faut un moyen de gérer les différentes clés, les messages, les utilisateurs, etc. Il faut également que l'application puisse réagir à certains de ces évènements (ie. réception d'un message, envoi d'un message, etc.).
+Une application front-end doit gérer un état global, qui permet de gérer les différentes parties de l'application. Par exemple, dans le cas de Missive, il faut un moyen de gérer les différentes clés, les messages, les utilisateurs, etc. Il faut également que l'application puisse réagir à certains de ces événements (ie. réception d'un message, envoi d'un message, etc.).
 
 Pour palier à ce problème, Flutter propose un système de gestion de l'état global, appelé Provider. Ce dernier permet de gérer l'état global de l'application, et de le partager entre les différentes parties de l'application. Un Provider est une classe, qui étend la classe `ChangeNotifier`, et qui permet de notifier les différentes parties de l'application lorsqu'un changement d'état a lieu.
 
@@ -167,7 +170,7 @@ client/lib
 
 Comme vous pouvez le voir, l'application est divisée en plusieurs parties, en utilisant l'approche *feature-first* : chaque fonctionnalité a son propre dossier, et est organisée de la même manière, avec les écrans séparés des providers. Cela permet de voir rapidement les différentes parties de l'application, de séparer au maximum la logique de l'interface, et m'a beaucoup aidé lors du développement.
 
-Ces différentes parties sont ensuites importées dans le fichier `main.dart`, qui est le point d'entrée de l'application. Il contient le routeur, importe tous les providers afin d'y avoir accès dans toute l'application, et redirige les utilisateurs par rapport à leur état de connexion.
+Ces différentes parties sont ensuite importées dans le fichier `main.dart`, qui est le point d'entrée de l'application. Il contient le routeur, importe tous les providers afin d'y avoir accès dans toute l'application, et redirige les utilisateurs par rapport à leur état de connexion.
 
 #### Protocole Signal
 
@@ -181,7 +184,7 @@ Cette bibliothèque fonctionne en deux parties :
 
  Dans le  cas de Missive, le stockage qui a été choisi est `flutter_secure_storage`, qui permet de stocker les clés de manière sécurisée dans le stockage sécurisé du système d'exploitation. Il est important de noter que les clés sont sérialisées en base64 avant d'être stockées, car le stockage sécurisé ne permet que le stockage de chaînes de caractères.
 
-Prenons l'exemple de `PreKeyStore`, qui permet de gérer les pré-clés, à savoir les clés qui sont utilisées pour établir une session de chiffrement avec un autre utilisateur. Dans la version en Dart, il est nécéssaire d'avoir une classe qui implémente les méthodes suivantes :
+Prenons l'exemple de `PreKeyStore`, qui permet de gérer les pré-clés, à savoir les clés qui sont utilisées pour établir une session de chiffrement avec un autre utilisateur. Dans la version en Dart, il est nécessaire d'avoir une classe qui implémente les méthodes suivantes :
 
 - `containsPreKey` : permet de vérifier si une pré-clé est déjà stockée
 - `loadPreKey` : permet de charger une pré-clé stockée
@@ -239,7 +242,9 @@ Les différents stores sont disponibles dans le dossier `client/features/encrypt
 
 Une fois les stores implémentés, il est possible de les utiliser dans les différentes parties de l'application. `libsignal_protocol_dart` fournit des classes qui permettent d'être instanciées en utilisant les stores, ce qui assure une cohérence dans l'application, ainsi qu'une grande facilité d'utilisation une fois les stores fonctionnels.
 
-Missive simplifie l'utilisation de ces classes en utilisant un Provider, `SignalProvider`, qui permet de gérer le chiffrement et le déchiffrement de messages. Nous allons voir un exemple d'utilisation de `SignalProvider` pour chiffrer un message :
+Missive simplifie l'utilisation de ces classes en utilisant un Provider, `
+
+SignalProvider`, qui permet de gérer le chiffrement et le déchiffrement de messages. Nous allons voir un exemple d'utilisation de`SignalProvider` pour chiffrer un message :
 
 ```dart
 class SignalProvider extends ChangeNotifier {
@@ -268,7 +273,7 @@ class SignalProvider extends ChangeNotifier {
 }
 ```
 
-Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores pour chiffrer un message, en instanciant un `SessionCipher`. Cette classe est la classe principale de la bibliothèque, et permet de chiffrer / déchiffrer les messages en utilisant les différentes clés stockées dans les stores. Il s'occupe automatiquement d'utiliser les différentes méthodes des stores pour récupérer les clés nécessaires, et de les utiliser pour chiffrer le message.
+Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores pour chiffrer un message, en instanciant un `SessionCipher`. Cette classe est la classe principale de la bibliothèque, et permet de chiffrer / déchiffrer les messages en utilisant les différentes clés stockées dans les stores. Elle s'occupe automatiquement d'utiliser les différentes méthodes des stores pour récupérer les clés nécessaires, et de les utiliser pour chiffrer le message.
 
 #### Fonctionnalités
 
@@ -334,7 +339,7 @@ Le contenu d'un jeton d'accès est le suivant :
 
 Le jeton de rafraîchissement contient uniquement l'identifiant unique de l'utilisateur, ainsi que sa date d'expiration.
 
-Ces derniers étant signés cryptographiquement via une clé privée, il est impossible de les modifier sans la clé privée correspondante. Cela permet de garantir l'intégrité des jetons, et de garantir que l'utilisateur·rice est bien celui·celle qu'il·elle prétend être. Cela permet également d'avoir à gérer des sessions côté serveur, et laisse au client la responsabilité de gérer son propre état.
+Ces derniers étant signés cryptographiquement via une clé privée, il est impossible de les modifier sans la clé privée correspondante. Cela permet de garantir l'intégrité des jetons, et de garantir que l'utilisateur·rice est bien celui·celle qu'il·elle prétend être. Cela permet également de ne pas avoir à gérer des sessions côté serveur, et laisse au client la responsabilité de gérer son propre état.
 
 <figure markdown="span">
     ![Diagramme de séquence du processus d'authentification](assets/diagrams/out/authentication.svg)
@@ -368,11 +373,13 @@ Le processus d'autorisation est géré par le hook `authorizationHook`, qui pren
 
 #### Serveur WebSocket
 
-Le serveur WebSocket est un serveur en TypeScript, qui permet de gérer la communication en temps réel entre les utilisateur·rice·s. Il permet de gérer l'envoi des messages, ainsi que leur stockage si nécéssaire. La bibliothèque utilisée pour ce dernier est un plugin Fastify, [@fastify/websocket](https://www.npmjs.com/package/@fastify/websocket), qui encapsule le protocole WebSocket et permet d'utiliser les fonctionnalités de Fastify.
+Le serveur WebSocket est un serveur en TypeScript, qui permet de gérer la communication en temps réel entre les utilisateur·rice·s. Il permet de gérer l'envoi des messages, ainsi que leur stockage si nécessaire. La bibliothèque utilisée pour ce dernier est un plugin Fastify, [@fastify/websocket](https://www.npmjs.com/package/@fastify/websocket), qui encapsule le protocole WebSocket et permet d'utiliser les fonctionnalités de Fastify.
 
 Ce dernier utilise le même système d'authentification que l'API (jeton d'accès) à la création de la connexion. Il peut également accéder à la base de données, ce qui lui permet de stocker les messages temporairement dans le cas où l'utilisateur·rice n'est pas connecté·e.
 
-Il permet d'envoyer des messages à un utilisateur•trice en utilisant son identifiant, ainsi que d'en recevoir et de gérer les statuts de lecture et de réception.
+Il
+
+ permet d'envoyer des messages à un utilisateur•trice en utilisant son identifiant, ainsi que d'en recevoir et de gérer les statuts de lecture et de réception.
 
 ##### Authentification / autorisation
 
@@ -398,7 +405,7 @@ Des informations sont ensuite ajoutées au message :
 - L'identifiant de l'expéditeur
 - L'heure d'envoi
 
-Si l'utilisateur est connecté, le message est envoyé directement à l'utilisateur·rice destinataire, sans passer par la base de données. Un message de confirmation est ensuite à l'expéditeur pour lui indiquer que le message a bien été remis.
+Si l'utilisateur est connecté, le message est envoyé directement à l'utilisateur·rice destinataire, sans passer par la base de données. Un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été remis.
 
 Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé. La sécurité des données des utilisateur•trice•s est garantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une protection au niveau du contenu même du message et du transport. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
 
@@ -443,7 +450,7 @@ La base de données est une base de données PostgreSQL, qui permet de stocker l
 
 La base de données est gérée par Prisma, qui est un ORM (Object-Relational Mapper) permettant de gérer les différentes tables de manière efficace, et de gérer les relations entre les différentes tables, en représentant les tables sous forme d'un schéma générique, qui peut être ensuite converti en un grand nombre de types de base de données.
 
-Le choix d'une base de données SQL a été fait car il n'y avait aucune nécéssité pour un modèle NoSQL, les données et les relations étant clairement définies et structurées.
+Le choix d'une base de données SQL a été fait car il n'y avait aucune nécessité pour un modèle NoSQL, les données et les relations étant clairement définies et structurées.
 
 #### Explication du schéma
 
@@ -487,44 +494,115 @@ La table `SignedPreKey` permet de stocker les différentes clés pré-clés sign
 | Colonne     | Description                                                                                                                                   |
 |-------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | `id`        | l'identifiant unique de la clé pré-clé signée (UUID généré automatiquement)                                                                   |
-| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé signée                                                                  |
-| `key`       | la valeur de la clé pré-clé signée (unique, encodée en base64, permet d'établir une session de chiffrement avec un•e autre utilisateur•trice) |
-| `signature` | la signature de la clé pré-clé signée (permet de garantir son intégrité)                                                                      |
+| `userId`    | l
+
+'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé signée                                                                  |
+| `keyId`     | l'identifiant unique de la clé pré-clé signée (généré automatiquement, fait partie du protocole Signal)                                        |
+| `publicKey` | la clé publique de la clé pré-clé signée (permet d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice)             |
+| `signature` | la signature de la clé pré-clé signée (permet de vérifier l'authenticité de la clé pré-clé signée, et d'éviter les attaques de type MITM)      |
+| `createdAt` | la date de création de la clé pré-clé signée                                                                                                   |
 
 ##### OneTimePreKey
 
-La table `OneTimePreKey` permet de stocker les différentes clés pré-clés à usage unique des utilisateur•trice•s. Comme expliqué précédemment, ces dernières permettent d'établir une session initiale de chiffrement avec un•e autre utilisateur•trice. Il y en a plusieurs par utilisateur•trice (environ une centaine générée par utilisateur, à la création de leur compte). Elle contient les informations suivantes :
+La table `OneTimePreKey` permet de stocker les différentes clés pré-clés à usage unique des utilisateur•trice•s. Elle contient les informations suivantes :
 
-| Colonne  | Description                                                                                                                                           |
-|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`     | l'identifiant unique de la clé pré-clé à usage unique (UUID généré automatiquement)                                                                   |
-| `userId` | l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé à usage unique                                                                  |
-| `key`    | la valeur de la clé pré-clé à usage unique (unique, encodée en base64, permet d'établir une session de chiffrement avec un•e autre utilisateur•trice) |
-
-`SignedPreKey` et `OneTimePreKey` étant très similaires, leur seule différence étant la présence d'une signature pour `SignedPreKey`, le choix de les séparer en deux tables distinctes a été fait pour des raisons de clarté et de performance : `OneTimePreKey` contenant beaucoup plus de clés que `SignedPreKey`, cela permet d'avoir une des deux requêtes plus rapides, et de garantir une meilleure performance de l'application.
+| Colonne     | Description                                                                                                                                    |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `id`        | l'identifiant unique de la clé pré-clé à usage unique (UUID généré automatiquement)                                                            |
+| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé à usage unique                                                           |
+| `keyId`     | l'identifiant unique de la clé pré-clé à usage unique (généré automatiquement, fait partie du protocole Signal)                                 |
+| `publicKey` | la clé publique de la clé pré-clé à usage unique (permet d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice)      |
+| `createdAt` | la date de création de la clé pré-clé à usage unique                                                                                           |
 
 ##### PendingMessage
 
-La table `PendingMessage` permet de stocker les messages en attente des utilisateur•trice•s. Ces messages sont stockés en base de données, et sont récupérés dès que l'utilisateur•trice se connecte. Elle contient les informations suivantes :
+La table `PendingMessage` permet de stocker les différents messages en attente des utilisateur•trice•s. Elle contient les informations suivantes :
 
-| Colonne      | Description                                                                 |
-|--------------|-----------------------------------------------------------------------------|
-| `id`         | l'identifiant unique du message en attente (UUID généré automatiquement)    |
-| `senderId`   | l'identifiant de l'expéditeur du message                                    |
-| `receiverId` | l'identifiant du destinataire du message                                    |
-| `content`    | le contenu du message (chiffré grâce au protocole Signal, encodé en base64) |
-
-Les messages sont stockés de manière chiffrée, afin de garantir la sécurité des données des utilisateur•trice•s. Ils sont stockés en base de données, et sont supprimés dès qu'ils ont été récupérés par le destinataire. Cela permet d'éviter de stocker les messages en base de données, et de garantir la sécurité des données des utilisateur•trice•s.
+| Colonne     | Description                                                                                                 |
+|-------------|-------------------------------------------------------------------------------------------------------------|
+| `id`        | l'identifiant unique du message en attente (UUID généré automatiquement)                                    |
+| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient le message en attente                                |
+| `senderId`  | l'identifiant de l'utilisateur•trice qui a envoyé le message en attente                                     |
+| `content`   | le contenu du message en attente (chiffré, pour des raisons de sécurité)                                    |
+| `createdAt` | la date de création du message en attente                                                                   |
 
 ##### MessageStatus
 
-La table `MessageStatus` permet de stocker les différents statuts des messages des utilisateur•trice•s. Ces statuts permettent de savoir si un message a été envoyé, reçu, ou lu. Elle contient les informations suivantes :
+La table `MessageStatus` permet de stocker les différents statuts des messages. Elle contient les informations suivantes :
 
-| Colonne     | Description                                                             |
-|-------------|-------------------------------------------------------------------------|
-| `id`        | l'identifiant unique du statut du message (UUID généré automatiquement) |
-| `messageId` | l'identifiant du message auquel appartient le statut                    |
-| `state`     | l'état du message (envoyé, reçu, lu)                                    |
-| `senderId`  | l'identifiant de l'expéditeur du message                                |
+| Colonne      | Description                                                                                              |
+|--------------|----------------------------------------------------------------------------------------------------------|
+| `id`         | l'identifiant unique du statut de message (UUID généré automatiquement)                                  |
+| `userId`     | l'identifiant de l'utilisateur•trice auquel appartient le statut de message                              |
+| `messageId`  | l'identifiant du message auquel appartient le statut de message                                          |
+| `state`      | l'état du message (envoyé, reçu, lu)                                                                     |
+| `createdAt`  | la date de création du statut de message                                                                 |
+| `updatedAt`  | la date de dernière mise à jour du statut de message                                                     |
 
-Le choix d'avoir séparé `MessageStatus` de `PendingMessage` a été fait pour des raisons de sécurité : dans le cas de Missive, il est beaucoup plus judicieux de stocker les messages temporaires le moins longtemps possible, afin d'encore plus garantir la sécurité des données des utilisateur•trice•s. Ces informations sont beaucoup moins sensibles, et une fois le message en lui-même supprimé, le statut du message ne veut plus rien dire pour un potentiel attaquant.
+## Justifications techniques et réflexions
+
+### Choix de Flutter
+
+Flutter a été retenu pour plusieurs raisons :
+
+1. **Rapidité de développement** : Flutter permet de développer des applications de manière très rapide, grâce à son hot reload, qui permet de voir les changements en temps réel. Cela permet de gagner énormément de temps lors du développement.
+2. **Expérience développeur** : Flutter possède une excellente documentation, ainsi qu'une communauté très active. Cela permet de trouver des solutions aux problèmes rencontrés très rapidement. J'ai pu d'ailleurs discuter avec des membres de la communauté, via leur serveur Discord, pour résoudre des problèmes rencontrés lors du développement.
+3. **Facilité de déploiement** : Flutter permet de déployer des applications sur plusieurs plateformes (iOS, Android, Web, Desktop) avec une seule *codebase*. Cela permet de gagner énormément de temps, et de garantir une expérience utilisateur homogène sur toutes les plateformes.
+4. **Gestion des mises à jour** : Flutter permet de gérer les mises à jour de manière très efficace, grâce à son système de packages. Cela permet de mettre à jour l'application de manière très simple, et de garantir une expérience utilisateur optimale.
+5. **Capacité à gérer les différentes plateformes** : Flutter permet de gérer les différentes plateformes de manière très simple, grâce à son système de widgets. Cela permet de garantir une expérience utilisateur optimale sur toutes les plateformes.
+
+### Choix du protocole Signal
+
+Le protocole Signal a été retenu pour plusieurs raisons :
+
+1. **Fiabilité** : Le protocole Signal est utilisé par de nombreuses applications de messagerie sécurisée, comme WhatsApp, Signal, et Facebook Messenger. Cela permet de garantir une fiabilité optimale, et de s'assurer que les messages sont chiffrés de manière sécurisée.
+2. **Documentation** : Le protocole Signal possède une excellente documentation, qui permet de comprendre son fonctionnement très rapidement. Cela permet de gagner énormément de temps lors du développement.
+3. **Implémentations disponibles** : Le protocole Signal possède de nombreuses implémentations disponibles dans différents langages de programmation, ce qui permet de l'utiliser dans de nombreux contextes. Cela permet de garantir une flexibilité optimale, et de s'adapter à de nombreux environnements de développement.
+4. **Sécurité** : Le protocole Signal permet de garantir une sécurité optimale, grâce à son chiffrement de bout en bout, le fait que chaque message est chiffré avec une clé différente, et à son système de signatures. Cela permet de garantir que les messages sont chiffrés de manière sécurisée, et que seul•e•s les utilisateur•rice•s peuvent les lire.
+
+### Choix de Fastify
+
+Fastify a été retenu pour plusieurs raisons :
+
+1. **Rapidité** : Fastify est un framework back-end rapide, qui permet de gérer les routes de manière très efficace. Cela permet de garantir une performance optimale, et de s'assurer que les requêtes sont traitées de manière rapide.
+2. **Gestion des erreurs** : Fastify permet de gérer les erreurs de manière très simple et unifiée grâce à son système de hooks. Cela permet de s'assurer que les erreurs sont gérées de manière efficace.
+3. **Simplicité** : Fastify est un framework très simple à utiliser, qui permet de se concentrer au maximum sur le développement des fonctionnalités. Cela permet de gagner énormément de temps lors du développement, et de garantir une expérience développeur optimale.
+4. **Extensions disponibles** : Fastify possède de nombreuses extensions disponibles, qui permettent de gérer des fonctionnalités avancées de manière très simple. Cela permet de garantir une flexibilité optimale, et de s'adapter à de nombreux environnements de développement.
+
+### Choix de PostgreSQL
+
+PostgreSQL a été retenu pour plusieurs raisons :
+
+1. **Robustesse** : PostgreSQL est une base de données très robuste, qui permet de gérer de gros volumes de données de manière très efficace. Cela permet de garantir une performance optimale, et de s'assurer que les données sont stockées de manière sécurisée.
+2. **Fiabilité** : PostgreSQL est une base de données très fiable, utilisée par de nombreuses entreprises pour stocker leurs données. Cela permet de garantir une fiabilité optimale, et de s'assurer que les données sont accessibles à tout moment.
+3. **UUID en clé primaire** : PostgreSQL permet d'utiliser des UUID comme clés primaires, ce qui permet d'éviter les collisions, et de garantir que les identifiants sont uniques. Cela permet de garantir l'intégrité des données, et de s'assurer que les données sont stockées de manière cohérente. Cela permet également d'éviter que l'on puisse itérer les données, les identifiants étant simplement incrémentaux.
+
+### Sécurité des données
+
+La sécurité des données des utilisateur•rice•s est une priorité absolue pour Missive. Plusieurs mesures ont été mises en place pour garantir la sécurité des données :
+
+1. **Chiffrement de bout en bout** : Les messages sont chiffrés de bout en bout, ce qui permet de garantir que seul•e•s les utilisateur•rice•s peuvent les lire. Cela permet de garantir la confidentialité des messages, et de s'assurer que les données ne sont pas accessibles à des tiers.
+2. **Stockage sécurisé des clés** : Les clés sont stockées de manière sécurisée dans le stockage sécurisé du système d'exploitation, ce qui permet de garantir que les clés ne sont pas accessibles à des tiers. Cela permet de garantir la sécurité des clés, et de s'assurer que les données sont chiffrées de manière sécurisée.
+3. **Utilisation de jetons JWT** : Les jetons JWT permettent de gérer l'authentification de manière sécurisée, en garantissant que les jetons ne peuvent pas être modifiés sans la clé privée correspondante. Cela permet de garantir l'intégrité des jetons, et de s'assurer que les utilisateur•rice•s sont bien ceux•celles qu'ils•elles prétendent être. Ces derniers étant également *stateless*, ils laissent au client la responsabilité de gérer son propre état, ce qui, dans le cas de Missive, est un choix pertinent pour garantir la sécurité des données des utilisateur•rice•s.
+
+En conclusion, la sécurité des données des utilisateur•rice•s est une priorité absolue pour Missive, et plusieurs mesures ont été mises en place pour garantir la sécurité des données. Ces mesures permettent de garantir que les données sont stockées de manière sécurisée, et qu'elles sont accessibles à tout moment. Elles permettent également de garantir que les données ne sont pas accessibles à des tiers, et que les utilisateur•rice•s sont bien ceux•celles qu'ils•elles prétendent être.
+
+### Notes supplémentaires et réflexions
+
+### Problèmes rencontrés
+
+Voici quelques problèmes rencontrés durant le développement de Missive, ainsi que les solutions apportées :
+
+1. **Problème de sérialisation des clés** : Le stockage sécurisé ne permet que le stockage de chaînes de caractères, ce qui pose problème pour le stockage des clés, qui sont des objets complexes. La solution apportée a été de sérialiser les clés en base64 avant de les stocker, et de les désérialiser à la récupération.
+2. **Problème de gestion des sessions** : Le protocole Signal nécessite la gestion de sessions, qui sont des objets complexes. La solution apportée a été d'implémenter un store pour les sessions, qui permet de les stocker de manière sécurisée dans le stockage sécurisé du système d'exploitation, en les sérialisant et en les désérialisant en base64 à la récupération.
+3. **Problème de gestion des erreurs** : La gestion des erreurs est cruciale pour garantir la sécurité des données des utilisateur•rice•s. La solution apportée a été d'utiliser les hooks de Fastify pour gérer les erreurs de manière efficace, et de s'assurer que les erreurs sont gérées de manière cohérente. Missive utilisant Docker pour le déploiement, les erreurs peuvent être récupérées de manière standarde via les logs de Docker.
+4. **Problème de reconnexion** : La reconnexion au serveur WebSocket est cruciale pour garantir la continuité de la communication en temps réel. La solution apportée a été d'implémenter un système de reconnexion automatique, qui permet de se reconnecter automatiquement au serveur en cas de perte de connexion, ainsi que d'envoyer les messages en attente dès que la connexion est rétablie.
+5. **Problème de stockage des messages** : Le stockage des messages en attente est crucial pour garantir que les utilisateur•rice•s ne ratent aucun message. La solution apportée a été d'implémenter une table `PendingMessage` dans la base de données, qui permet de stocker les messages en attente, et de les récupérer dès que l'utilisateur•rice se connecte.
+
+### Améliorations futures
+
+Voici quelques améliorations futures qui pourraient être apportées à Missive :
+
+1. **Gestion des contacts** : La gestion des contacts permettrait de simplifier la recherche d'utilisateur•rice•s, et de faciliter l'envoi de messages. Cela permettrait également de garantir une meilleure expérience utilisateur.
+2. **Support multi-appareils** : Le support multi-appareils permettrait de garantir que les utilisateur•rice•s peuvent utiliser l'application sur plusieurs appareils en même temps, et de synchroniser les messages entre les différents appareils. Cela permettrait de garantir une meilleure expérience utilisateur. Le protocole Signal étant par défaut un protocole multi-appareils, il serait intéressant de l'implémenter dans Missive.
+3. **Amélioration de l'interface utilisateur** : L'amélioration de l'interface utilisateur permettrait de garantir une meilleure expérience utilisateur, en rendant l'application plus agréable à utiliser. Cela permettrait également de simplifier l'utilisation de l'application, et de garantir une meilleure compréhension de son fonctionnement.
