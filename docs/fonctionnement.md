@@ -440,3 +440,79 @@ La base de données est une base de données PostgreSQL, qui permet de stocker l
 ![Schéma de la base de données](assets/diagrams/database.svg){ width=800 loading=lazy }
 <figcaption>Schéma de la base de données</figcaption>
 </figure>
+
+La base de données est gérée par Prisma, qui est un ORM (Object-Relational Mapper) permettant de gérer les différentes tables de manière efficace, et de gérer les relations entre les différentes tables, en représentant les tables sous forme d'un schéma générique, qui peut être ensuite converti en un grand nombre de types de base de données.
+
+Le choix d'une base de données SQL a été fait car il n'y avait aucune nécéssité pour un modèle NoSQL, les données et les relations étant clairement définies et structurées.
+
+#### Explication du schéma
+
+##### User
+
+La table `User` permet de stocker les différents utilisateur•trice•s de l'application. Elle contient les informations suivantes :
+
+- `id` : l'identifiant unique de l'utilisateur•trice (UUID généré automatiquement, permet d'éviter les collisions et d'itérer sur les utilisateurs)
+- `name` : le nom d'utilisateur•trice (unique, sert également à identifier l'utilisateur•trice dans les différents cas où c'est la seule information que l'on a)
+- `password` : le mot de passe de l'utilisateur•trice (hashé, pour des raisons de sécurité, en utilisant Argon2)
+- `totp_url` : l'URL du TOTP (Time-based One-Time Password) de l'utilisateur•trice, qui permet de générer un code à usage unique pour la double authentification
+- `registrationId` : l'identifiant de l'enregistrement de l'utilisateur•trice. Fait partie du protocole Signal
+- `identityKey` : la clé d'identité publique de l'utilisateur•trice. Fait partie du protocole Signal
+- `createdAt` : la date de création de l'utilisateur•trice
+- `updatedAt` : la date de dernière mise à jour de l'utilisateur•trice
+- `tokens` : les différents jetons de rafraîchissement de l'utilisateur•trice (permet de révoquer les connexions en cas de perte ou de vol du compte)
+- `pendingMessages` : les messages en attente de l'utilisateur•trice (stockés en base de données, et récupérés dès que l'utilisateur•trice se connecte)
+- `sentMessages` : les messages envoyés par l'utilisateur•trice
+- `oneTimePreKeys` : les clés pré-clés à usage unique de l'utilisateur•trice. Fait partie du protocole Signal. Utilisées afin d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice
+- `signedPreKey` : la clé pré-clé signée de l'utilisateur•trice. Fait partie du protocole Signal
+- `MessageStatus` : les différents statuts des messages de l'utilisateur•trice (envoyé, reçu, lu)
+
+##### RefreshToken
+
+La table `RefreshToken` permet de stocker les différents jetons de rafraîchissement des utilisateur•trice•s. Elle contient les informations suivantes :
+
+- `id` : l'identifiant unique du jeton de rafraîchissement (UUID généré automatiquement)
+- `userId` : l'identifiant de l'utilisateur•trice auquel appartient le jeton de rafraîchissement
+- `value` : la valeur du jeton de rafraîchissement (unique, permet de révoquer les connexions en cas de perte ou de vol du compte)
+
+Cette table contient le minimum d'informations possibles, afin d'éviter de stocker une session côté serveur, et de garantir que l'application reste *stateless* le plus possible. Cela allège le travail du serveur et laisse la responsabilité au client de gérer son propre état, ce qui dans le cas de Missive, est un choix pertinent pour garantir la sécurité des données des utilisateur•trice•s.
+
+##### SignedPreKey
+
+La table `SignedPreKey` permet de stocker les différentes clés pré-clés signées des utilisateur•trice•s. Il y en a une seule par utilisateur•trice. Elle contient les informations suivantes :
+
+- `id` : l'identifiant unique de la clé pré-clé signée (UUID généré automatiquement)
+- `userId` : l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé signée
+- `key` : la valeur de la clé pré-clé signée (unique, encodée en base64, permet d'établir une session de chiffrement avec un•e autre utilisateur•trice)
+- `signature` : la signature de la clé pré-clé signée (permet de garantir son intégrité)
+
+##### OneTimePreKey
+
+La table `OneTimePreKey` permet de stocker les différentes clés pré-clés à usage unique des utilisateur•trice•s. Comme expliqué précédemment, ces dernières permettent d'établir une session initiale de chiffrement avec un•e autre utilisateur•trice. Il y en a plusieurs par utilisateur•trice (environ une centaine générée par utilisateur, à la création de leur compte). Elle contient les informations suivantes :
+
+- `id` : l'identifiant unique de la clé pré-clé à usage unique (UUID généré automatiquement)
+- `userId` : l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé à usage unique
+- `key` : la valeur de la clé pré-clé à usage unique (unique, encodée en base64, permet d'établir une session de chiffrement avec un•e autre utilisateur•trice)
+
+`SignedPreKey` et `OneTimePreKey` étant très similaires, leur seule différence étant la présence d'une signature pour `SignedPreKey`, le choix de les séparer en deux tables distinctes a été fait pour des raisons de clarté et de performance : `OneTimePreKey` contenant beaucoup plus de clés que `SignedPreKey`, cela permet d'avoir une des deux requêtes plus rapides, et de garantir une meilleure performance de l'application.
+
+##### PendingMessage
+
+La table `PendingMessage` permet de stocker les messages en attente des utilisateur•trice•s. Ces messages sont stockés en base de données, et sont récupérés dès que l'utilisateur•trice se connecte. Elle contient les informations suivantes :
+
+- `id` : l'identifiant unique du message en attente (UUID généré automatiquement)
+- `senderId` : l'identifiant de l'expéditeur du message
+- `receiverId` : l'identifiant du destinataire du message
+- `content` : le contenu du message (chiffré grâce au protocole Signal, encodé en base64)
+
+Les messages sont stockés de manière chiffrée, afin de garantir la sécurité des données des utilisateur•trice•s. Ils sont stockés en base de données, et sont supprimés dès qu'ils ont été récupérés par le destinataire. Cela permet d'éviter de stocker les messages en base de données, et de garantir la sécurité des données des utilisateur•trice•s.
+
+##### MessageStatus
+
+La table `MessageStatus` permet de stocker les différents statuts des messages des utilisateur•trice•s. Ces statuts permettent de savoir si un message a été envoyé, reçu, ou lu. Elle contient les informations suivantes :
+
+- `id` : l'identifiant unique du statut du message (UUID généré automatiquement)
+- `messageId` : l'identifiant du message auquel appartient le statut
+- `state` : l'état du message (envoyé, reçu, lu)
+- `senderId` : l'identifiant de l'expéditeur du message
+
+Le choix d'avoir séparé `MessageStatus` de `PendingMessage` a été fait pour des raisons de sécurité : dans le cas de Missive, il est beaucoup plus judicieux de stocker les messages temporaires le moins longtemps possible, afin d'encore plus garantir la sécurité des données des utilisateur•trice•s. Ces informations sont beaucoup moins sensibles, et une fois le message en lui-même supprimé, le statut du message ne veut plus rien dire pour un potentiel attaquant.
