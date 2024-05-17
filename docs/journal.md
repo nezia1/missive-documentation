@@ -480,3 +480,24 @@ Cette après-midi, j'ai mis en place un système au cas où l'on perde la connex
 J'ai également mis en place une récupération des messages ainsi que des statuts de lectures si il y a eu une reconnexion, pour éviter de devoir recharger l'application dans ce cas là. Tout fonctionne comme prévu, et je suis très content du résultat !
 
 La dernière chose qu'il faudrait mettre en place serait une persistence de la connexion à l'application, même hors-ligne : en effet, vu qu'un bon nombre d'opérations est possible à effectuer hors-ligne, comme consulter ses messages car ils sont stockés en local, ou envoyer un message qui sera stocké en local, il serait intéressant de pouvoir utiliser l'application même sans connexion à internet. Pour l'instant, l'application déconnecte l'utilisateur si il n'arrive pas à récupérer un jeton d'accès ou si l'une des requêtes d'authentification ne passe pas. Il faudrait donc rajouter un système permettant la reconnexion, un peu comme pour le `ChatProvider`. Il faudrait regarder tout ça demain.
+
+## 2024-06-16
+
+Aujourd'hui, j'ai pris la journée afin de me concentrer sur la documentation. Je voulais m'assurer que la partie Fonctionnement était bien expliquée, et j'ai également rajouté des réflexions qui étaient uniquement présentes dans mon journal de bord, afin d'avoir une documentation complète et précise du déroulé du projet. J'ai également rajouté des captures d'écran de l'application, afin de montrer le fonctionnement de l'application.
+
+## 2024-06-17
+
+Aujourd'hui, j'ai envie de faire fonctionner les notifications, car c'était une des parties essentielles de mon application. Je me suis rendu compte que les notifications ne fonctionnaient pas de la même manière sur téléphone et PC :
+
+- iOS/Android : un système de notifications push est disponible, ce qui permet d'envoyer une notification depuis le serveur dès que le message est reçu
+- PC : il n'y a pas de système de notifications push, il faudra donc utiliser un système de notifications locales. J'ai trouvé un package Flutter, `flutter_local_notifications`, qui permet de gérer les notifications locales sur toutes les plateformes. Il faudra donc l'implémenter pour les notifications sur PC, et garder le système de notifications push pour les téléphones.
+
+La partie PC sera un peu plus complexe, car il faudra implémenter un système de *poll* des messages : je pense réutiliser le WebSocket afin d'envoyer une notification à l'utilisateur dès que le message est reçu. La partie notifications de statut étant déjà implémentée, ajouter les notifications PC sera sûrement beaucoup plus simple. Je vais commencer par la partie téléphone.
+
+OneSignal sera utilisé afin de s'occuper des notifications téléphone : c'est un service qui propose un système de notifications unifié pour Android et iOS. Il a été retenu pour sa simplicité d'utilisation, dépendant d'un *Player ID*, qui est généré par le SDK OneSignal.
+
+Après avoir essayé OneSignal, je me suis rendu compte que le système de notifications push n'était pas aussi simple que je le pensais : je n'ai pas réussi à envoyer de notifications depuis le serveur avec. J'ai donc décidé de passer sur Firebase Cloud Messaging, un service de Firebase, qui permet de faire la même chose de manière beaucoup plus simple. Après avoir implémenté, tout fonctionne !
+
+Le seul souci qu'il me reste, et que je ne pense pas pouvoir résoudre durant le reste du travail de diplôme, car beaucoup trop de temps serait nécessaire, est le fait que iOS impose des restrictions sur les tâches de fond, et ne permettrait donc pas de déchiffrer les messages en arrière-plan. Il faudrait donc que l'utilisateur ouvre l'application pour pouvoir déchiffrer les messages, ce qui est un peu embêtant. Je suis pour l'instant obligé d'envoyer une notification générique, sans le contenu du message.
+
+En cherchant un peu comment Signal fait pour déchiffrer ses messages en fond, je me suis aperçu qu'ils utilisent un procédé assez ingénieux, les notifications silencieuses d'iOS : cela permet d'envoyer une notification sans que l'utilisateur ne la voit, et de déchiffrer le message en arrière-plan, car cela réveille l'application pendant un bref moment. Cela me semble être une solution viable, mais je ne pense pas avoir le temps de l'implémenter et préfère me concentrer sur les fonctionnalités essentielles.
