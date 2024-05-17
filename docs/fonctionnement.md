@@ -421,7 +421,7 @@ Au niveau du serveur, le WebSocket permet également de publier des mises à jou
 ```json
 {
     "messageId": "5443f5ef-9b6d-438b-9c0f-e00298725d13",
-    "state": "delivered",
+    "state": "received",
     "sender": "alice"
 }
 ```
@@ -429,7 +429,7 @@ Au niveau du serveur, le WebSocket permet également de publier des mises à jou
 Ces dernières permettent aux clients de mettre à jour le statut de leur message. Il y a trois états possibles :
 
 - `sent` : le message a été envoyé
-- `delivered` : le message a été reçu
+- `received` : le message a été reçu
 - `read` : le message a été lu
 
 Ils peuvent être soit envoyés directement depuis le serveur, dans le cas d'un envoi de message (afin d'avertir l'envoyeur que son message a bien été reçu), soit envoyés par le client, dans le cas de la lecture d'un message. Ces derniers sont soit :
