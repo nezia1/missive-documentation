@@ -534,3 +534,5 @@ Aujourd'hui, je veux impérativement faire fonctionner les notifications sur iOS
 Il reste encore quelques soucis à régler, comme le fait que les notifications Push sont seulement envoyées quand l'application est fermée (ce qui est normal, mais il faudrait aussi que ça fonctionne quand l'application est en tâche de fond). J'essaie donc de mettre à jour mon serveur, afin d'envoyer la notification dans tous les cas, et de la gérer côté client si l'application est en tâche de fond.
 
 J'ai réussi à régler le problème ! Il suffisait de les envoyer dans tous les cas. Le souci était que je n'envoyais pas de notification tant qu'il y avait une connection WebSocket, ce qui est le cas quand l'utilisateur a son application en tâche de fond.
+
+J'ai par contre remarqué des soucis au niveau de la version Android, notamment certaines personnes qui ne peuvent pas envoyer de messages. Il faudrait que je m'y penche un peu plus lundi.
