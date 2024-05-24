@@ -522,3 +522,7 @@ J'ai réussi à faire fonctionner tout ça ! J'ai réussi à déployer mon appli
 Aujourd'hui, j'ai passé la plus grande partie de ma journée à installer une machine macOS afin de pouvoir build mon application dessus, et tester si elle fonctionne correctement. J'ai réussi à le faire fonctionner, après avoir tout configuré comme il faut au niveau macOS, mais j'ai eu quelques soucis avec les dépendances de Flutter : en effet, `flutter_secure_storage` se comporte différement sur iOS, et envoie une exception si la valeur n'est pas trouvée, car l'implémentation est différente. J'ai dû légèrement modifier le code pour que ça fonctionne correctement.
 
 J'ai également eu des soucis avec le fait que les Mac soient des machines Arm64, avec les nouvelles puces M, et que les conteneurs Docker ne soient pas encore complètement supportés sur ces architectures (certaines dépendances doivent être compilées à la main). J'ai donc perdu du temps là dessus, il faudra repasser du temps dessus demain pour s'assurer que le déploiement iOS fonctionne comme le déploiement Android.
+
+## 2024-06-23
+
+Aujourd'hui, j'ai avancé sur la documentation. J'ai essayé de faire fonctionner une librairie qui me permettrait de générer une documentation OpenAPI à partir de mon code Fastify, mais je n'ai pas réussi à la faire fonctionner correctement. J'ai donc décidé de rester sur le fichier `openapi.yml` que j'ai écrit à la main, et de le mettre à jour manuellement.
