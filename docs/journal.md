@@ -526,3 +526,11 @@ J'ai également eu des soucis avec le fait que les Mac soient des machines Arm64
 ## 2024-06-23
 
 Aujourd'hui, j'ai avancé sur la documentation. J'ai essayé de faire fonctionner une librairie qui me permettrait de générer une documentation OpenAPI à partir de mon code Fastify, mais je n'ai pas réussi à la faire fonctionner correctement. J'ai donc décidé de rester sur le fichier `openapi.yml` que j'ai écrit à la main, et de le mettre à jour manuellement.
+
+## 2024-06-24
+
+Aujourd'hui, je veux impérativement faire fonctionner les notifications sur iOS. Je me suis donc penché sur le sujet, et j'ai passé la matinée à configurer le service d'Apple. J'ai réussi à obtenir un certificat de développement, et à le configurer dans mon serveur de notifications Firebase. J'ai également réussi à envoyer une notification depuis le serveur, qui est bien reçue par l'application.
+
+Il reste encore quelques soucis à régler, comme le fait que les notifications Push sont seulement envoyées quand l'application est fermée (ce qui est normal, mais il faudrait aussi que ça fonctionne quand l'application est en tâche de fond). J'essaie donc de mettre à jour mon serveur, afin d'envoyer la notification dans tous les cas, et de la gérer côté client si l'application est en tâche de fond.
+
+J'ai réussi à régler le problème ! Il suffisait de les envoyer dans tous les cas. Le souci était que je n'envoyais pas de notification tant qu'il y avait une connection WebSocket, ce qui est le cas quand l'utilisateur a son application en tâche de fond.
