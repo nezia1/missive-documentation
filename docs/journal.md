@@ -545,5 +545,6 @@ Aujourd'hui, je m'occupe de peaufiner au maximum l'application afin qu'elle soit
 - J'ai rajouté un timestamp sur l'écran des conversations afin de pouvoir s'y retrouver plus facilement
 - Possibilité de copier le nom d'utilisateur en appuyant longtemps dessus
 - Ajout d'une version de l'application en bas du menu Drawer
+- Ajout d'un badge qui indique le nombre de messages non lus dans la liste des conversations, si il y en a
 
 Le souci lié à la version Android est d'ailleurs lié à une migration du schéma Realm (ma base de données locale), qui devait être faite sur les anciennes versions de la base de données, car certaines valeurs sont maintenant requises, comme `sentAt`. Cela faisait crasher l'application si elle avait une ancienne version de la base de données. Ce ne sera pas un problème en production, et je ferais attention aux migrations locales si jamais je venais à changer le schéma.
