@@ -536,3 +536,14 @@ Il reste encore quelques soucis à régler, comme le fait que les notifications 
 J'ai réussi à régler le problème ! Il suffisait de les envoyer dans tous les cas. Le souci était que je n'envoyais pas de notification tant qu'il y avait une connection WebSocket, ce qui est le cas quand l'utilisateur a son application en tâche de fond.
 
 J'ai par contre remarqué des soucis au niveau de la version Android, notamment certaines personnes qui ne peuvent pas envoyer de messages. Il faudrait que je m'y penche un peu plus lundi.
+
+## 2024-06-27
+
+Aujourd'hui, je m'occupe de peaufiner au maximum l'application afin qu'elle soit le plus agréable à utiliser. J'avais eu quelques retours sur certaines fonctionnalités et améliorations potentielles, que j'ai donc implémenté :
+
+- J'ai trié les conversations pour que la conversation avec le message le plus récent soit en haut
+- J'ai rajouté un timestamp sur l'écran des conversations afin de pouvoir s'y retrouver plus facilement
+- Possibilité de copier le nom d'utilisateur en appuyant longtemps dessus
+- Ajout d'une version de l'application en bas du menu Drawer
+
+Le souci lié à la version Android est d'ailleurs lié à une migration du schéma Realm (ma base de données locale), qui devait être faite sur les anciennes versions de la base de données, car certaines valeurs sont maintenant requises, comme `sentAt`. Cela faisait crasher l'application si elle avait une ancienne version de la base de données. Ce ne sera pas un problème en production, et je ferais attention aux migrations locales si jamais je venais à changer le schéma.
