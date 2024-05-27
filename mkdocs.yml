@@ -135,7 +135,6 @@ markdown_extensions:
       custom_checkbox: true
   - pymdownx.tilde
 extra_css:
-  - stylesheets/disable-sidebar.css
   - stylesheets/inline-figures.css
   - stylesheets/increase-logo-size.css
   - stylesheets/align-codeblocks-left.css

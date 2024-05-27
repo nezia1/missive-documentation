@@ -1,3 +1,7 @@
+---
+hide: 
+    - navigation
+---
 # Plan de tests
 
 ## API

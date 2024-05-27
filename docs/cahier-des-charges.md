@@ -1,3 +1,7 @@
+---
+hide: 
+    - navigation
+---
 # Cahier des charges
 
 ## Contexte

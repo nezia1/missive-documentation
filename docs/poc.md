@@ -1,3 +1,7 @@
+---
+hide: 
+    - navigation
+---
 # Proof of concept
 
 Un *Proof Of Concept* (POC) est un processus qui permet de commencer le travail de diplôme en testant les technologies qui seront utilisées dans le projet. Il permet également de tester la faisabilité du projet, et de déterminer si les technologies choisies sont adaptées. L'idée est de réaliser un projet simple, mais qui implémente les fonctionnalités du projet qui ont le plus de risque de causer des points de friction.

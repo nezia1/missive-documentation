@@ -1,3 +1,7 @@
+---
+hide: 
+    - navigation
+---
 # Journal de bord
 
 ## 2024-03-27

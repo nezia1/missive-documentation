@@ -1,4 +1,7 @@
-
+---
+hide: 
+    - navigation
+---
 # Fonctionnement
 
 Le fonctionnement de Missive repose sur l'efficacité du protocole Signal, qui est décrit [sur cette page](https://signal.org/docs/). Vous trouverez ci-dessous un schéma d'utilisation classique, de la création du compte utilisateur à l'envoi et la réception d'un message.
