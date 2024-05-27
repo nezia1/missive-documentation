@@ -87,10 +87,7 @@ Arborescence de l'application (au 11 février 2024)
 J'ai également commencé à refactor le code de l'application, dont l'ajout d'un routeur et la composition de widgets indépendants et séparés par fonctionnalité. Je suis également en train de commencer à regarder pour passer sur un système de gestion d'état global comme BLoC, qui pourrait permettre de rendre la gestion de l'état de l'application plus standard, sachant que beaucoup de données seront partagées entre les différentes parties de l'application / widgets, et que cela pourrait devenir compliqué à gérer avec le temps.
 
 L'idée de BLoC est de composer des Cubit ou des Blocs, qui utilisent des *streams* afin de pouvoir réagir aux changements d'état. Ces classes permettent de gérer l'état de l'application, et de notifier les widgets qui écoutent les changements de cet état. Cela permet de rendre l'application plus prévisible, et de gérer l'état de manière plus standardisée. Voici un diagramme du fonctionnement de BLoC :
-<figure markdown>
 ![Diagramme de fonctionnement de BLoC](assets/img/bloc_architecture.png)
-<figcaption>Diagramme de fonctionnement de BLoC</figcaption>
-</figure>
 
 J'ai finalement décidé de partir sur [Provider](https://pub.dev/packages/provider), qui est une bibliothèque de gestion d'était qui est plus adaptée à mon cas d'utilisation. Elle est plus simple à utiliser, et permet de gérer l'état de manière plus simple.
 

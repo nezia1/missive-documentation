@@ -160,14 +160,8 @@ Maintenant, je suis en train de m'attaquer aux maquettes de l'application mobile
 ## 2024-05-17
 
 Aujourd'hui, j'ai continué à travailler sur les maquettes. Je commence à avoir quelque chose qui ressemble à ce que je veux, en ce qui concerne l'authentification et les conversations. Voici des captures d'écran des maquettes:
-<figure markdown="span">
-  ![Maquette de l'authentification](./assets/img/wireframe-authentication.png)
-  <figcaption>Maquette de l'authentification</figcaption>
-</figure>
-<figure markdown="span">
-  ![Maquette des écrans de conversation](./assets/img/wireframe-conversations.png)
-  <figcaption>Maquette des écrans de conversation</figcaption>
-</figure>
+![Maquette de l'authentification](./assets/img/wireframe-authentication.png)
+![Maquette des écrans de conversation](./assets/img/wireframe-conversations.png)
 
 Il me reste encore à m'occuper des maquettes de l'écran de paramètres. Accessoirement, je vais commencer à m'occuper de copier ce que j'avais sur le POC dans mon dossier `client`. Il est une bonne base sur laquelle j'avais passé beaucoup de temps, et j'aimerais bien pouvoir réutiliser ce que j'avais déjà fait.
 
@@ -281,10 +275,7 @@ En tout cas, le lancement de l'application sur l'ordinateur de l'école marche c
 
 J'ai réussi à faire fonctionner le chiffrement de bout-en-bout !! Voici une capture d'écran du processus en action:
 
-<figure markdown="span">
-  ![Chiffrement de bout-en-bout](./assets/img/e2e-screenshot.png)
-  <figcaption>Chiffrement de bout-en-bout</figcaption>
-</figure>
+![Chiffrement de bout-en-bout](./assets/img/e2e-screenshot.png)
 
 Malheureusement, en essayant d'ajouter un StreamBuilder afin de visualiser le flux des messages en temps réel, je me suis heurté à un problème : ayant du marquer les variables en "late", ce qui signifie qu'elles seront initialisées plus tard dans le code, mon interface n'attend pas la connexion au WebSocket et crashe complètement. Il sera possible de régler ça avec un FutureBuilder, un widget qui permet d'attendre la fin d'un Future avant de construire le widget. Cela nous permettra aussi d'avoir un écran de chargement pendant le processus de génération des clés, ce qui sera beaucoup plus agréable et propre pour l'expérience utilisateur.
 

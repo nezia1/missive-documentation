@@ -6,25 +6,17 @@ Le fonctionnement de Missive repose sur l'efficacité du protocole Signal, qui e
 ## Cas d'utilisation
 
 Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'utilisation typique, de la création du compte utilisateur à l'envoi et la réception d'un message. Voici un diagramme qui résume les différentes actions que l'utilisateur peut entreprendre au sein de l'application :
-<figure markdown="span">
 ![Cas d'utilisation de Missive](assets/diagrams/out/use-case.svg)
-<figcaption>Cas d'utilisation de Missive</figcaption>
-</figure>
 
 ### Création du compte
 
 La création du compte s'effectue de la manière suivante : l'utilisateur rentre ses informations, et les confirme. Un ID d'enregistrement et une paire de clés d'identités sont générées. Toutes ces informations sont ensuite envoyées à l'API (seulement la partie publique de la clé). L'API vérifie que les informations sont correctes, puis crée un compte utilisateur. Après la confirmation de la création du compte, le reste des clés nécessaires au fonctionnement du protocole sont ensuite générées, envoyées à l'API, et stockées en base de données.
 
-<figure markdown="span">
-    ![Écran de création du compte](assets/img/examples/register-screen.png){ width="400" }
-    <figcaption>Écran de création du compte</figcaption>
-</figure>
+![Écran de création du compte](assets/img/examples/register-screen.png){ width="400" }
+
 Un jeton d'accès et de rafraîchissement sont ensuite envoyés à l'utilisateur, qui lui permet de se connecter à l'application, ainsi que de rafraîchir son jeton d'accès, qui a une durée de vie de 15 minutes. Ce jeton de rafraîchissement est crucial car il est stocké en base de données avec l'ID de l'utilisateur, et peut donc être révoqué en cas de perte ou de vol du compte.
 
-<figure markdown="span">
-    ![Diagramme de séquence de la création d'un compte](assets/diagrams/out/registration.svg)
-    <figcaption>Diagramme de séquence de la création d'un compte</figcaption>
-</figure>
+![Diagramme de séquence de la création d'un compte](assets/diagrams/out/registration.svg)
 
 Une fois le compte de l'utilisateur créé, il est redirigé sur la page d'accueil de l'application, d'où commence la prochaine étape, la génération des clés.
 
@@ -32,34 +24,22 @@ Une fois le compte de l'utilisateur créé, il est redirigé sur la page d'accue
 
 Une fois que l'utilisateur arrive sur la page d'accueil, que ce soit après la création de son compte ou après s'être connecté, une vérification du statut de l'application est effectuée. Si ce compte vient d'être accédé pour la première fois sur ce périphérique, alors une génération des clés s'effectue. Ce processus permet de s'assurer que les différentes clés soient bien disponibles, et qu'il n'y ait aucun conflit.
 
-<figure markdown="span">
-    ![Diagramme de séquence de la génération des clés](assets/diagrams/out/key-generation.svg)
-    <figcaption>Diagramme de séquence de la génération des clés</figcaption>
-</figure>
+![Diagramme de séquence de la génération des clés](assets/diagrams/out/key-generation.svg)
 
 En résumé, les différentes clés privées et publiques sont générées, stockées dans le stockage sécurisé du système d'exploitation, puis envoyées à l'API pour être stockées en base de données. Il est nécessaire que tous les utilisateurs puissent avoir accès aux clés publiques d'un autre utilisateur afin d'établir une connexion et autorisation initiale. Une fois que les clés sont stockées, l'utilisateur peut commencer à envoyer et recevoir des messages.
 
-<figure markdown="span">
-    ![Écran des conversations](assets/img/examples/conversations-screen.png){ width="400" }
-    <figcaption>Écran des conversations</figcaption>
-</figure>
+![Écran des conversations](assets/img/examples/conversations-screen.png){ width="400" }
 
 ### Début de la conversation
 
 Quand un utilisateur•trice souhaite envoyer un message à un•e autre utilisateur•trice pour la première fois, il/elle dispose d'un bouton en haut à droite de l'application pour commencer une conversation. Il/elle rentre le nom de l'utilisateur•trice destinataire, qui sera cherché•e en temps réel dans la base de données. Une fois l'utilisateur•trice trouvé•e, une conversation est créée, stockée en local dans une base de données et l'utilisateur•trice peut envoyer un message. Cette dernière viendra également se rajouter sur la page d'accueil afin que l'utilisateur•trice puisse y accéder facilement.
 
-<figure markdown="span">
-    ![Écran de recherche d'un utilisateur](assets/img/examples/user-search-screen.png){ width="400" }
-    <figcaption>Écran de recherche d'un utilisateur</figcaption>
-</figure>
+![Écran de recherche d'un utilisateur](assets/img/examples/user-search-screen.png){ width="400" }
 
 ### Envoi du message
 
 Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en utilisant le protocole Signal, puis envoyé au serveur de WebSocket. Ce dernier vérifie que l'utilisateur est bien connecté, puis envoie le message à l'utilisateur destinataire. Si ce dernier est connecté, le message est directement envoyé à l'utilisateur•trice. Sinon, le message est stocké en base de données, et sera récupéré dès que l'utilisateur•trice se connectera.
-<figure markdown="span">
-    ![Écran de conversation](assets/img/examples/conversation-unread.png){ width="400" }
-    <figcaption>Écran de conversation</figcaption>
-</figure>
+![Écran de conversation](assets/img/examples/conversation-unread.png){ width="400" }
 
 À la réception de ce message par le receveur (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé s'il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au receveur pour lui indiquer qu'un nouveau message est disponible.
 
@@ -67,10 +47,7 @@ Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en util
 
 Maintenant que l'expéditeur a envoyé son message, il est temps pour le destinataire de le récupérer. Ce dernier se connecte sur son application, ou l'ouvre simplement s'il est déjà connecté. Une vérification des messages en attente est effectuée à chaque démarrage de l'application. Si le destinataire a des messages en attente, ils sont récupérés depuis l'API, déchiffrés, et affichés à l'utilisateur. Cela permet de garantir que l'utilisateur ne rate aucun message, même s'il n'était pas connecté à l'application.
 
-<figure markdown="span">
-    ![Écrans de conversation - messages lus](assets/img/examples/conversation-read.png){ width="400" }
-    <figcaption>Écrans de conversation - messages lus</figcaption>
-</figure>
+![Écrans de conversation - messages lus](assets/img/examples/conversation-read.png){ width="400" }
 
 Dans le cas où l'utilisateur était déjà présent sur l'application, le message lui est directement envoyé, et est traité en temps réel par l'application.
 
@@ -79,10 +56,7 @@ Quand l'utilisateur lit le message (le message est affiché à l'écran, dans l'
 ## Architecture
 
 L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
-<figure markdown>
 ![Schéma de l'architecture de l'application](assets/diagrams/Missive.svg)
-<figcaption>Schéma de l'architecture de l'application</figcaption>
-</figure>
 
 1. Le client envoie un message à un•e utilisateur•trice via son application. Ce message est chiffré au niveau de l'application grâce au protocole Signal.
 2. Le message est envoyé grâce à une connexion WebSocket au serveur.
@@ -118,10 +92,7 @@ Pour Missive, trois Provider sont disponibles :
 - `SignalProvider` : propose une interface plus haut niveau de mon implémentation du protocole Signal, et permet de chiffrer, déchiffrer, et signer les messages. Il interagit également avec le SecureStorage pour stocker les clés de manière sécurisée (sérialisation / désérialisation).
 - `ChatProvider` : permet de gérer la communication en temps réel avec le serveur de WebSocket.
 
-<figure markdown="span">
-    ![Mindmap du fonctionnement des Provider](assets/diagrams/out/provider-diagram.svg)
-    <figcaption>Mindmap de l'architecture des Provider</figcaption>
-</figure>
+![Mindmap du fonctionnement des Provider](assets/diagrams/out/provider-diagram.svg)
 
 Provider a été retenu pour sa simplicité, et la possibilité de séparer clairement la logique de l'interface de manière efficace.
 
@@ -354,10 +325,7 @@ Le jeton de rafraîchissement contient uniquement l'identifiant unique de l'util
 
 Ces derniers étant signés cryptographiquement via une clé privée, il est impossible de les modifier sans la clé privée correspondante. Cela permet de garantir l'intégrité des jetons, et de garantir que l'utilisateur·rice est bien celui·celle qu'il·elle prétend être. Cela permet également de ne pas avoir à gérer des sessions côté serveur, et laisse au client la responsabilité de gérer son propre état.
 
-<figure markdown="span">
-    ![Diagramme de séquence du processus d'authentification](assets/diagrams/out/authentication.svg)
-    <figcaption>Diagramme de séquence du processus d'authentification</figcaption>
-</figure>
+![Diagramme de séquence du processus d'authentification](assets/diagrams/out/authentication.svg)
 
 Le processus d'authentification est géré par le hook `authenticationHook`.
 
@@ -380,10 +348,7 @@ Voici le champ en question, qui a déjà été mentionné dans la partie Authent
 Scope d'un jeton d'accès
 
 Le processus d'autorisation est géré par le hook `authorizationHook`, qui prend également en paramètre les permissions nécessaires pour accéder à une route.
-<figure markdown="span">
-    ![Diagramme de séquence du processus d'autorisation](assets/diagrams/out/authorization.svg)
-    <figcaption>Diagramme de séquence du processus d'autorisation</figcaption>
-</figure>
+![Diagramme de séquence du processus d'autorisation](assets/diagrams/out/authorization.svg)
 
 #### Serveur WebSocket
 
@@ -424,10 +389,7 @@ Si l'utilisateur est connecté, le message est envoyé directement à l'utilisat
 
 Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé. La sécurité des données des utilisateur•trice•s est garantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une protection au niveau du contenu même du message et du transport. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
 
-<figure markdown>
 ![Diagramme du processus d'envoi d'un message](assets/diagrams/out/sending-message.svg)
-<figcaption>Diagramme du processus d'envoi d'un message</figcaption>
-</figure>
 
 ##### Gestion des statuts de messages
 
@@ -459,10 +421,7 @@ C'est un processus qui est similaire à celui de l'envoi de messages, mais qui u
 
 La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateur•trice•s, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
 
-<figure markdown>
 ![Schéma de la base de données](assets/diagrams/database.svg){ width=800 loading=lazy }
-<figcaption>Schéma de la base de données</figcaption>
-</figure>
 
 La base de données est gérée par Prisma, qui est un ORM (Object-Relational Mapper) permettant de gérer les différentes tables de manière efficace, et de gérer les relations entre les différentes tables, en représentant les tables sous forme d'un schéma générique, qui peut être ensuite converti en un grand nombre de types de base de données.
 
