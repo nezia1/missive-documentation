@@ -41,7 +41,7 @@ Quand un utilisateur•trice souhaite envoyer un message à un•e autre utilisa
 Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en utilisant le protocole Signal, puis envoyé au serveur de WebSocket. Ce dernier vérifie que l'utilisateur est bien connecté, puis envoie le message à l'utilisateur destinataire. Si ce dernier est connecté, le message est directement envoyé à l'utilisateur•trice. Sinon, le message est stocké en base de données, et sera récupéré dès que l'utilisateur•trice se connectera.
 ![Écran de conversation](assets/img/examples/conversation-unread.png){ width="400" }
 
-À la réception de ce message par le receveur (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé s'il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au receveur pour lui indiquer qu'un nouveau message est disponible.
+À la réception de ce message par le destinataire (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé s'il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au destinataire pour lui indiquer qu'un nouveau message est disponible.
 
 ### Réception du message
 
