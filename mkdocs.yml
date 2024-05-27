@@ -140,6 +140,7 @@ extra_css:
   - stylesheets/align-codeblocks-left.css
   - stylesheets/increase-figure-size.css
   - stylesheets/add-missive-brand-colors.css
+  - stylesheets/justify-paragraphs.css
   
 # Page tree
 nav:
