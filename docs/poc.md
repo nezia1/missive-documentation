@@ -46,7 +46,7 @@ Je vais finalement utiliser Bun pour le développement ainsi que l'hébergement 
 Après avoir choisi les différentes technologies, je décide de m'attaquer à la planification des routes : j'ai pensé à réaliser une API REST, avec les routes suivantes :
 
 | Méthode | Route     | Description                                            |
-|---------|-----------|--------------------------------------------------------|
+| ------- | --------- | ------------------------------------------------------ |
 | POST    | /users    | Permet à l'utilisateur de créer un compte              |
 | GET     | /users/me | Permet à l'utilisateur de récupérer son profil         |
 | DEL     | /users/me | Permet à l'utilisateur de supprimer son compte         |
@@ -82,6 +82,7 @@ Aujourd'hui, j'ai travaillé sur mon POC depuis chez moi. J'ai refait la structu
 │       └── home_screen.dart
 └── main.dart
 ```
+Arborescence de l'application (au 11 février 2024)
 
 J'ai également commencé à refactor le code de l'application, dont l'ajout d'un routeur et la composition de widgets indépendants et séparés par fonctionnalité. Je suis également en train de commencer à regarder pour passer sur un système de gestion d'état global comme BLoC, qui pourrait permettre de rendre la gestion de l'état de l'application plus standard, sachant que beaucoup de données seront partagées entre les différentes parties de l'application / widgets, et que cela pourrait devenir compliqué à gérer avec le temps.
 

@@ -29,10 +29,7 @@ Pour la base de données, j'ai décidé de partir sur un schéma qui sépare les
 J'ai mis à jour le schéma de base de données afin d'inclure ces nouvelles tables et relations.
 
 Voici le résultat :
-<figure markdown="span">
-    ![Schéma initial de la base de données](./assets/diagrams/out/database.svg)
-    <figcaption>Schéma initial de la base de données</figcaption>
-</figure>
+![Schéma initial de la base de données](./assets/diagrams/out/database.svg)
 
 Je me suis aussi occupé de rajouter des exemples de tokens dans la spécification OpenAPI, afin de simplifier la compréhension globale du projet. Journée finalement très productive, je suis content de mon avancement et me sens prêt à attaquer la suite, qui sera l'implémentation de l'API. Cependant, avant de m'y mettre, je vais encore peaufiner la documentation, et m'assurer que tout soit bien clair et défini.
 
@@ -57,10 +54,7 @@ J'ai réussi à faire fonctionner la pipeline correctement ! Il suffisait juste 
 ## 2024-05-03
 
 Aujourd'hui, je décide de m'intéresser de plus près à l'implémentation en elle-même du protocole Signal. Je n'étais pas sûr de comment nommer certaines choses, je suis donc allé voir un exemple que les développeurs de la librairie que je vais utiliser pour Flutter ont réalisé en Typescript, qui est disponible [ici](https://signal-demo.privacyresearch.io/). Leur interface est extrêmement intuitive, et explique bien comment fonctionne le protocole, ainsi de comment l'implémenter au niveau du client. Voici ci-dessous une capture d'écran de leur interface :
-<figure markdown="span">
-  ![Capture d'écran de l'interface](./assets/img/signal-web-interface.png)
-  <figcaption>Image caption</figcaption>
-</figure>
+![Capture d'écran de l'interface](./assets/img/signal-web-interface.png)
 
 Je met donc à jour ma spécification API, afin de coller à ce que j'ai vu dans l'exemple. La première chose que je vais faire est de renommer mon champ preKey en oneTimePreKey afin d'éviter les ambiguïtés.
 
@@ -132,14 +126,8 @@ Ensuite, j'ai implémenté la logique derrière l'envoi. Elle fonctionne comme c
 4. Si l'utilisateur n'est pas connecté, le serveur stocke le message dans la base de données, et informe l'envoyeur du statut du message dès qu'il est stocké
 5. Après stockage du message, le serveur WebSocket envoie une notification push au destinataire, qui lui permettra de récupérer le message. Le statut du message change également en "remis", et l'envoyeur est informé. (cette étape n'est pas encore implémentée)
 
-<figure markdown="span">
-  ![Envoi d'un message à un utilisateur connecté via Postman](./assets/img/communication-example-online-20240412.png)
-  <figcaption>Envoi d'un message à un utilisateur connecté via Postman</figcaption>
-</figure>
-<figure markdown="span">
-  ![Envoi d'un message à un utilisateur hors-ligne via Postman](./assets/img/communication-example-offline-20240412.png)
-  <figcaption>Envoi d'un message à un utilisateur hors-ligne via Postman</figcaption>
-</figure>
+| ![Envoi d'un message à un utilisateur connecté via Postman](./assets/img/communication-example-online-20240412.png) | ![Envoi d'un message à un utilisateur hors-ligne via Postman](./assets/img/communication-example-offline-20240412.png) |
+
 J'ai rencontré quelques soucis avec cette approche, et quelques points qui ne sont pour l'instant pas encore clairs:
 
 - Si le destinataire récupère le message depuis la base de données, comment informer l'envoyeur que le message a bien été reçu ? En sachant que l'idée de base était de récupérer avec une route dédiée dans l'API, et non directement dans le serveur WebSocket.
@@ -277,6 +265,7 @@ Je me suis donc penché sur le problème, et j'ai réalisé que les sessions ét
     await _secureStorage.write(key: 'sessions', value: jsonEncode(sessions));
   }
 ```
+Exemple de sérialisation des sessions
 
 Je ne m'étais pas rendu compte de mon erreur, mais le `if (sessions == null) return;` empêchait de stocker les sessions si elles n'étaient pas déjà stockées. J'ai donc enlevé cette ligne, et initialisé une Map vide si les sessions n'étaient pas déjà stockées. J'ai également rajouté une méthode pour récupérer les sessions, qui permet de les désérialiser correctement.
 
@@ -337,13 +326,9 @@ Il faudra également rajouter un ID au message, généré depuis le client, afin
 
 J'ai également rajouté un écran de chargement qui prend tout l'écran pendant le chargement des clés, afin de ne pas laisser l'utilisateur dans le flou, et de rendre le tout plus agréable à utiliser.
 
-<figure markdown>
-  ![Écran d'accueil](./assets/img/ui/2024-05-26/landing-page.png){ width="400" }
-  ![Écran de connexion - informations vides](./assets/img/ui/2024-05-26/login-empty.png){ width="400" }
-  ![Écran de connexion - informations remplies](./assets/img/ui/2024-05-26/login-info-filled.png){ width="400" }
-  ![Écran de chargement](./assets/img/ui/2024-05-26/loading-screen.png){ width="400" }
-  <figcaption>Captures d'écran de l'application</figcaption>
-</figure>
+| ![Écran d'accueil](./assets/img/ui/2024-05-26/landing-page.png){ width="400" } | ![Écran de connexion - informations vides](./assets/img/ui/2024-05-26/login-empty.png){ width="400" } |
+
+| ![Écran de connexion - informations remplies](./assets/img/ui/2024-05-26/login-info-filled.png){ width="400" } | ![Écran de chargement](./assets/img/ui/2024-05-26/loading-screen.png){ width="400" } |
 
 ## 2024-05-28
 
@@ -392,10 +377,8 @@ Aujourd'hui, je vais commencer à implémenter une recherche d'utilisateurs. J'a
 J'ai réussi à implémenter cette recherche. J'ai rajouté ma route `GET /users`, qui permet de récupérer le nom des utilisateurs que l'on recherche (sauf l'utilisateur connecté, pour éviter de pouvoir s'envoyer des messages à soi-même). J'ai également rajouté un paramètre `search` qui permet de filtrer les utilisateurs par leur nom.
 
 Ensuite, j'ai créé une page qui permet de rechercher un utilisateur, et à chaque fois que l'on tape quelque chose dans la barre de recherche, une requête est envoyée au serveur pour récupérer les utilisateurs correspondants (j'ai mis un timeout de 500ms avec une classe Debouncer, qui prend un temps en millisecondes et qui empêche de pouvoir être lancée avant la fin de ce timer). Quand on clique sur l'utilisateur auquel on souhaite envoyer un message, une session est créée avec lui grâce au SignalProvider, et l'écran de conversation est affiché.
-<figure markdown>
+
 ![Écran de recherche](./assets/img/ui/2024-06-02/user-search-screen.png)
-<figcaption>Écran de recherche</figcaption>
-</figure>
 
 Maintenant que la communication initiale peut être établie au niveau de l'interface, j'aimerais m'occuper de la récupération des messages temporaires au démarrage de l'application. Je pense rajouter une méthode dans mon ChatProvider, qui permet de récupérer ces messages, créer une session au besoin, et les stocker dans la base de données locale.
 
@@ -405,10 +388,7 @@ J'ai aussi réglé un bug assez gênant qui faisait qu'un utilisateur s'envoyait
 
 Aujourd'hui, j'ai principalement passé du temps sur quelques fioritures au niveau de la page de conversation. J'ai rajouté des timestamps pour chaque message, si ils sont séparés de plus de 5 minutes, ou la date complète si ils sont séparés de plus de 24 heures. Je me suis également occupé de créer un poster pour l'application, qui sera utilisé pour la présentation de mon projet. Voici à quoi il ressemble pour l'instant :
 
-<figure markdown>
 ![Poster de Missive](./assets/img/missive-poster-v1.png){ width="500" }
-<figcaption>Poster de Missive</figcaption>
-</figure>
 
 ## 2024-06-05
 
@@ -433,6 +413,7 @@ rules:
   - changes:
     - documentation
 ```
+Exemple de règle pour tester les changements sur le submodule
 
 ## 2024-06-07
 

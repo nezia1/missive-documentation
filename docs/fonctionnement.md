@@ -140,7 +140,8 @@ client/lib
 ├── common
 │   └── http.dart
 ├── constants
-│   └── api.dart
+│   ├── api.dart
+│   └── app_colors.dart
 ├── features
 │   ├── authentication
 │   │   ├── landing_screen.dart
@@ -152,21 +153,30 @@ client/lib
 │   │   ├── register_screen.dart
 │   │   └── totp_modal.dart
 │   ├── chat
-│   │   └── providers
-│   │       └── chat_provider.dart
-│   ├── encryption
+│   │   ├── models
+│   │   │   ├── conversation.dart
+│   │   │   ├── conversation.realm.dart
+│   │   │   ├── pending_messages.dart
+│   │   │   └── pending_messages.realm.dart
 │   │   ├── providers
-│   │   │   └── signal_provider.dart
-│   │   ├── secure_storage_identity_key_store.dart
-│   │   ├── secure_storage_pre_key_store.dart
-│   │   ├── secure_storage_session_store.dart
-│   │   └── secure_storage_signed_pre_key_store.dart
-│   └── home
-│       └── screens
-│           ├── home_screen.dart
-│           └── settings_screen.dart
+│   │   │   └── chat_provider.dart
+│   │   └── screens
+│   │       ├── conversation_screen.dart
+│   │       ├── conversations_screen.dart
+│   │       ├── message_bubble.dart
+│   │       └── user_search_screen.dart
+│   └── encryption
+│       ├── namespaced_secure_storage.dart
+│       ├── providers
+│       │   └── signal_provider.dart
+│       ├── secure_storage_identity_key_store.dart
+│       ├── secure_storage_pre_key_store.dart
+│       ├── secure_storage_session_store.dart
+│       └── secure_storage_signed_pre_key_store.dart
+├── firebase_options.dart
 └── main.dart
 ```
+Arborescence de l'application
 
 Comme vous pouvez le voir, l'application est divisée en plusieurs parties, en utilisant l'approche *feature-first* : chaque fonctionnalité a son propre dossier, et est organisée de la même manière, avec les écrans séparés des providers. Cela permet de voir rapidement les différentes parties de l'application, de séparer au maximum la logique de l'interface, et m'a beaucoup aidé lors du développement.
 
@@ -233,6 +243,7 @@ class SecureStoragePreKeyStore implements PreKeyStore {
   // Autres méthodes (storePreKey, removePreKey, containsPreKey)...
 }
 ```
+Exemple d'implémentation du store PreKeyStore
 
 Comme vous pouvez le voir, la méthode loadPreKey s'occupe de désérialiser les clés depuis le stockage sécurisé, et de les renvoyer sous forme de PreKeyRecord, qui est un objet de la bibliothèque `libsignal_protocol_dart`.
 
@@ -272,6 +283,7 @@ class SignalProvider extends ChangeNotifier {
     }
 }
 ```
+Méthode encrypt de SignalProvider
 
 Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores pour chiffrer un message, en instanciant un `SessionCipher`. Cette classe est la classe principale de la bibliothèque, et permet de chiffrer / déchiffrer les messages en utilisant les différentes clés stockées dans les stores. Elle s'occupe automatiquement d'utiliser les différentes méthodes des stores pour récupérer les clés nécessaires, et de les utiliser pour chiffrer le message.
 
@@ -331,6 +343,7 @@ Le contenu d'un jeton d'accès est le suivant :
   "exp": 1712661871
 }
 ```
+Contenu d'un jeton d'accès
 
 - `scope` : les différentes permissions de l'utilisateur·rice
 - `iat` : l'heure à laquelle le jeton a été émis (issued at)
@@ -364,6 +377,7 @@ Voici le champ en question, qui a déjà été mentionné dans la partie Authent
     ]
 }
 ```
+Scope d'un jeton d'accès
 
 Le processus d'autorisation est géré par le hook `authorizationHook`, qui prend également en paramètre les permissions nécessaires pour accéder à une route.
 <figure markdown="span">
@@ -399,6 +413,7 @@ Une fois la connexion établie, l'utilisateur·rice peut envoyer des messages à
     "content": "This is an encrypted test message"
 }
 ```
+Structure d'un message
 
 Des informations sont ensuite ajoutées au message :
 
@@ -425,6 +440,7 @@ Au niveau du serveur, le WebSocket permet également de publier des mises à jou
     "sender": "alice"
 }
 ```
+Structure d'un message de statut
 
 Ces dernières permettent aux clients de mettre à jour le statut de leur message. Il y a trois états possibles :
 
@@ -459,7 +475,7 @@ Le choix d'une base de données SQL a été fait car il n'y avait aucune nécess
 La table `User` permet de stocker les différents utilisateur•trice•s de l'application. Elle contient les informations suivantes :
 
 | Colonne           | Description                                                                                                                                                                              |
-|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`              | l'identifiant unique de l'utilisateur•trice (UUID généré automatiquement, permet d'éviter les collisions et d'itérer sur les utilisateurs)                                               |
 | `name`            | le nom d'utilisateur•trice (unique, sert également à identifier l'utilisateur•trice dans les différents cas où c'est la seule information que l'on a)                                    |
 | `password`        | le mot de passe de l'utilisateur•trice (hashé, pour des raisons de sécurité, en utilisant Argon2)                                                                                        |
@@ -480,7 +496,7 @@ La table `User` permet de stocker les différents utilisateur•trice•s de l'a
 La table `RefreshToken` permet de stocker les différents jetons de rafraîchissement des utilisateur•trice•s. Elle contient les informations suivantes :
 
 | Colonne  | Description                                                                                                            |
-|----------|------------------------------------------------------------------------------------------------------------------------|
+| -------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `id`     | l'identifiant unique du jeton de rafraîchissement (UUID généré automatiquement)                                        |
 | `userId` | l'identifiant de l'utilisateur•trice auquel appartient le jeton de rafraîchissement                                    |
 | `value`  | la valeur du jeton de rafraîchissement (unique, permet de révoquer les connexions en cas de perte ou de vol du compte) |
@@ -491,10 +507,10 @@ Cette table contient le minimum d'informations possibles, afin d'éviter de stoc
 
 La table `SignedPreKey` permet de stocker les différentes clés pré-clés signées des utilisateur•trice•s. Il y en a une seule par utilisateur•trice. Elle contient les informations suivantes :
 
-| Colonne     | Description                                                                                                                                   |
-|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`        | l'identifiant unique de la clé pré-clé signée (UUID généré automatiquement)                                                                   |
-| `userId`    | l
+| Colonne  | Description                                                                 |
+| -------- | --------------------------------------------------------------------------- |
+| `id`     | l'identifiant unique de la clé pré-clé signée (UUID généré automatiquement) |
+| `userId` | l                                                                           |
 
 'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé signée                                                                  |
 | `keyId`     | l'identifiant unique de la clé pré-clé signée (généré automatiquement, fait partie du protocole Signal)                                        |
@@ -506,38 +522,38 @@ La table `SignedPreKey` permet de stocker les différentes clés pré-clés sign
 
 La table `OneTimePreKey` permet de stocker les différentes clés pré-clés à usage unique des utilisateur•trice•s. Elle contient les informations suivantes :
 
-| Colonne     | Description                                                                                                                                    |
-|-------------|------------------------------------------------------------------------------------------------------------------------------------------------|
-| `id`        | l'identifiant unique de la clé pré-clé à usage unique (UUID généré automatiquement)                                                            |
-| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé à usage unique                                                           |
-| `keyId`     | l'identifiant unique de la clé pré-clé à usage unique (généré automatiquement, fait partie du protocole Signal)                                 |
-| `publicKey` | la clé publique de la clé pré-clé à usage unique (permet d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice)      |
-| `createdAt` | la date de création de la clé pré-clé à usage unique                                                                                           |
+| Colonne     | Description                                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`        | l'identifiant unique de la clé pré-clé à usage unique (UUID généré automatiquement)                                                       |
+| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé à usage unique                                                      |
+| `keyId`     | l'identifiant unique de la clé pré-clé à usage unique (généré automatiquement, fait partie du protocole Signal)                           |
+| `publicKey` | la clé publique de la clé pré-clé à usage unique (permet d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice) |
+| `createdAt` | la date de création de la clé pré-clé à usage unique                                                                                      |
 
 ##### PendingMessage
 
 La table `PendingMessage` permet de stocker les différents messages en attente des utilisateur•trice•s. Elle contient les informations suivantes :
 
-| Colonne     | Description                                                                                                 |
-|-------------|-------------------------------------------------------------------------------------------------------------|
-| `id`        | l'identifiant unique du message en attente (UUID généré automatiquement)                                    |
-| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient le message en attente                                |
-| `senderId`  | l'identifiant de l'utilisateur•trice qui a envoyé le message en attente                                     |
-| `content`   | le contenu du message en attente (chiffré, pour des raisons de sécurité)                                    |
-| `createdAt` | la date de création du message en attente                                                                   |
+| Colonne     | Description                                                                  |
+| ----------- | ---------------------------------------------------------------------------- |
+| `id`        | l'identifiant unique du message en attente (UUID généré automatiquement)     |
+| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient le message en attente |
+| `senderId`  | l'identifiant de l'utilisateur•trice qui a envoyé le message en attente      |
+| `content`   | le contenu du message en attente (chiffré, pour des raisons de sécurité)     |
+| `createdAt` | la date de création du message en attente                                    |
 
 ##### MessageStatus
 
 La table `MessageStatus` permet de stocker les différents statuts des messages. Elle contient les informations suivantes :
 
-| Colonne      | Description                                                                                              |
-|--------------|----------------------------------------------------------------------------------------------------------|
-| `id`         | l'identifiant unique du statut de message (UUID généré automatiquement)                                  |
-| `userId`     | l'identifiant de l'utilisateur•trice auquel appartient le statut de message                              |
-| `messageId`  | l'identifiant du message auquel appartient le statut de message                                          |
-| `state`      | l'état du message (envoyé, reçu, lu)                                                                     |
-| `createdAt`  | la date de création du statut de message                                                                 |
-| `updatedAt`  | la date de dernière mise à jour du statut de message                                                     |
+| Colonne     | Description                                                                 |
+| ----------- | --------------------------------------------------------------------------- |
+| `id`        | l'identifiant unique du statut de message (UUID généré automatiquement)     |
+| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient le statut de message |
+| `messageId` | l'identifiant du message auquel appartient le statut de message             |
+| `state`     | l'état du message (envoyé, reçu, lu)                                        |
+| `createdAt` | la date de création du statut de message                                    |
+| `updatedAt` | la date de dernière mise à jour du statut de message                        |
 
 ## Justifications techniques et réflexions
 

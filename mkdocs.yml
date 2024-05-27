@@ -87,6 +87,15 @@ plugins:
       output_folder: 'out'
       input_folder: 'src'
   - swagger-ui-tag
+  - table-of-figures:
+      title_label: Table des figures
+      on_pair: true
+      show_pair_description_arrows: true
+      show_type: true
+      show_section: true
+      pair_type_name: Images
+      on_codeblock: true 
+      on_table: true
 # Extensions
 markdown_extensions:
   - abbr
@@ -138,3 +147,4 @@ nav:
   - API client: https://anthony-rdrgz.docs.ictge.ch/missive/client-api
   - Plan de tests: testing.md
   - Journal de bord: journal.md
+  - Figures: figures.md
