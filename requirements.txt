@@ -110,9 +110,7 @@ rpmautospec==0.6.3
 rpmautospec-core==0.1.4
 s3transfer==0.10.1
 SecretStorage==3.3.3
-selinux @ file:///builddir/build/BUILD/libselinux-3.6/src
 sentry-sdk==1.45.0
-sepolicy @ file:///builddir/build/BUILD/selinux-3.6/python/sepolicy
 setools==4.5.1
 setuptools==69.0.3
 shtab==1.6.1
