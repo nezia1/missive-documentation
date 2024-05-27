@@ -44,14 +44,14 @@ theme:
     # - toc.integrate
   palette:
     - scheme: default
-      primary: deep purple
-      accent: purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
-      primary: deep purple
-      accent: purple
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -139,6 +139,7 @@ extra_css:
   - stylesheets/increase-logo-size.css
   - stylesheets/align-codeblocks-left.css
   - stylesheets/increase-figure-size.css
+  - stylesheets/add-missive-brand-colors.css
   
 # Page tree
 nav:
