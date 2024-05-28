@@ -524,3 +524,12 @@ Aujourd'hui, je m'occupe de peaufiner au maximum l'application afin qu'elle soit
 - Ajout d'un badge qui indique le nombre de messages non lus dans la liste des conversations, si il y en a
 
 Le souci lié à la version Android est d'ailleurs lié à une migration du schéma Realm (ma base de données locale), qui devait être faite sur les anciennes versions de la base de données, car certaines valeurs sont maintenant requises, comme `sentAt`. Cela faisait crasher l'application si elle avait une ancienne version de la base de données. Ce ne sera pas un problème en production, et je ferais attention aux migrations locales si jamais je venais à changer le schéma.
+
+## 2024-06-28
+
+Aujourd'hui, je me suis décidé à déplacer le déploiement depuis DigitalOcean vers Jelastic Cloud, afin d'avoir les données stockées en Suisse. J'ai donc commencé à regarder comment je pourrais déployer mon application sur Jelastic, et j'ai commencé à le faire. J'ai réussi à déployer le serveur Prisma, le serveur WebSocket, et le client Flutter, et tout fonctionne comme prévu. J'ai eu beaucoup de soucis ce matin, notamment avec la gestion des secrets et des configurations avec Docker Swarm. J'ai décidé d'utiliser les configs de Docker Swarm, qui permettent de stocker des configurations dans le cluster, et de les utiliser dans les conteneurs. Cela m'a permis de stocker la configuration Caddy afin de la séparer complètement du code source de l'application.
+
+Je vais également m'occuper de mettre en place une réplication, qui permettra d'effectuer un *load balancing*. J'aimerais aussi mettre en place une réplication des bases de données, car mon instance Jelastic Cloud possède deux machines dans la swarm.
+
+La réplication a été mise en place au niveau de l'application. En revanche, c'est un peu plus complexe pour la base de données, et cela nécéssite des scripts de backup et de restauration, qui ne sont pas encore implémentés. Il faudra que je m'y penche un peu plus tard, si j'ai le temps. En tout cas, pour l'instant, l'application tourne sur trois répliques sur les serveurs d'Infomaniak !
+![Missive sur Jelastic Cloud](./assets/img/2024-06-28/jelastic-cloud.png){ width=650 }
