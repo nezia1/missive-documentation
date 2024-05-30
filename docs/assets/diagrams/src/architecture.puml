@@ -1,0 +1,20 @@
+@startuml architecture
+package "Client" {
+    [Flutter Application]
+}
+
+package "Server" {
+    [REST API]
+    [WebSocket Server]
+}
+
+package "Database" {
+    [PostgreSQL]
+}
+
+[Flutter Application] -> [REST API] : Account management 
+[Flutter Application] -> [REST API] : Public key retrieval/storage requests
+[Flutter Application] -> [WebSocket Server] : Real-time messaging
+[REST API] -> [PostgreSQL] : Account data & public key storage
+[WebSocket Server] -> [PostgreSQL] : Pending message storage
+@enduml

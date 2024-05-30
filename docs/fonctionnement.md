@@ -6,10 +6,10 @@ hide:
 
 Le fonctionnement de Missive repose sur l'efficacité du protocole Signal, qui est décrit [sur cette page](https://signal.org/docs/). Vous trouverez ci-dessous un schéma d'utilisation classique, de la création du compte utilisateur à l'envoi et la réception d'un message.
 
+![Schéma de l'architecture de l'application](assets/diagrams/Missive.svg)
 ## Cas d'utilisation
 
-Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'utilisation typique, de la création du compte utilisateur à l'envoi et la réception d'un message. Voici un diagramme qui résume les différentes actions que l'utilisateur peut entreprendre au sein de l'application :
-![Cas d'utilisation de Missive](assets/diagrams/out/use-case.svg)
+Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'utilisation typique, de la création du compte utilisateur à l'envoi et la réception d'un message. 
 
 ### Création du compte
 
@@ -59,7 +59,7 @@ Quand l'utilisateur lit le message (le message est affiché à l'écran, dans l'
 ## Architecture
 
 L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
-![Schéma de l'architecture de l'application](assets/diagrams/Missive.svg)
+![Diagramme de composants de l'application](assets/diagrams/out/architecture.svg)
 
 1. Le client envoie un message à un•e utilisateur•trice via son application. Ce message est chiffré au niveau de l'application grâce au protocole Signal.
 2. Le message est envoyé grâce à une connexion WebSocket au serveur.
