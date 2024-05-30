@@ -1,8 +1,8 @@
 ---
-hide: 
-    - navigation
+hide: navigation
 ---
 # Plan de tests
+
 
 ## API
 
@@ -26,14 +26,14 @@ Toutes les requêtes nécessitent une authentification par token Bearer, sauf la
 | POST /tokens             | POST    | Authentifier l'utilisateur et fournir tokens       | Gérer l'authentification avec 2FA                  | 202 Accepted   | OK     | Élevé  |
 | PUT /tokens              | PUT     | Rafraîchir le token d'accès                        | Vérifier la mise à jour du token d'accès           | 200 OK         | OK     | Élevé  |
 | DELETE /tokens           | DELETE  | Révoquer un refresh token                          | Vérifier la révocation du refresh token            | 204 No Content | X      | Élevé  |
-| POST /users              | POST    | Créer un compte utilisateur                        | Vérifier la création de compte                     | 204 No Content | X      | Élevé  |
-| GET /users/{id}          | GET     | Obtenir les données d'un utilisateur               | Vérifier la récupération des données utilisateur   | 200 OK         | X      | Élevé  |
-| DELETE /users/{id}       | DELETE  | Supprimer le profil d'un utilisateur               | Vérifier la suppression du profil utilisateur      | 204 No Content | X      | Élevé  |
-| POST /users/{id}/keys    | POST    | Stocker un lot de pré-clés                         | Vérifier le stockage des pré-clés                  | 204 No Content | X      | Moyen  |
-| GET /users/{id}/keys     | GET     | Récupérer les pré-clés d'un utilisateur            | Vérifier la récupération des pré-clés              | 200 OK         | X      | Moyen  |
-| PATCH /users/{id}/keys   | PATCH   | Mettre à jour la pré-clé signée d'un utilisateur   | Vérifier la mise à jour de la pré-clé signée       | 204 No Content | X      | Moyen  |
-| GET /users/{id}/messages | GET     | Récupérer les messages en attente d'un utilisateur | Vérifier la récupération des messages en attente   | 200 OK         | X      | Moyen  |
-| GET /users/{id}/messages | GET     | Récupérer les messages en attente d'un utilisateur | Vérifier la suppression après récupération         | 200 OK         | X      | Moyen  |
+| POST /users              | POST    | Créer un compte utilisateur                        | Vérifier la création de compte                     | 204 No Content | OK     | Élevé  |
+| GET /users/{id}          | GET     | Obtenir les données d'un utilisateur               | Vérifier la récupération des données utilisateur   | 200 OK         | OK     | Élevé  |
+| DELETE /users/{id}       | DELETE  | Supprimer le profil d'un utilisateur               | Vérifier la suppression du profil utilisateur      | 204 No Content | OK     | Élevé  |
+| POST /users/{id}/keys    | POST    | Stocker un lot de pré-clés                         | Vérifier le stockage des pré-clés                  | 204 No Content | OK     | Moyen  |
+| GET /users/{id}/keys     | GET     | Récupérer les pré-clés d'un utilisateur            | Vérifier la récupération des pré-clés              | 200 OK         | OK     | Moyen  |
+| PATCH /users/{id}/keys   | PATCH   | Mettre à jour la pré-clé signée d'un utilisateur   | Vérifier la mise à jour de la pré-clé signée       | 204 No Content | OK     | Moyen  |
+| GET /users/{id}/messages | GET     | Récupérer les messages en attente d'un utilisateur | Vérifier la récupération des messages en attente   | 200 OK         | OK     | Moyen  |
+| GET /users/{id}/messages | GET     | Récupérer les messages en attente d'un utilisateur | Vérifier la suppression après récupération         | 200 OK         | OK     | Moyen  |
 
 #### Notes supplémentaires
 
@@ -69,4 +69,63 @@ Ce plan détaille les tests fonctionnels prévus pour valider les fonctionnalit�
 | Envoyer le message directement si le récepteur est en ligne | Vérifier l'envoi en temps réel                       | 200 OK                  | OK     | Élevé  |
 | Mettre à jour le statut du message à 'envoyé'               | Vérifier la mise à jour du statut après l'envoi      | 200 OK                  | OK     | Moyen  |
 | Mettre à jour le statut du message à 'reçu'                 | Vérifier la mise à jour du statut après la réception | 200 OK                  | OK     | Moyen  |
-| Mettre à jour le statut du message à 'lu'                   | Vérifier la mise à jour du statut après lecture      | 200 OK                  | X      | Moyen  |
+| Mettre à jour le statut du message à 'lu'                   | Vérifier la mise à jour du statut après lecture      | 200 OK                  | OK     | Moyen  |
+
+
+#### Historique
+
+- 2024-03-29 : Les routes `POST /tokens`, `PUT /tokens` sont opérationnelles et validées.
+- 2024-05-02 : Validation des routes `POST /users/{id}/keys`, `GET /users/{id}/keys`.
+- 2024-05-16 : Amélioration de la gestion des WebSocket et validation des tests d'envoi et de réception de messages.
+- 2024-06-03 : Refactoring et validation des tests de mise à jour des statuts des messages.
+- 2024-06-05 : Documentation du code avec docstrings.
+- 2024-06-08 : Implémentation de la gestion des WebSocket 
+- 2024-06-13 : Implémentation des tests de mise à jour des statuts des messages à "lu".
+- 2024-06-15 : Validation de la reconnexion automatique et stockage temporaire des messages.
+
+### Plan de tests
+
+## Client
+
+### Introduction
+
+Ce plan détaille les tests fonctionnels prévus pour valider les fonctionnalités du client Missive, développé en Flutter, qui gère l'authentification des utilisateurs, la communication sécurisée via le protocole Signal, et l'envoi/réception de messages en temps réel.
+
+### URL
+**Production** : `wss://missive.nezia.dev`
+### Scénarios de Test
+
+| Fonctionnalité                                 | Description                                              | Objectif                                                       | Statut | Impact |
+| ---------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------- | ------ | ------ |
+| Connexion utilisateur                          | Authentifier un utilisateur avec ses identifiants        | Vérifier l'authentification et la remise de tokens             | OK     | Élevé  |
+| Création de compte utilisateur                 | Créer un nouveau compte utilisateur                      | Vérifier la création de compte et l'initialisation des clés    | OK     | Élevé  |
+| Récupération des données utilisateur           | Obtenir les informations de l'utilisateur connecté       | Vérifier la récupération des données utilisateur               | OK     | Élevé  |
+| Déconnexion utilisateur                        | Déconnecter l'utilisateur et révoquer les tokens         | Vérifier la déconnexion et la révocation des tokens            | OK     | Élevé  |
+| Envoi de message                               | Envoyer un message chiffré à un autre utilisateur        | Vérifier l'envoi et le chiffrement des messages                | OK     | Élevé  |
+| Réception de message                           | Recevoir un message chiffré d'un autre utilisateur       | Vérifier la réception et le déchiffrement des messages         | OK     | Élevé  |
+| Gestion des clés publiques                     | Synchroniser et mettre à jour les clés publiques         | Vérifier la synchronisation et la mise à jour des clés         | OK     | Moyen  |
+| Stockage et récupération des messages en local | Stocker et récupérer les messages en local               | Vérifier la persistance des messages en local                  | OK     | Moyen  |
+| Reconnexion automatique                        | Reconnecter automatiquement en cas de perte de connexion | Vérifier la reconnexion automatique et la reprise des messages | OK     | Moyen  |
+| Gestion des notifications                      | Recevoir des notifications push en arrière-plan          | Vérifier la réception des notifications                        | OK     | Moyen  |
+| Statut des messages                            | Mettre à jour le statut des messages (envoyé, reçu, lu)  | Vérifier la mise à jour des statuts des messages               | OK     | Moyen  |
+| Interface utilisateur                          | Afficher les messages et interactions utilisateur        | Vérifier la bonne présentation des messages et des statuts     | OK     | Moyen  |
+
+#### Historique
+
+- 2024-03-27 : Mise en place de l'environnement de développement et configuration initiale.
+- 2024-05-17 : Validation de l'interface de connexion et des conversations.
+- 2024-05-18 : Implémentation du stockage sécurisé des clés publiques.
+- 2024-05-21 : Révision du stockage des clés publiques et validation de la création de sessions chiffrées.
+- 2024-05-22 : Validation de la connexion WebSocket et de l'envoi/réception de messages chiffrés.
+- 2024-05-23 : Gestion de la persistance des messages locaux avec Hive.
+- 2024-05-25 : Validation de l'envoi et de la réception de messages avec mise à jour des statuts.
+- 2024-05-26 : Amélioration de l'interface utilisateur.
+- 2024-06-01 : Validation de l'écran de conversations.
+- 2024-06-02 : Implémentation de la recherche d'utilisateurs.
+- 2024-06-03 : Validation de la récupération et du stockage des messages temporaires.
+- 2024-06-07 : Validation des notifications push avec Firebase.
+- 2024-06-13 : Validation des tests de mise à jour des statuts des messages à "lu".
+- 2024-06-15 : Validation de la reconnexion automatique et du stockage temporaire des messages.
+- 2024-06-16 : Documentation et plan de tests.
+- 2024-06-17 : Validation des notifications sur iOS et Android.
+- 2024-06-27 : Déploiement sur Jelastic Cloud.

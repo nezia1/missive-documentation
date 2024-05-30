@@ -533,3 +533,7 @@ Je vais également m'occuper de mettre en place une réplication, qui permettra 
 
 La réplication a été mise en place au niveau de l'application. En revanche, c'est un peu plus complexe pour la base de données, et cela nécéssite des scripts de backup et de restauration, qui ne sont pas encore implémentés. Il faudra que je m'y penche un peu plus tard, si j'ai le temps. En tout cas, pour l'instant, l'application tourne sur trois répliques sur les serveurs d'Infomaniak !
 ![Missive sur Jelastic Cloud](./assets/img/2024-06-28/jelastic-cloud.png){ width=650 }
+
+## 2024-06-30
+
+Aujourd'hui, c'est une journée principalement documentation. Le projet étant quasiment terminé, il est temps de mettre à jour la documentation, et de la rendre la plus complète possible. J'ai commencé par travailler sur le plan de tests, en rajoutant les tests du client ainsi qu'un historique afin de pouvoir suivre la progression du projet de manière plus simple.
