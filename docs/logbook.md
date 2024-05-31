@@ -537,3 +537,11 @@ La réplication a été mise en place au niveau de l'application. En revanche, c
 ## 2024-06-30
 
 Aujourd'hui, c'est une journée principalement documentation. Le projet étant quasiment terminé, il est temps de mettre à jour la documentation, et de la rendre la plus complète possible. J'ai commencé par travailler sur le plan de tests, en rajoutant les tests du client ainsi qu'un historique afin de pouvoir suivre la progression du projet de manière plus simple.
+
+## 2024-06-31
+
+Aujourd'hui, il est temps de s'attaquer aux tests unitaires. Ces derniers étant je trouve assez peu pertinents au niveau du serveur, j'ai décidé de les refaire en appliquant des principes solides de modularité et de testabilité.
+
+Pour commencer, j'ai réécrit des parties du code afin de le rendre plus modulaire : certaines parties utilisaient des fonctions en interne, comme mon `authenticationHook`, par lequel j'ai décidé de commencer. J'ai fait en sorte qu'on puisse y injecter en tant que dépendance la fonction `verifyAndDecodeScopedJWT`, afin de pouvoir lui faire retourner une valeur attendue. J'ai aussi du modifier mon plugin Fastify qui me permettait d'avoir Prisma à `fastify.prisma`, afin qu'il puisse prendre une instance optionnelle personnalisée afin de pouvoir la mock complètement.
+
+Malheureusement, je me suis heurté à de nombreux problèmes, qui sont principalement liés au mock : en effet, il s'est avéré que mocker mon client Prisma s'est avéré beaucoup plus complexe que prévu, et les différents essais entre différentes librairies de mock n'ont pas vraiment aidé. Je vais essayer de m'y pencher lundi, mais je pense que le fait que j'utilise Prisma comme plugin Fastify pose beaucoup de problèmes. Il faudrait que j'essaie d'utiliser une instance singleton afin de simplifier le processus.
