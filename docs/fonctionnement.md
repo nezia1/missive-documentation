@@ -75,9 +75,7 @@ Le fonctionnement technique de ces différentes parties est détaillé ci-dessou
 
 ### Client
 
-Le client est l'application mobile, réalisée en Flutter. Il est le point d'entrée de l'utilisateur·rice, et permet de communiquer avec l'API et le serveur de WebSocket. Il permet aussi de gérer le chiffrement, le déchiffrement, et la signature des messages. Flutter
-
- a été retenu pour sa rapidité de développement, son expérience développeur, sa facilité de déploiement, et sa capacité à gérer les différentes plateformes (iOS, Android, Web, Desktop). Il permet également de gérer les mises à jour de manière efficace, et de gérer les différentes versions de l'application.
+Le client est l'application mobile, réalisée en Flutter. Il est le point d'entrée de l'utilisateur·rice, et permet de communiquer avec l'API et le serveur de WebSocket. Il permet aussi de gérer le chiffrement, le déchiffrement, et la signature des messages. Flutter a été retenu pour sa rapidité de développement, son expérience développeur, sa facilité de déploiement, et sa capacité à gérer les différentes plateformes (iOS, Android, Web, Desktop). Il permet également de gérer les mises à jour de manière efficace, et de gérer les différentes versions de l'application.
 
 #### Concepts Flutter
 
@@ -516,6 +514,18 @@ La table `MessageStatus` permet de stocker les différents statuts des messages.
 | `state`     | l'état du message (envoyé, reçu, lu)                                        |
 | `createdAt` | la date de création du statut de message                                    |
 | `updatedAt` | la date de dernière mise à jour du statut de message                        |
+
+## Intégration continue 
+
+Missive possède une pipeline d'intégration continue, gérée par un fichier `.gitlab-ci.yml`. Ce dernier est configuré pour être activé à chaque push la branche `main`, et se charge d'effectuer les opérations suivantes : 
+
+1. Tests unitaires du serveur
+2. Tests unitaires du client
+3. Génération de la documentation d'API du client
+4. Génération de la documentation mkdocs
+5. Déploiement sur pages
+
+Les tests unitaires du serveur et du client se déclenchent seulement si il y a eu des changements dans leurs dossiers respectifs, afin d'éviter d'effectuer des pipelines redondantes. Il n'a pas été possible de faire la même chose pour la documentation du client et du serveur, car ces derniers dépendent l'un de l'autre (la documentation du client se situe dans un sous-dossier du Gitlab Pages du serveur, afin de pouvoir être accessible facilement via le même domaine).
 
 ## Justifications techniques et réflexions
 
