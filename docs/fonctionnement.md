@@ -15,7 +15,7 @@ Pour mieux comprendre le fonctionnement global, nous allons étudier un cas d'ut
 
 La création du compte s'effectue de la manière suivante : l'utilisateur rentre ses informations, et les confirme. Un ID d'enregistrement et une paire de clés d'identités sont générées. Toutes ces informations sont ensuite envoyées à l'API (seulement la partie publique de la clé). L'API vérifie que les informations sont correctes, puis crée un compte utilisateur. Après la confirmation de la création du compte, le reste des clés nécessaires au fonctionnement du protocole sont ensuite générées, envoyées à l'API, et stockées en base de données.
 
-![Écran de création du compte](assets/img/examples/register-screen.png){ width="400" }
+![Écran de création du compte](assets/img/examples/register-screen.png){ width="350" }
 
 Un jeton d'accès et de rafraîchissement sont ensuite envoyés à l'utilisateur, qui lui permet de se connecter à l'application, ainsi que de rafraîchir son jeton d'accès, qui a une durée de vie de 15 minutes. Ce jeton de rafraîchissement est crucial car il est stocké en base de données avec l'ID de l'utilisateur, et peut donc être révoqué en cas de perte ou de vol du compte.
 
@@ -31,18 +31,18 @@ Une fois que l'utilisateur arrive sur la page d'accueil, que ce soit après la c
 
 En résumé, les différentes clés privées et publiques sont générées, stockées dans le stockage sécurisé du système d'exploitation, puis envoyées à l'API pour être stockées en base de données. Il est nécessaire que tous les utilisateurs puissent avoir accès aux clés publiques d'un autre utilisateur afin d'établir une connexion et autorisation initiale. Une fois que les clés sont stockées, l'utilisateur peut commencer à envoyer et recevoir des messages.
 
-![Écran des conversations](assets/img/examples/conversations-screen.png){ width="400" }
+![Écran des conversations](assets/img/examples/conversations-screen.png){ width="350" }
 
 ### Début de la conversation
 
 Quand un utilisateur•trice souhaite envoyer un message à un•e autre utilisateur•trice pour la première fois, il/elle dispose d'un bouton en haut à droite de l'application pour commencer une conversation. Il/elle rentre le nom de l'utilisateur•trice destinataire, qui sera cherché•e en temps réel dans la base de données. Une fois l'utilisateur•trice trouvé•e, une conversation est créée, stockée en local dans une base de données et l'utilisateur•trice peut envoyer un message. Cette dernière viendra également se rajouter sur la page d'accueil afin que l'utilisateur•trice puisse y accéder facilement.
 
-![Écran de recherche d'un utilisateur](assets/img/examples/user-search-screen.png){ width="400" }
+![Écran de recherche d'un utilisateur](assets/img/examples/user-search-screen.png){ width="350" }
 
 ### Envoi du message
 
 Lorsque l'utilisateur•trice envoie un message, ce dernier est chiffré en utilisant le protocole Signal, puis envoyé au serveur de WebSocket. Ce dernier vérifie que l'utilisateur est bien connecté, puis envoie le message à l'utilisateur destinataire. Si ce dernier est connecté, le message est directement envoyé à l'utilisateur•trice. Sinon, le message est stocké en base de données, et sera récupéré dès que l'utilisateur•trice se connectera.
-![Écran de conversation](assets/img/examples/conversation-unread.png){ width="400" }
+![Écran de conversation](assets/img/examples/conversation-unread.png){ width="350" }
 
 À la réception de ce message par le destinataire (la réception étant soit en temps réel si l'utilisateur est sur l'application, soit en différé s'il n'est pas connecté), l'envoyeur est directement notifié, et le changement de statut est reflété sur l'application par des petites coches à droite du message. Une notification push est également envoyée au destinataire pour lui indiquer qu'un nouveau message est disponible.
 
@@ -526,6 +526,29 @@ Missive possède une pipeline d'intégration continue, gérée par un fichier `.
 5. Déploiement sur pages
 
 Les tests unitaires du serveur et du client se déclenchent seulement si il y a eu des changements dans leurs dossiers respectifs, afin d'éviter d'effectuer des pipelines redondantes. Il n'a pas été possible de faire la même chose pour la documentation du client et du serveur, car ces derniers dépendent l'un de l'autre (la documentation du client se situe dans un sous-dossier du Gitlab Pages du serveur, afin de pouvoir être accessible facilement via le même domaine).
+
+## Déploiement 
+
+Le déploiement du serveur de Missive s'effectue à l'aide de Docker, qui a été retenu pour sa facilité à maintenir et pour sa capacité à recréer des environnements reproducibles. Un `Dockerfile` est présent dans le répertoire `server`, qui permet de générer une image du serveur.
+
+Une fois cette image générée, un `docker-compose.yml` est présent à la racine du projet. Ce dernier comporte deux variantes :
+
+- Développement (`docker-compose.dev.yml`) : permet de lancer une instance en développement, avec *hot reload*
+- Production (`docker-compose.prod.yml`) : permet de lancer une instance en production, avec HTTPS automatique
+
+La raison pour laquelle ces deux dernières ont été séparées en plusieurs fichiers vient du fait des légères différences entre les environnements. Avec ce système, la version en développement peut bénéficier du *hot reload*, comme mentionné auparavant, ce qui améliore grandement l'expérience développeur. De plus, le déploiement en production nécéssitant HTTPS, qui a besoin d'un nom de domaine afin de générer les certificats, ce n'est donc pas possible de le faire si le serveur tourne sur localhost.
+
+Ce Compose permet également aussi de lancer une base de données postgres, qui est migrée automatiquement grâce au script `migrate-and-run.sh` dans le dossier serveur. Ce dernier lance les bonnes migrations par rapport à l'environnement dans lequel il se trouve (migrations de développement en développement, qui active également les seeders présents, et migrations de production en production, qui permettent de s'assurer que les données ne seront pas supprimées si nous venions à mettre à jour le modèle). Les différentes variables d'environnements nécéssaires sont également définies, si besoin est.
+
+Finalement, il lance un serveur Caddy, qui permet de gérer le reverse proxy vers les différentes applications, afin de pouvoir avoir le serveur et un client pgAdmin sur la même URL sans avoir besoin de changer le numéro de port.
+
+Une des autres raisons pour laquelle les deux versions sont séparées est le fait que Docker Swarm est utilisé pour le déploiement de Missive. Ce dernier  est un outil de Docker, qui permet de rajouter des fonctionnalitées extrêmement pratiques pour le développement, comme la gestion des secrets de manière sécurisée (clés privées...), des configurations, et encore de pouvoir effectuer un *load balancing* automatiquement en connectant des nœuds ensemble.
+
+### Jelastic Cloud
+
+Le choix de l'hébergeur pour Missive a été Jelastic Cloud de chez Infomaniak. Ce dernier a été choisi car les données de Missive doivent se trouver en Suisse, afin de respecter la confidentialité des utilisateurs. De plus, ayant déjà une expérience antérieure avec les produits Infomaniak, le choix me semblait tout à fait naturel.
+
+Jelastic Cloud est une *PaaS* (Platform as a Service), qui permet d'héberger facilement des applications. Un Docker Swarm a été créé chez eux, ainsi qu'une interface Portainer afin de pouvoir permettre une gestion du déploiement simple. Portainer possède également une fonctionnalité très appréciable, qui permet de donner le lien vers un dépôt Git contenant un `docker-compose.yml`, afin de pouvoir gérer automatiquement les différentes versions de l'application.
 
 ## Justifications techniques et réflexions
 
