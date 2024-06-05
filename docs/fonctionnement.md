@@ -263,6 +263,8 @@ Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores 
 
 Afin de simplifier tout ce processus, un Provider a été créé afin d'envelopper les méthodes et la logique plus bas niveau du protocole Signal. Ce dernier contient des méthodes permettant d'effectuer les opérations principales dont Missive a besoin (initialisation du protocole ainsi que des stores, récupération des pré-clés, chiffrement / déchiffrement des messages). Cela permet d'avoir une interface simple afin d'utiliser le protocole, et de séparer encore plus la logique de l'interface afin d'éviter d'avoir des composants trop longs et complexes.
 
+![Diagramme de classe de SignalProvider](assets/diagrams/out/technical/signal_provider.svg)
+
 ##### Initialisation du protocole
 
 À chaque fois que l'utilisateur lance l'application, le protocole est initialisé, en utilisant la fonction `initialize({required bool installing, required String name, String? accessToken})`. Le fonctionnement de cette dernière est le suivant : 
@@ -270,6 +272,11 @@ Afin de simplifier tout ce processus, un Provider a été créé afin d'envelopp
 
 Une fois le protocole initialisé, `SignalProvider` est prêt à être utilisé. Si ce dernier ne l'est pas, une erreur sera retournée afin d'éviter tout comportement non attendu.
 
+##### Établissement d'une session
+
+Le protocole Signal requiert l'établissement d'une session entre deux utilisateur•trice•s afin de pouvoir envoyer et recevoir des messages chiffrés. Ce processus est abstrait dans la fonction `buildSession(name: 'username', accessToken: 'access-token')`. Cette dernière est appelée à chaque fois qu'une conversation est accédée, ou si un message est reçu sans qu'une session soit disponible (si c'est le premier message que l'on reçoit de cet•te utilisateur•trice). Voici comment elle fonctionne :
+
+- Vérifie si une session existe déjà dans notre implémentation du `SessionStore`
 #### Authentification
 
 L'authentification de Missive est gérée par le provider `AuthProvider`. Ce dernier permet de connecter l'utilisateur, en interagissant avec l'API afin de récupérer les jetons d'accès et de rafraîchissement. Il permet aussi de gérer la création de compte, et la déconnexion.
@@ -311,7 +318,11 @@ Logique de redirection du routeur de Missive
 
 Si la connexion échoue, une erreur est affichée à l'utilisateur (grâce au type de retour de `login()` et `register()`), et il lui est demandé de réessayer.
 
-#### Communication en temps réel
+#### Conversations
+
+La gestion des conversations est effectuée grâce à `ChatProvider`. Ce dernier contient  
+
+##### Communication en temps réel
 
 La communication en temps réel est gérée par le provider `ChatProvider`. Ce dernier permet de gérer la connexion au serveur de WebSocket, ainsi que l'envoi et la réception des messages. Il permet également de gérer les différentes erreurs qui peuvent survenir lors de la communication. Il dépend de `SignalProvider` pour chiffrer et déchiffrer les messages, ainsi que de `AuthProvider` pour récupérer les jetons d'accès, comme par exemple afin d'établir la connexion au serveur WebSocket, ou pour récupérer les messages en attente.
 
