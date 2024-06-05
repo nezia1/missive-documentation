@@ -1,4 +1,4 @@
-@startuml
+@startuml build_session
 actor User
 participant SignalProvider
 participant SecureStorageSessionStore

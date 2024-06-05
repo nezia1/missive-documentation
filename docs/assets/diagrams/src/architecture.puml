@@ -3,18 +3,18 @@ package "Client" {
     [Flutter Application]
 }
 
-package "Server" {
+package "Serveur" {
     [REST API]
     [WebSocket Server]
 }
 
-package "Database" {
+package "Base de données" {
     [PostgreSQL]
 }
 
-[Flutter Application] -> [REST API] : Account management 
-[Flutter Application] -> [REST API] : Public key retrieval/storage requests
-[Flutter Application] -> [WebSocket Server] : Real-time messaging
-[REST API] -> [PostgreSQL] : Account data & public key storage
-[WebSocket Server] -> [PostgreSQL] : Pending message storage
+[Flutter Application] -> [REST API] : Gestion des comptes
+[Flutter Application] -> [REST API] : Récupération et stockage des clés publiques
+[Flutter Application] -> [WebSocket Server] : Messagerie en temps réel
+[REST API] -> [PostgreSQL] : Gestion du compte & stockage des clés publiques
+[WebSocket Server] -> [PostgreSQL] : Stockage des messages temporaires
 @enduml
