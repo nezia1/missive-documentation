@@ -75,17 +75,17 @@ plugins:
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
       output_path: pdf/anthony-rdrgz-documentation-missive.pdf
-      exclude_pages: 
+      exclude_pages:
         - ^$
         - api
   - glightbox
   - build_plantuml:
-      render: 'server'
-      server: 'http://www.plantuml.com/plantuml' # official plantuml server
-      output_format: 'svg' # or "png"
-      diagram_root: 'docs/assets/diagrams' # should reside under docs_dir
-      output_folder: 'out'
-      input_folder: 'src'
+      render: "server"
+      server: "http://www.plantuml.com/plantuml" # official plantuml server
+      output_format: "svg" # or "png"
+      diagram_root: "docs/assets/diagrams" # should reside under docs_dir
+      output_folder: "out"
+      input_folder: "src"
   - swagger-ui-tag
   - table-of-figures:
       title_label: Table des figures
@@ -94,7 +94,7 @@ plugins:
       show_type: true
       show_section: true
       pair_type_name: Images
-      on_codeblock: true 
+      on_codeblock: true
       on_table: true
 # Extensions
 markdown_extensions:
@@ -141,7 +141,7 @@ extra_css:
   - stylesheets/increase-figure-size.css
   - stylesheets/add-missive-brand-colors.css
   - stylesheets/justify-paragraphs.css
-  
+
 # Page tree
 nav:
   - Accueil: index.md
@@ -149,5 +149,6 @@ nav:
   - Fonctionnement: fonctionnement.md
   - API: api.md
   - Plan de tests: testing.md
-  - Journal de bord: logbook.md
+  - Glossaire: glossary.md
   - Illustrations: figures.md
+  - Journal de bord: logbook.md
