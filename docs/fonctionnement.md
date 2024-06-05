@@ -276,12 +276,53 @@ Une fois le protocole initialisé, `SignalProvider` est prêt à être utilisé.
 
 Le protocole Signal requiert l'établissement d'une session entre deux utilisateur•trice•s afin de pouvoir envoyer et recevoir des messages chiffrés. Ce processus est abstrait dans la fonction `buildSession(name: 'username', accessToken: 'access-token')`. Cette dernière est appelée à chaque fois qu'une conversation est accédée, ou si un message est reçu sans qu'une session soit disponible (si c'est le premier message que l'on reçoit de cet•te utilisateur•trice). Voici comment elle fonctionne :
 
-- Vérifie si une session existe déjà dans notre implémentation du `SessionStore`
-- Récupération du bundle de pré-clés avec `GET /users/{name}/keys
-- Instanciation d'un SessionBuilder avec les différents stores, ainsi que l'addresse de l'utilisateur (en l'occurence son nom)
-- Traitement du bundle de pré-clés
+
+![Diagramme de séquence de l'établissement d'une session](assets/diagrams/out/technical/build_session.svg)
 
 Une fois toutes ces étapes effectuées, le SessionBuilder se chargera automatiquement de créer la session avec nos implémentations des différents stores (ceci est également la raison de pourquoi il est si important de bien les implémenter), du moment que nos méthodes font ce qu'elles sont sensées faire.
+
+##### Chiffrement d'un message
+
+Une fois la session établie, nous pouvons enfin commencer à envoyer des messages. `SignalProvider` possède une fonction, `encrypt({required String name, required String message})`qui permet de chiffrer simplement un message, et de le préparer à l'envoi par le serveur WebSocket. Voici son implémentation : 
+
+```dart
+  Future<CiphertextMessage> encrypt(
+      {required String name, required String message}) async {
+    final remoteAddress = SignalProtocolAddress(name, 1);
+    final sessionCipher = SessionCipher(_sessionStore, _preKeyStore,
+        _signedPreKeyStore, _identityKeyStore, remoteAddress);
+
+    final cipherText = await sessionCipher.encrypt(utf8.encode(message));
+    return cipherText;
+  }
+```
+Implémentation de la méthode encrypt
+
+Il fonctionne de manière similaire au buildSession avec le SessionCipher. Il suffit de lui donner tous les stores, et il va aller chercher les bonnes données automatiquement avec les fonctions que nous avons implémenté au plus bas niveau.
+
+##### Déchiffrement d'un message
+
+Une fois le message envoyé (le fonctionnement de la communication en temps réel est expliquée plus bas), Il sera nécéssaire de le déchiffrer de l'autre côté une fois reçu. Encore une fois, `SignalProvider` contient une fonction pour déchiffrer un `CiphertextMessage`, qui est la classe prodiguée par l'implémentation de `libsignal_protocol_dart`. Voici à quoi elle ressemble : 
+```dart
+ Future<String> decrypt(
+      CiphertextMessage message, SignalProtocolAddress senderAddress) async {
+    final sessionCipher = SessionCipher(_sessionStore, _preKeyStore,
+        _signedPreKeyStore, _identityKeyStore, senderAddress);
+    Uint8List plainText = Uint8List(0);
+
+    if (message is PreKeySignalMessage) {
+      plainText = await sessionCipher.decrypt(message);
+    }
+    if (message is SignalMessage) {
+      plainText = await sessionCipher.decryptFromSignal(message);
+    }
+    return utf8.decode(plainText);
+  }
+}
+```
+Implémentation de la méthode decrypt
+
+On peut voir deux types de messages dans cette méthode, `PreKeySignalMessage` et `SignalMessage`. Les deux doivent être déchiffrés différement, car un `PreKeySignalMessage` est envoyé en tant que message initial d'une conversation. Il a donc besoin d'une pré clé afin d'établir la chaîne initiale. Ensuite, les messages seront uniquement des `SignalMessage`, mais ce cas doit être traité à part car il nécéssite une logique et des données différentes.
 
 #### Authentification
 
@@ -326,12 +367,33 @@ Si la connexion échoue, une erreur est affichée à l'utilisateur (grâce au ty
 
 #### Conversations
 
-La gestion des conversations est effectuée grâce à `ChatProvider`. Ce dernier contient  
+La gestion des conversations est effectuée grâce à `ChatProvider`. Ce dernier contient des méthodes qui permettent de se connecter au serveur WebSocket, de réagir aux nouveaux messages en temps réel ainsi que de se charger du stockage des messages après leur chiffrement/déchiffrement.
+
+##### Stockage des messages en local
+
+Une partie importante du fonctionnement de Missive est la manière dont les messages sont stockés en local. Pour se faire, une bibliothèque nommée Realm, publiée par MongoDB, est utilisée. Il s'agit d'une base de données locale, en NoSQL, qui permet d'effectuer des requêtes de manière efficace et supporte également le chiffrement de la base de données en natif.
+
+Différentes solutions ont été considérées pour le stockage des messages. Tout d'abord, SQLite a été le premier choix, mais le chiffrement ne fonctionnait malheureusement pas. Ensuite, des essais ont été effectués avec Hive, une autre solution de stockage persistent en
+local qui supporte des requêtes, mais le souci était que l'intégralité des messages devaient être chargés si l'on souhaitait stocker quelque chose (également aucun support de pagination). Vu les soucis de performance, le choix de Realm a été fait, qui supporte le chiffrement de manière native, ainsi que la capacité de requêtes et l'efficacité d'une base de données comme SQLite.
+
+La base de données Realm est chiffrée avec une clé générée à la création du compte, et stockée dans le stockage sécurisé du téléphone. Elle peut être accédée seulement quand l'utilisateur est connecté, et est seulement déchiffrée au besoin.
+
+##### Réception
+
+Quand un message est reçu, la méthode `handleMessage` est appelée, qui se charge de déchiffrer le message et de le stocker dans la base de données locale. Voici comment elle fonctionne : 
+
+![Diagramme de séquence de la méthode pour gérer les messages reçus](assets/diagrams/out/technical/handle_message.svg)
 
 ##### Communication en temps réel
 
 La communication en temps réel est gérée par le provider `ChatProvider`. Ce dernier permet de gérer la connexion au serveur de WebSocket, ainsi que l'envoi et la réception des messages. Il permet également de gérer les différentes erreurs qui peuvent survenir lors de la communication. Il dépend de `SignalProvider` pour chiffrer et déchiffrer les messages, ainsi que de `AuthProvider` pour récupérer les jetons d'accès, comme par exemple afin d'établir la connexion au serveur WebSocket, ou pour récupérer les messages en attente.
 
+Il implémente une méthode `connect()` qui permet d'effectuer les opérations suivantes :
+
+- Connecte l'application au serveur WebSocket de Missive
+- Envoie les messages en attente au WebSocket si il y en a
+- Gère la reconnexion si jamais la connexion est perdue
+- Gère la réception des messages (leur déchiffrement ainsi que leur stockage dans la base de données locale)
 ### Serveur
 
 Le serveur de Missive est composé de deux parties distinctes : l'API, et le serveur WebSocket. Ces deux parties permettent de gérer l'authentification, l'autorisation, le stockage des messages, et la communication en temps réel entre les utilisateur·rice·s. Ils sont réalisés à l'aide du framework Fastify, qui est un framework back-end rapide, et qui permet de gérer les différentes routes de manière efficace. Il permet également de gérer les différentes parties de l'application de manière découplée, ce qui est crucial dans le développement de cette application.
