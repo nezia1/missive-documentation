@@ -1,0 +1,23 @@
+@startuml
+actor Utilisateur
+participant _handleMessage
+participant SignalMessage
+participant PreKeySignalMessage
+participant _signalProvider
+participant _getUserRealm
+participant Realm
+participant Conversation
+
+_handleMessage -> _handleMessage : Traitement du JSON (création d'un objet SignalMessage ou PreKeySignalMessage)
+_handleMessage -> _signalProvider : Déchiffrement du message
+_signalProvider -> _handleMessage : Envoi du message en clair
+_handleMessage -> _getUserRealm : Récupération du Realm de l'utilisateur
+_getUserRealm -> _handleMessage : Retourne la base de données Realm
+_handleMessage -> Realm : Écriture du message en clair
+Realm -> Conversation : Recherche de la conversation
+alt conversation trouvée
+    Realm -> Conversation : Ajout du message
+else
+    Realm -> Conversation : Création et ajout du message
+end
+@enduml
