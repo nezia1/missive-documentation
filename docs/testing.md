@@ -54,6 +54,12 @@ Toutes les requêtes nécessitent une authentification par token Bearer, sauf la
 
 Ce plan détaille les tests fonctionnels prévus pour valider les fonctionnalités du serveur WebSocket de Missive, qui gère l'envoi et la réception des messages en temps réel ainsi que la gestion des statuts des messages.
 
+Les tests unitaires du serveur de Missive sont réalisés avec Vitest, un framework de test moderne et rapide, simple à utiliser et extrêmement bien documenté et maintenu. Il est développé par Evan You, le créateur de Vue.JS. Il permet également de réaliser des mocks de manière simple, ce qui a été crucial étant donné que le serveur de Missive dépend d'un bon nombre de composants externes, comme Prisma pour la base de données.
+
+Ils sont organisés en ajoutant .test.ts après le nom du fichier, ce qui permet d'avoir les tests directement à côté du fichier concerné dans l'arborescence.
+
+Ils également mis en place de manière à générer un rapport JUnit, ce qui permet d'avoir une vue dans la pipeline Gitlab des différents tests.
+
 ### URL
 
 **WebSocket Server** : `wss://missive.nezia.dev`
@@ -90,6 +96,10 @@ Ce plan détaille les tests fonctionnels prévus pour valider les fonctionnalit�
 ### Introduction
 
 Ce plan détaille les tests fonctionnels prévus pour valider les fonctionnalités du client Missive, développé en Flutter, qui gère l'authentification des utilisateurs, la communication sécurisée via le protocole Signal, et l'envoi/réception de messages en temps réel.
+
+Les tests unitaires du client de Missive sont réalisés avec flutter_test, une librairie native à Flutter. Ils utilisent aussi mockito afin de pouvoir créer les différents mocks, qui dans le cas du client est crucial (le client dépend d'un bon nombre d'éléments externes, l'exemple le plus évident étant l'API).
+
+Ils sont organisés dans le répertoire test, ce qui est la convention pour les tests en Flutter. Un rapport JUnit est également généré afin d'avoir une visualisation claire directement dans la pipeline Gitlab.
 
 ### URL
 **Production** : `wss://missive.nezia.dev`

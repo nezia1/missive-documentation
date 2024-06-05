@@ -273,11 +273,6 @@ Si la connexion échoue, une erreur est affichée à l'utilisateur, et il lui es
 
 La communication en temps réel est gérée par le provider `ChatProvider`. Ce dernier permet de gérer la connexion au serveur de WebSocket, ainsi que l'envoi et la réception des messages. Il permet également de gérer les différentes erreurs qui peuvent survenir lors de la communication. Il dépend de `SignalProvider` pour chiffrer et déchiffrer les messages, ainsi que de `AuthProvider` pour récupérer les jetons d'accès, comme par exemple afin d'établir la connexion au serveur WebSocket, ou pour récupérer les messages en attente.
 
-#### Tests unitaires
-
-Les tests unitaires du client de Missive sont réalisés avec `flutter_test`, une librairie native à Flutter. Ils utilisent aussi `mockito  ` afin de pouvoir créer les différents mocks, qui dans le cas du client est crucial (le client dépend d'un bon nombre d'éléments externes, l'exemple le plus évident étant l'API).
-
-Ils sont organisés dans le répertoire `test`, ce qui est la convention pour les tests en Flutter. Un rapport JUnit est également généré afin d'avoir une visualisation claire directement dans la pipeline Gitlab.
 ### Serveur
 
 Le serveur de Missive est composé de deux parties distinctes : l'API, et le serveur WebSocket. Ces deux parties permettent de gérer l'authentification, l'autorisation, le stockage des messages, et la communication en temps réel entre les utilisateur·rice·s. Ils sont réalisés à l'aide du framework Fastify, qui est un framework back-end rapide, et qui permet de gérer les différentes routes de manière efficace. Il permet également de gérer les différentes parties de l'application de manière découplée, ce qui est crucial dans le développement de cette application.
@@ -423,13 +418,6 @@ Ils peuvent être soit envoyés directement depuis le serveur, dans le cas d'un 
 
 C'est un processus qui est similaire à celui de l'envoi de messages, mais qui utilise une table complètement différente, à savoir `MessageStatus`, afin d'éviter de garder les messages en base de données. Cela permet d'augmenter encore plus la sécurité des données des utilisateur•trice•s.
 
-#### Tests unitaires
-
-Les tests unitaires du serveur de Missive sont réalisés avec Vitest, un framework de test moderne et rapide, simple à utiliser et extrêmement bien documenté et maintenu. Il est développé par Evan You, le créateur de Vue.JS. Il permet également de réaliser des mocks de manière simple, ce qui a été crucial étant donné que le serveur de Missive dépend d'un bon nombre de composants externes, comme Prisma pour la base de données.
-
-Ils sont organisés en ajoutant .test.ts après le nom du fichier, ce qui permet d'avoir les tests directement à côté du fichier concerné dans l'arborescence.
-
-Ils également mis en place de manière à générer un rapport JUnit, ce qui permet d'avoir une vue dans la pipeline Gitlab des différents tests.
 ### Base de données
 
 La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateur•trice•s, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
