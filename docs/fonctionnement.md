@@ -277,6 +277,12 @@ Une fois le protocole initialisé, `SignalProvider` est prêt à être utilisé.
 Le protocole Signal requiert l'établissement d'une session entre deux utilisateur•trice•s afin de pouvoir envoyer et recevoir des messages chiffrés. Ce processus est abstrait dans la fonction `buildSession(name: 'username', accessToken: 'access-token')`. Cette dernière est appelée à chaque fois qu'une conversation est accédée, ou si un message est reçu sans qu'une session soit disponible (si c'est le premier message que l'on reçoit de cet•te utilisateur•trice). Voici comment elle fonctionne :
 
 - Vérifie si une session existe déjà dans notre implémentation du `SessionStore`
+- Récupération du bundle de pré-clés avec `GET /users/{name}/keys
+- Instanciation d'un SessionBuilder avec les différents stores, ainsi que l'addresse de l'utilisateur (en l'occurence son nom)
+- Traitement du bundle de pré-clés
+
+Une fois toutes ces étapes effectuées, le SessionBuilder se chargera automatiquement de créer la session avec nos implémentations des différents stores (ceci est également la raison de pourquoi il est si important de bien les implémenter), du moment que nos méthodes font ce qu'elles sont sensées faire.
+
 #### Authentification
 
 L'authentification de Missive est gérée par le provider `AuthProvider`. Ce dernier permet de connecter l'utilisateur, en interagissant avec l'API afin de récupérer les jetons d'accès et de rafraîchissement. Il permet aussi de gérer la création de compte, et la déconnexion.
