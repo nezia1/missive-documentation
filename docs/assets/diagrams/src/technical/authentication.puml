@@ -1,0 +1,28 @@
+@startuml authentication
+actor Utilisateur
+participant Mobile
+participant AuthProvider
+participant NamespacedSecureStorage
+participant API
+participant Firebase
+
+Utilisateur -> AuthProvider: Envoi des informations de connexion
+AuthProvider -> API: Valider les informations (POST /tokens)
+alt Informations correctes
+    API -> AuthProvider: Envoi des jetons
+    AuthProvider -> NamespacedSecureStorage: Stocker le jeton d'accès et le jeton de rafraîchissement
+    AuthProvider -> Mobile: Vérifier si sur mobile
+    alt Sur mobile
+        AuthProvider -> Firebase: Initialiser la connexion
+    end
+    AuthProvider -> NamespacedSecureStorage: Vérifier la clé d'identité
+    alt Première connexion
+        NamespacedSecureStorage --> AuthProvider: Aucune clé trouvée
+    else
+        NamespacedSecureStorage --> AuthProvider: Clé trouvée
+    end
+    AuthProvider --> Mobile: AuthenticationSuccess
+else Informations incorrectes ou erreur
+    AuthProvider --> Mobile: AuthenticationError
+end
+@enduml

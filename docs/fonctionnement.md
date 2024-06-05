@@ -259,17 +259,59 @@ Méthode encrypt de SignalProvider
 
 Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores pour chiffrer un message, en instanciant un `SessionCipher`. Cette classe est la classe principale de la bibliothèque, et permet de chiffrer / déchiffrer les messages en utilisant les différentes clés stockées dans les stores. Elle s'occupe automatiquement d'utiliser les différentes méthodes des stores pour récupérer les clés nécessaires, et de les utiliser pour chiffrer le message.
 
-#### Fonctionnalités
+##### SignalProvider
 
-##### Authentification
+Afin de simplifier tout ce processus, un Provider a été créé afin d'envelopper les méthodes et la logique plus bas niveau du protocole Signal. Ce dernier contient des méthodes permettant d'effectuer les opérations principales dont Missive a besoin (initialisation du protocole ainsi que des stores, récupération des pré-clés, chiffrement / déchiffrement des messages). Cela permet d'avoir une interface simple afin d'utiliser le protocole, et de séparer encore plus la logique de l'interface afin d'éviter d'avoir des composants trop longs et complexes.
+
+##### Initialisation du protocole
+
+À chaque fois que l'utilisateur lance l'application, le protocole est initialisé, en utilisant la fonction `initialize({required bool installing, required String name, String? accessToken})`. Le fonctionnement de cette dernière est le suivant : 
+![Diagramme de séquence de SignalProvider.initialize()](assets/diagrams/out/technical/initialize.svg)
+
+Une fois le protocole initialisé, `SignalProvider` est prêt à être utilisé. Si ce dernier ne l'est pas, une erreur sera retournée afin d'éviter tout comportement non attendu.
+
+#### Authentification
 
 L'authentification de Missive est gérée par le provider `AuthProvider`. Ce dernier permet de connecter l'utilisateur, en interagissant avec l'API afin de récupérer les jetons d'accès et de rafraîchissement. Il permet aussi de gérer la création de compte, et la déconnexion.
 
-La connexion et la création de compte s'effectue en envoyant une requête à l'API (`POST /users` pour la création de compte, `POST /tokens` pour la connexion). Si la connexion est réussie, les jetons d'accès et de rafraîchissement sont stockés dans le stockage sécurisé, et l'utilisateur est redirigé vers la page des conversations.
+##### AuthProvider
+La connexion et la création de compte s'effectue en envoyant une requête à l'API (`POST /users` pour la création de compte, `POST /tokens` pour la connexion). Si la connexion est réussie, les jetons d'accès et de rafraîchissement sont stockés dans le stockage sécurisé, et l'utilisateur est redirigé vers la page des conversations. Tout ce comportement est enveloppé par la fonction `login(String name, String password)`. Cette dernière fonctionne de cette manière : 
 
-Si la connexion échoue, une erreur est affichée à l'utilisateur, et il lui est demandé de réessayer.
+![Diagramme de séquence technique de l'authentification](assets/diagrams/out/technical/authentication.svg)
 
-##### Communication en temps réel
+Il est important de noter que `register()` fonctionne quasiment de la même manière, la différence étant que la requête sera à `POST /users` et non `POST /tokens`.
+###### Gestion des erreurs d'authentification
+
+Les erreurs d'authentification sont gérées par des classes qui sont retournées par les fonctions d'authentification. J'ai décidé de baser mon système de gestion d'erreurs sur le type de l'objet plutôt qu'avec un statut quelque part dans l'objet, car le système de typage de Dart rend ce procédé beaucoup plus propre.
+
+Nous avons d'un côté la classe `AuthenticationSuccess`, qui représente une authentification avec les bons identifiants ou une création de compte qui a fonctionnée. De l'autre, nous avons `AuthenticationError`, une classe abstraite dont plusieurs autres classes héritent. Elle hérite de la classe `Error` par défaut de Dart, et nous permet d'avoir une interface commune et standarde à toutes ces erreurs. Si une de ces erreurs est retournée, le client pourra donc gérer le message à afficher au client en vérifiant le type de l'objet retourné. On peut apercevoir ce procédé dans l'implémentation de `login_screen.dart` et `register_screen.dart`.
+
+###### Authentification des requêtes
+
+Une fois la connexion / la création de compte effectuée, les autres requêtes qui seront effectuées vers le serveur pourront désormais être authentifiées avec le jeton d'accès et de rafraîchissement stockés dans le stockage sécurisé. Ils sont récupérés à l'aide de *getters* dans le `AuthProvider`, qui rendent le procédé beaucoup plus propre car le *getter* `accessToken` rafraîchit automatiquement le jeton d'accès si il venait à expirer, en décodant la base64 et en vérifiant la date d'expiration avec la date de l'appareil.
+
+##### Routage 
+Le routage des pages est effectuée en utilisant `go_router`, qui permet de rediriger l'utilisateur•trice sur la page d'accueil de son compte dès qu'il•elle s'authentifie, ainsi que de s'occuper d'envoyer l'utilisateur sur les différentes pages de l'application comme la page d'une conversation, l'écran de recherche etc. `AuthProvider` étant ce qu'on appelle un *listenable* en Dart (un élément depuis lequel un autre peut réagir), à chaque fois que `notifyListeners()` est appelé (dans le cas de `AuthProvider`, après une connexion  / création de compte qui a fonctionné), la logique définie dans `_router.refresh`, présente dans l'entrypoint de mon application, `main.dart` est lancée. Voici à quoi elle ressemble : 
+
+```dart
+redirect: (context, state) async {
+      // Determine if the user is in the onboarding flow (trying to login or register)
+      bool onboarding = state.matchedLocation == '/login' ||
+          state.matchedLocation == '/register' ||
+          state.matchedLocation == '/landing';
+      if (!authProvider.isLoggedIn) {
+        return onboarding ? null : '/landing';
+      }
+
+      return onboarding ? '/' : null;
+    },
+    refreshListenable: authProvider
+```
+Logique de redirection du routeur de Missive
+
+Si la connexion échoue, une erreur est affichée à l'utilisateur (grâce au type de retour de `login()` et `register()`), et il lui est demandé de réessayer.
+
+#### Communication en temps réel
 
 La communication en temps réel est gérée par le provider `ChatProvider`. Ce dernier permet de gérer la connexion au serveur de WebSocket, ainsi que l'envoi et la réception des messages. Il permet également de gérer les différentes erreurs qui peuvent survenir lors de la communication. Il dépend de `SignalProvider` pour chiffrer et déchiffrer les messages, ainsi que de `AuthProvider` pour récupérer les jetons d'accès, comme par exemple afin d'établir la connexion au serveur WebSocket, ou pour récupérer les messages en attente.
 
@@ -494,13 +536,13 @@ La table `OneTimePreKey` permet de stocker les différentes clés pré-clés à 
 
 La table `PendingMessage` permet de stocker les différents messages en attente des utilisateur•trice•s. Elle contient les informations suivantes :
 
-| Colonne     | Description                                                                  |
-| ----------- | ---------------------------------------------------------------------------- |
-| `id`        | l'identifiant unique du message en attente (UUID généré automatiquement)     |
-| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient le message en attente |
-| `senderId`  | l'identifiant de l'utilisateur•trice qui a envoyé le message en attente      |
-| `content`   | le contenu du message en attente (chiffré, pour des raisons de sécurité)     |
-| `createdAt` | la date de création du message en attente                                    |
+| Colonne     | Description                                                                |
+| ----------- | -------------------------------------------------------------------------- |
+| `id`        | l'identifiant unique du message en attente (UUID généré automatiquement)   |
+| `userId`    | ldentifiant de l'utilisateur•trice auquel appartient le message en attente |
+| `senderId`  | l'identifiant de l'utilisateur•trice qui a envoyé le message en attente    |
+| `content`   | le contenu du message en attente (chiffré, pour des raisons de sécurité)   |
+| `createdAt` | la date de création du message en attente                                  |
 
 ##### MessageStatus
 
