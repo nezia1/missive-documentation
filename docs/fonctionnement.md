@@ -543,7 +543,7 @@ C'est un processus qui est similaire à celui de l'envoi de messages, mais qui u
 
 La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateur•trice•s, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
 
-![Schéma de la base de données](assets/diagrams/database.svg#darkable){ width=800 loading=lazy }
+![Schéma de la base de données](assets/diagrams/database.svg){ width=800 loading=lazy }
 
 La base de données est gérée par Prisma, qui est un ORM (Object-Relational Mapper) permettant de gérer les différentes tables de manière efficace, et de gérer les relations entre les différentes tables, en représentant les tables sous forme d'un schéma générique, qui peut être ensuite converti en un grand nombre de types de base de données.
 
