@@ -1,4 +1,5 @@
 @startuml architecture
+!include ../include/themes/light.puml
 package "Client" {
     [Flutter Application]
 }

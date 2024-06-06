@@ -1,4 +1,5 @@
 @startuml build_session
+!include ../../include/themes/light.puml
 actor User
 participant SignalProvider
 participant SecureStorageSessionStore

@@ -43,18 +43,31 @@ theme:
     - toc.follow
     # - toc.integrate
   palette:
-    - scheme: default
+        # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
       primary: custom
       accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    - scheme: slate
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
       primary: custom
-      accent: custom
+      accent: custom  
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to system preference
   font:
     text: Roboto
     code: Roboto Mono
@@ -81,11 +94,14 @@ plugins:
   - glightbox
   - build_plantuml:
       render: "server"
-      server: "http://www.plantuml.com/plantuml" # official plantuml server
       output_format: "svg" # or "png"
       diagram_root: "docs/assets/diagrams" # should reside under docs_dir
       output_folder: "out"
       input_folder: "src"
+      theme_enabled: true
+      theme_folder: "include/themes"
+      theme_light: "light.puml"
+      theme_dark: "dark.puml"
   - swagger-ui-tag
   - table-of-figures:
       title_label: Table des figures
@@ -141,6 +157,8 @@ extra_css:
   - stylesheets/increase-figure-size.css
   - stylesheets/add-missive-brand-colors.css
   - stylesheets/justify-paragraphs.css
+extra_javascript:
+  - javascript/images_dark.js
 
 # Page tree
 nav:

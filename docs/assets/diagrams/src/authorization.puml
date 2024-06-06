@@ -1,4 +1,5 @@
 @startuml authorization
+!include ../include/themes/light.puml
 entity "Application" as Client
 entity API
 database "Base de données" as Database

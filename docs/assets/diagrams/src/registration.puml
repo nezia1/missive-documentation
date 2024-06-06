@@ -1,4 +1,5 @@
 @startuml registration
+!include ../include/themes/light.puml
 actor "Utilisateur" as User
 participant "Application" as Client
 participant "API" as API

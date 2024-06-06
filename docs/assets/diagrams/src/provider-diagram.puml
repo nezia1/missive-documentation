@@ -1,4 +1,5 @@
 @startmindmap provider-diagram
+!include ../include/themes/light.puml
 * Fournisseurs de l'application
 ** AuthProvider
 *** Gérer l'authentification des utilisateurs

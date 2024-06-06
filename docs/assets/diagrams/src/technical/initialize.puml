@@ -1,4 +1,5 @@
 @startuml initialize
+!include ../../include/themes/light.puml
 actor Utilisateur
 participant "SignalProvider" as SignalProvider
 participant "libsignal_protocol_dart" as LibSignal

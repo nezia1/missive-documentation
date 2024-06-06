@@ -1,4 +1,5 @@
 @startuml authentication
+!include ../../include/themes/light.puml
 actor Utilisateur
 participant Mobile
 participant AuthProvider

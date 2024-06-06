@@ -1,5 +1,5 @@
 @startuml signal_provider
-
+!include ../../include/themes/light.puml
 class SignalProvider {
   -SecureStorageIdentityKeyStore _identityKeyStore
   -SecureStoragePreKeyStore _preKeyStore

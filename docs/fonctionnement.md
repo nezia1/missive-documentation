@@ -19,7 +19,7 @@ La création du compte s'effectue de la manière suivante : l'utilisateur rentre
 
 Un jeton d'accès et de rafraîchissement sont ensuite envoyés à l'utilisateur, qui lui permet de se connecter à l'application, ainsi que de rafraîchir son jeton d'accès, qui a une durée de vie de 15 minutes. Ce jeton de rafraîchissement est crucial car il est stocké en base de données avec l'ID de l'utilisateur, et peut donc être révoqué en cas de perte ou de vol du compte.
 
-![Diagramme de séquence de la création d'un compte](assets/diagrams/out/registration.svg)
+![Diagramme de séquence de la création d'un compte](assets/diagrams/out/registration.svg#darkable)
 
 Une fois le compte de l'utilisateur créé, il est redirigé sur la page d'accueil de l'application, d'où commence la prochaine étape, la génération des clés.
 
@@ -27,7 +27,7 @@ Une fois le compte de l'utilisateur créé, il est redirigé sur la page d'accue
 
 Une fois que l'utilisateur arrive sur la page d'accueil, que ce soit après la création de son compte ou après s'être connecté, une vérification du statut de l'application est effectuée. Si ce compte vient d'être accédé pour la première fois sur ce périphérique, alors une génération des clés s'effectue. Ce processus permet de s'assurer que les différentes clés soient bien disponibles, et qu'il n'y ait aucun conflit.
 
-![Diagramme de séquence de la génération des clés](assets/diagrams/out/key-generation.svg)
+![Diagramme de séquence de la génération des clés](assets/diagrams/out/key-generation.svg#darkable)
 
 En résumé, les différentes clés privées et publiques sont générées, stockées dans le stockage sécurisé du système d'exploitation, puis envoyées à l'API pour être stockées en base de données. Il est nécessaire que tous les utilisateurs puissent avoir accès aux clés publiques d'un autre utilisateur afin d'établir une connexion et autorisation initiale. Une fois que les clés sont stockées, l'utilisateur peut commencer à envoyer et recevoir des messages.
 
@@ -59,7 +59,7 @@ Quand l'utilisateur lit le message (le message est affiché à l'écran, dans l'
 ## Architecture
 
 L'application comporte trois parties distinctes : le client, qui est l'application mobile réalisée en Flutter, l'API, qui est une API REST en TypeScript, ainsi qu'un serveur de WebSocket, qui est lui aussi en TypeScript. Le client peut communiquer avec l'API pour la partie autorisation (gestion de la connexion à l'application, de l'authentification en 2 étapes...), ainsi que la réception des messages depuis le serveur si l'on était hors-ligne, et avec le serveur de WebSocket pour la partie communication en temps réel. Vous trouverez ci-dessous un schéma de l'architecture de l'application.
-![Diagramme de composants de l'application](assets/diagrams/out/architecture.svg)
+![Diagramme de composants de l'application](assets/diagrams/out/architecture.svg#darkable)
 
 1. Le client envoie un message à un•e utilisateur•trice via son application. Ce message est chiffré au niveau de l'application grâce au protocole Signal.
 2. Le message est envoyé grâce à une connexion WebSocket au serveur.
@@ -93,7 +93,7 @@ Pour Missive, trois Provider sont disponibles :
 - `SignalProvider` : propose une interface plus haut niveau de mon implémentation du protocole Signal, et permet de chiffrer, déchiffrer, et signer les messages. Il interagit également avec le SecureStorage pour stocker les clés de manière sécurisée (sérialisation / désérialisation).
 - `ChatProvider` : permet de gérer la communication en temps réel avec le serveur de WebSocket.
 
-![Mindmap du fonctionnement des Provider](assets/diagrams/out/provider-diagram.svg)
+![Mindmap du fonctionnement des Provider](assets/diagrams/out/provider-diagram.svg#darkable)
 
 Provider a été retenu pour sa simplicité, et la possibilité de séparer clairement la logique de l'interface de manière efficace.
 
@@ -263,12 +263,12 @@ Comme vous pouvez le voir, la méthode `encrypt` utilise les différents stores 
 
 Afin de simplifier tout ce processus, un Provider a été créé afin d'envelopper les méthodes et la logique plus bas niveau du protocole Signal. Ce dernier contient des méthodes permettant d'effectuer les opérations principales dont Missive a besoin (initialisation du protocole ainsi que des stores, récupération des pré-clés, chiffrement / déchiffrement des messages). Cela permet d'avoir une interface simple afin d'utiliser le protocole, et de séparer encore plus la logique de l'interface afin d'éviter d'avoir des composants trop longs et complexes.
 
-![Diagramme de classe de SignalProvider](assets/diagrams/out/technical/signal_provider.svg)
+![Diagramme de classe de SignalProvider](assets/diagrams/out/technical/signal_provider.svg#darkable)
 
 ##### Initialisation du protocole
 
 À chaque fois que l'utilisateur lance l'application, le protocole est initialisé, en utilisant la fonction `initialize({required bool installing, required String name, String? accessToken})`. Le fonctionnement de cette dernière est le suivant : 
-![Diagramme de séquence de SignalProvider.initialize()](assets/diagrams/out/technical/initialize.svg)
+![Diagramme de séquence de SignalProvider.initialize()](assets/diagrams/out/technical/initialize.svg#darkable)
 
 Une fois le protocole initialisé, `SignalProvider` est prêt à être utilisé. Si ce dernier ne l'est pas, une erreur sera retournée afin d'éviter tout comportement non attendu.
 
@@ -277,7 +277,7 @@ Une fois le protocole initialisé, `SignalProvider` est prêt à être utilisé.
 Le protocole Signal requiert l'établissement d'une session entre deux utilisateur•trice•s afin de pouvoir envoyer et recevoir des messages chiffrés. Ce processus est abstrait dans la fonction `buildSession(name: 'username', accessToken: 'access-token')`. Cette dernière est appelée à chaque fois qu'une conversation est accédée, ou si un message est reçu sans qu'une session soit disponible (si c'est le premier message que l'on reçoit de cet•te utilisateur•trice). Voici comment elle fonctionne :
 
 
-![Diagramme de séquence de l'établissement d'une session](assets/diagrams/out/technical/build_session.svg)
+![Diagramme de séquence de l'établissement d'une session](assets/diagrams/out/technical/build_session.svg#darkable)
 
 Une fois toutes ces étapes effectuées, le SessionBuilder se chargera automatiquement de créer la session avec nos implémentations des différents stores (ceci est également la raison de pourquoi il est si important de bien les implémenter), du moment que nos méthodes font ce qu'elles sont sensées faire.
 
@@ -331,7 +331,7 @@ L'authentification de Missive est gérée par le provider `AuthProvider`. Ce der
 ##### AuthProvider
 La connexion et la création de compte s'effectue en envoyant une requête à l'API (`POST /users` pour la création de compte, `POST /tokens` pour la connexion). Si la connexion est réussie, les jetons d'accès et de rafraîchissement sont stockés dans le stockage sécurisé, et l'utilisateur est redirigé vers la page des conversations. Tout ce comportement est enveloppé par la fonction `login(String name, String password)`. Cette dernière fonctionne de cette manière : 
 
-![Diagramme de séquence technique de l'authentification](assets/diagrams/out/technical/authentication.svg)
+![Diagramme de séquence technique de l'authentification](assets/diagrams/out/technical/authentication.svg#darkable)
 
 Il est important de noter que `register()` fonctionne quasiment de la même manière, la différence étant que la requête sera à `POST /users` et non `POST /tokens`.
 ###### Gestion des erreurs d'authentification
@@ -382,7 +382,7 @@ La base de données Realm est chiffrée avec une clé générée à la création
 
 Quand un message est reçu, la méthode `handleMessage` est appelée, qui se charge de déchiffrer le message et de le stocker dans la base de données locale. Voici comment elle fonctionne : 
 
-![Diagramme de séquence de la méthode pour gérer les messages reçus](assets/diagrams/out/technical/handle_message.svg)
+![Diagramme de séquence de la méthode pour gérer les messages reçus](assets/diagrams/out/technical/handle_message.svg#darkable)
 
 ##### Communication en temps réel
 
@@ -447,7 +447,7 @@ Le jeton de rafraîchissement contient uniquement l'identifiant unique de l'util
 
 Ces derniers étant signés cryptographiquement via une clé privée, il est impossible de les modifier sans la clé privée correspondante. Cela permet de garantir l'intégrité des jetons, et de garantir que l'utilisateur·rice est bien celui·celle qu'il·elle prétend être. Cela permet également de ne pas avoir à gérer des sessions côté serveur, et laisse au client la responsabilité de gérer son propre état.
 
-![Diagramme de séquence du processus d'authentification](assets/diagrams/out/authentication.svg)
+![Diagramme de séquence du processus d'authentification](assets/diagrams/out/authentication.svg#darkable#darkable)
 
 Le processus d'authentification est géré par le hook `authenticationHook`.
 
@@ -470,7 +470,7 @@ Voici le champ en question, qui a déjà été mentionné dans la partie Authent
 Scope d'un jeton d'accès
 
 Le processus d'autorisation est géré par le hook `authorizationHook`, qui prend également en paramètre les permissions nécessaires pour accéder à une route.
-![Diagramme de séquence du processus d'autorisation](assets/diagrams/out/authorization.svg)
+![Diagramme de séquence du processus d'autorisation](assets/diagrams/out/authorization.svg#darkable)
 
 #### Serveur WebSocket
 
@@ -511,7 +511,7 @@ Si l'utilisateur est connecté, le message est envoyé directement à l'utilisat
 
 Si ce n'est pas le cas, le message est stocké dans la base de données, et sera envoyé à l'utilisateur·rice dès qu'il·elle se connectera. Après le stockage, un message de confirmation est ensuite envoyé à l'expéditeur pour lui indiquer que le message a bien été envoyé. La sécurité des données des utilisateur•trice•s est garantie par le chiffrement de bout en bout, ainsi que WSS, grâce à TLS, qui permet d'avoir une protection au niveau du contenu même du message et du transport. Les messages sont également supprimés de la base de données une fois qu'ils ont été demandés par le destinataire.
 
-![Diagramme du processus d'envoi d'un message](assets/diagrams/out/sending-message.svg)
+![Diagramme du processus d'envoi d'un message](assets/diagrams/out/sending-message.svg#darkable)
 
 ##### Gestion des statuts de messages
 
@@ -543,7 +543,7 @@ C'est un processus qui est similaire à celui de l'envoi de messages, mais qui u
 
 La base de données est une base de données PostgreSQL, qui permet de stocker les utilisateur•trice•s, les messages non envoyés et les clés publiques. PostgreSQL a été retenu pour sa robustesse, sa fiabilité, et sa capacité à gérer de gros volumes de données. Il permet également de gérer les transactions, les clés étrangères, et les index de manière efficace. Un diagramme de la base de données est disponible ci-dessous :
 
-![Schéma de la base de données](assets/diagrams/database.svg){ width=800 loading=lazy }
+![Schéma de la base de données](assets/diagrams/database.svg#darkable){ width=800 loading=lazy }
 
 La base de données est gérée par Prisma, qui est un ORM (Object-Relational Mapper) permettant de gérer les différentes tables de manière efficace, et de gérer les relations entre les différentes tables, en représentant les tables sous forme d'un schéma générique, qui peut être ensuite converti en un grand nombre de types de base de données.
 
