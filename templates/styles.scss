@@ -1,0 +1,17 @@
+:root {
+    --color: #625D92;
+}
+
+$color: #625D92;
+
+article h1 {
+    border-bottom: 2px solid $color !important;
+}
+
+article h2 {
+    border-bottom: 1px solid $color !important;
+}
+
+article h3 {
+    border-bottom: 0.5px solid $color !important;
+}

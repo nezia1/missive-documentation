@@ -84,13 +84,15 @@ plugins:
       credits: CFPT Informatique
       cover: true
       cover_title: Documentation Missive
-      cover_subtitle: Documentation de Missive, travail de diplôme d'Anthony Rodriguez, étudiant en informatique technicien ES 2023/2024
+      cover_subtitle: Anthony Rodriguez - Technicien ES 2023/2024
+      cover_logo: ./assets/img/missive_logo.svg
       toc_title: Table des matières
       enabled_if_env: ENABLE_PDF_EXPORT
       output_path: pdf/anthony-rdrgz-documentation-missive.pdf
       exclude_pages:
         - ^$
         - api
+      debug_html: true
   - glightbox
   - build_plantuml:
       render: "server"
