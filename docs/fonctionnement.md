@@ -588,16 +588,14 @@ Cette table contient le minimum d'informations possibles, afin d'éviter de stoc
 
 La table `SignedPreKey` permet de stocker les différentes clés pré-clés signées des utilisateur•trice•s. Il y en a une seule par utilisateur•trice. Elle contient les informations suivantes :
 
-| Colonne  | Description                                                                 |
-| -------- | --------------------------------------------------------------------------- |
-| `id`     | l'identifiant unique de la clé pré-clé signée (UUID généré automatiquement) |
-| `userId` | l                                                                           |
-
-'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé signée                                                                  |
-| `keyId`     | l'identifiant unique de la clé pré-clé signée (généré automatiquement, fait partie du protocole Signal)                                        |
-| `publicKey` | la clé publique de la clé pré-clé signée (permet d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice)             |
-| `signature` | la signature de la clé pré-clé signée (permet de vérifier l'authenticité de la clé pré-clé signée, et d'éviter les attaques de type MITM)      |
-| `createdAt` | la date de création de la clé pré-clé signée                                                                                                   |
+| Colonne     | Description                                                                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`        | l'identifiant unique de la clé pré-clé signée (UUID généré automatiquement)                                                               |
+| `userId`    | l'identifiant de l'utilisateur•trice auquel appartient la clé pré-clé signée                                                              |
+| `keyId`     | l'identifiant unique de la clé pré-clé signée (généré automatiquement, fait partie du protocole Signal)                                   |
+| `publicKey` | la clé publique de la clé pré-clé signée (permet d'établir une session de chiffrement initiale avec un•e autre utilisateur•trice)         |
+| `signature` | la signature de la clé pré-clé signée (permet de vérifier l'authenticité de la clé pré-clé signée, et d'éviter les attaques de type MITM) |
+| `createdAt` | la date de création de la clé pré-clé signée                                                                                              |
 
 ##### OneTimePreKey
 
@@ -737,23 +735,3 @@ Voici quelques améliorations futures qui pourraient être apportées à Missive
 1. **Gestion des contacts** : La gestion des contacts permettrait de simplifier la recherche d'utilisateur•rice•s, et de faciliter l'envoi de messages. Cela permettrait également de garantir une meilleure expérience utilisateur.
 2. **Support multi-appareils** : Le support multi-appareils permettrait de garantir que les utilisateur•rice•s peuvent utiliser l'application sur plusieurs appareils en même temps, et de synchroniser les messages entre les différents appareils. Cela permettrait de garantir une meilleure expérience utilisateur. Le protocole Signal étant par défaut un protocole multi-appareils, il serait intéressant de l'implémenter dans Missive.
 3. **Amélioration de l'interface utilisateur** : L'amélioration de l'interface utilisateur permettrait de garantir une meilleure expérience utilisateur, en rendant l'application plus agréable à utiliser. Cela permettrait également de simplifier l'utilisation de l'application, et de garantir une meilleure compréhension de son fonctionnement.
-## Glossaire
-
-| Terme                 | Description                                                                                                                                                                                         |
-| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Base64**            | Méthode d'encodage binaire à texte qui représente des données binaires en caractères ASCII, utilisée pour le stockage et le transfert des données.                                                  |
-| **Chiffrement**       | Processus de conversion de données en une forme codée pour empêcher l'accès non autorisé.                                                                                                           |
-| **Fastify**           | Framework web rapide pour Node.js, utilisé pour construire des serveurs et des API.                                                                                                                 |
-| **Flutter**           | Framework de développement open-source créé par Google pour développer des applications natives pour iOS, Android, Web et Desktop.                                                                  |
-| **Hot Reload**        | Fonctionnalité de Flutter qui permet de recharger une application en cours d'exécution pour voir instantanément les changements de code.                                                            |
-| **JWT**               | JSON Web Token, un standard pour créer des jetons d'accès qui sont utilisés pour l'authentification et l'autorisation.                                                                              |
-| **Keychain/Keystore** | Composants de sécurité dans iOS et Android respectivement, utilisés pour stocker des informations sensibles de manière sécurisée.                                                                   |
-| **Middleware**        | Logiciel qui connecte différents systèmes ou applications, permettant leur interaction et échange de données.                                                                                       |
-| **ORM**               | Object-Relational Mapper, un outil qui permet de convertir des données entre des systèmes incompatibles, comme entre une base de données relationnelle et un modèle de programmation orienté objet. |
-| **Prisma**            | ORM pour Node.js et TypeScript qui facilite l'interaction avec les bases de données.                                                                                                                |
-| **Provider**          | Bibliothèque de gestion de l'état dans Flutter, permettant de partager et gérer l'état global de l'application.                                                                                     |
-| **Secure Storage**    | Stockage sécurisé dans le système d'exploitation pour des données sensibles comme les clés de chiffrement et les jetons d'accès.                                                                    |
-| **Signal Protocol**   | Protocole de chiffrement utilisé par l'application pour assurer la sécurité des communications entre utilisateurs.                                                                                  |
-| **TOTP**              | Time-based One-Time Password, un mot de passe à usage unique basé sur le temps, utilisé pour l'authentification à deux facteurs.                                                                    |
-| **UUID**              | Universal Unique Identifier, un identifiant unique universel utilisé pour identifier de manière unique des entités dans un système.                                                                 |
-| **WebSocket**         | Protocole de communication qui permet une interaction bidirectionnelle en temps réel entre un client et un serveur.                                                                                 |
