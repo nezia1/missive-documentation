@@ -5,8 +5,6 @@ hide:
 ---
 # Glossaire
 
-Voici le tableau trié par ordre alphabétique :
-
 | Termes                      | Description                                                                                                                                        |
 | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Authentification 2FA        | Implémentation de l'authentification à deux facteurs pour renforcer la sécurité de l'application.                                                  |
