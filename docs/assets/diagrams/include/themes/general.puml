@@ -83,6 +83,12 @@ skinparam {
     QueueBorderColor ACCENT_COLOR
     QueueFontColor TEXT_PRIMARY_COLOR
 
+    
+    ClassBackgroundColor PRIMARY_COLOR
+    ClassBorderColor ACCENT_COLOR
+    ClassFontColor #FFFFFF
+    ClassAttributeFontColor #FFFFFF
+
     CloudBackgroundColor SECONDARY_COLOR
     CloudBorderColor ACCENT_COLOR
     CloudFontColor TEXT_PRIMARY_COLOR
