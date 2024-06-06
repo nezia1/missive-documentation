@@ -1,8 +1,8 @@
 @startuml key-generation
 !include ../include/themes/light.puml
 actor "Utilisateur" as User
-entity "Application" as Client
-entity "API" as API
+participant "Application" as Client
+participant "API" as API
 database "Base de données" as DB
 
 User -> Client : Accès à la page d'accueil

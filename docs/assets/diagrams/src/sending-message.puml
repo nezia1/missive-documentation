@@ -1,7 +1,7 @@
 @startuml sending-message
 !include ../include/themes/light.puml
 actor "Envoyeur" as Sender
-entity "Serveur WebSocket" as WebSocket
+participant "Serveur WebSocket" as WebSocket
 database "Base de données" as Database
 actor "Destinataire" as Receiver
 

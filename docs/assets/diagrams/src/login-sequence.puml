@@ -1,8 +1,8 @@
 @startuml login-sequence
 !include ../include/themes/light.puml
 actor Utilisateur as User
-entity "Application" as Client
-entity API
+participant "Application" as Client
+participant API
 database "Base de données" as Database
 
 User -> Client : Création de compte

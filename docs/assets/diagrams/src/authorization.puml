@@ -1,7 +1,7 @@
 @startuml authorization
 !include ../include/themes/light.puml
-entity "Application" as Client
-entity API
+participant "Application" as Client
+participant API
 database "Base de données" as Database
 
 Client -> API : GET /users/{id}
