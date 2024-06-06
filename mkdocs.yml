@@ -159,6 +159,7 @@ extra_css:
   - stylesheets/increase-figure-size.css
   - stylesheets/add-missive-brand-colors.css
   - stylesheets/justify-paragraphs.css
+  - stylesheets/icons.css
 extra_javascript:
   - javascript/images_dark.js
 

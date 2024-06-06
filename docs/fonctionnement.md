@@ -378,6 +378,94 @@ local qui supporte des requêtes, mais le souci était que l'intégralité des m
 
 La base de données Realm est chiffrée avec une clé générée à la création du compte, et stockée dans le stockage sécurisé du téléphone. Elle peut être accédée seulement quand l'utilisateur est connecté, et est seulement déchiffrée au besoin.
 
+Voici un modèle de cette dernière : 
+![Diagramme de classes de la base de données Realm des conversations](assets/diagrams/out/technical/realm_conversation.svg#darkable)
+
+Les conversations sont des objets Flutter, séparées par le nom du destinataire, qui sert de clé.
+
+##### Affichage des conversations
+
+Une fois la base de données locale mise en route, il est possible de voir ses conversations sur la page d'accueil de Missive. Elles sont récupérées ainsi que triées en fonction de la conversation avec le message le plus récent, et un petit badge avec le nombre de messages non lus est ensuite affiché afin de pouvoir correctement visualiser ses derniers messages. Cette logique visualisation est gérée par le widget `conversations_screen.dart`, qui sert également de point d'entrée de l'application après la connexion / la création de compte. Ce dernier initialise tout d'abord l'application, avec la logique suivante : 
+```dart
+late AuthProvider _userProvider;
+late SignalProvider _signalProvider;
+late SecureStorageIdentityKeyStore identityKeyStore;
+late ChatProvider _chatProvider;
+late Future _initialization;
+final Logger _logger = Logger('ConversationsScreen')
+
+void initState() {
+    super.initState();
+    _userProvider = Provider.of<AuthProvider>(context, listen: false);
+    _signalProvider = Provider.of<SignalProvider>(context, listen: false);
+    _chatProvider = Provider.of<ChatProvider>(context, listen: false);
+    _fToast.init(context);
+    _initialization = initialize();
+  }
+
+  /// Initializes stores, providers, and fetches pending data. It also installs the app (generates all required keys and upload them) in case it's the first time the user opens the appa.
+  Future<void> initialize() async {
+    await _initializeSignalAsNeeded();
+    await _chatProvider.setupUserRealm();
+    try {
+      _chatProvider.fetchPendingMessages();
+      _chatProvider.fetchMessageStatuses();
+    } catch (e) {
+      _logger.log(Level.WARNING,
+          'Error fetching pending messages: $e (error of type ${e.runtimeType})');
+    }
+    if (!mounted) return;
+    await _chatProvider.connect();
+    final info = await PackageInfo.fromPlatform();
+    setState(() {
+      _version = info.version;
+    });
+  }
+```
+Logique d'initialisation de Missive
+
+Comme on peut le voir plus haut, le fait d'avoir séparé la logique le plus possible du client rend le code côté client beaucoup plus lisible. On peut également noter quelque chose qui pourrait paraître assez particulier à première vu : la logique de `initState()` est partiellement dans une fonction `initialize()`. C'est une partie assez importante de cet `initState()` ; en effet, certaines de ces fonctions étant asynchrones, nous ne pouvons pas utiliser l'application avant que ces fonctions soient complétées, car elles permettent d'initialiser correctement les Provider ainsi que les différentes connexions. 
+
+Pour remédier à cela, nous définissons un Future, une fonction asynchrone, qui nous permettra de le réutiliser plus bas. Flutter implémente un widget, appelé FutureBuilder, qui nous permet d'envelopper l'application complètement et montrer un écran de chargement à l'utilisateur le temps que cette fonction n'a pas fini son initialisation. Voici à quoi ressemble le code de l'application : 
+```dart
+ Widget build(BuildContext context) {
+    const String logoName = 'assets/missive_logo.svg';
+    final logo = SvgPicture.asset(
+      logoName,
+      width: 200.0,
+      height: 200.0,
+      colorFilter: ColorFilter.mode(
+          Theme.of(context).colorScheme.onPrimary, BlendMode.srcIn),
+    );
+    return FutureBuilder(
+        future: _initialization,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return _buildBody();
+          }
+          return Container(
+            color: Theme.of(context).colorScheme.surface,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                logo,
+                CircularProgressIndicator(
+                  strokeWidth: 8,
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.onPrimary),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+```
+Implémentation du FutureBuilder
+
+En Flutter, un FutureBuilder a besoin d'un Future, c'est donc pour ça qu'on est venu le stocker dans `initState()`. Ce dernier est une fonction qui ne se lancera qu'une seule fois par "cycle de vie" du widget, c'est à dire tant qu'il est à l'écran. 
+
+Une fois ce Future assigné, nous pouvons implémenter ce que nous souhaitons faire dans le callback `builder:`, qui nous permet de retourner le widget de notre choix par rapport à l'état de `snapshot`. Dans ce cas-là, l'intégralité de l'application est stockée dans `_buildBody`, qui sera retournée uniquement après la complétion du Future. Dans le cas échéant, un écran de chargement pleine page, apparent à un *splashscreen* sera montré à l'utilisateur afin de l'informer visuellement et l'empêcher d'interagir avec une application non pleinement initialisée.
+
 ##### Réception
 
 Quand un message est reçu, la méthode `handleMessage` est appelée, qui se charge de déchiffrer le message et de le stocker dans la base de données locale. Voici comment elle fonctionne : 
@@ -397,6 +485,16 @@ Il implémente une méthode `connect()` qui permet d'effectuer les opérations s
 ### Serveur
 
 Le serveur de Missive est composé de deux parties distinctes : l'API, et le serveur WebSocket. Ces deux parties permettent de gérer l'authentification, l'autorisation, le stockage des messages, et la communication en temps réel entre les utilisateur·rice·s. Ils sont réalisés à l'aide du framework Fastify, qui est un framework back-end rapide, et qui permet de gérer les différentes routes de manière efficace. Il permet également de gérer les différentes parties de l'application de manière découplée, ce qui est crucial dans le développement de cette application.
+
+##### Gestion des mises à jour de statuts
+
+Missive implémente également une mise à jour des statuts de lecture, sous forme de petites coches, inspiré par des applications comme WhatsApp et Telegram. Voici tout d'abord à quoi correspondent les différentes légendes, que vous pouvez retrouver sous les messages que vous avez envoyé :
+
+- :material-check: : message envoyé
+- :material-check-all: : message reçu
+- :material-check-all:{ .done } : message lu
+
+Ces statuts sont mis à jour également grâce au `ChatProvider`. Une dépendance Flutter est tout d'abord utilisé au niveau de la conversation, 
 
 #### Concepts Fastify
 
@@ -646,7 +744,7 @@ Missive possède une pipeline d'intégration continue, gérée par un fichier `.
 
 Les tests unitaires du serveur et du client se déclenchent seulement si il y a eu des changements dans leurs dossiers respectifs, afin d'éviter d'effectuer des pipelines redondantes. Il n'a pas été possible de faire la même chose pour la documentation du client et du serveur, car ces derniers dépendent l'un de l'autre (la documentation du client se situe dans un sous-dossier du Gitlab Pages du serveur, afin de pouvoir être accessible facilement via le même domaine).
 
-## Déploiement 
+## Déploiement
 
 Le déploiement du serveur de Missive s'effectue à l'aide de Docker, qui a été retenu pour sa facilité à maintenir et pour sa capacité à recréer des environnements reproducibles. Un `Dockerfile` est présent dans le répertoire `server`, qui permet de générer une image du serveur.
 
