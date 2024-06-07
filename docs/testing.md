@@ -189,20 +189,20 @@ Ils sont organisés dans le répertoire test, ce qui est la convention pour les 
 
 ### Scénarios de Test
 
-| Fonctionnalité                                 | Description                                              | Objectif                                                       | Statut | Impact |
-| ---------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------- | ------ | ------ |
-| Connexion utilisateur                          | Authentifier un utilisateur avec ses identifiants        | Vérifier l'authentification et la remise de tokens             | OK     | Élevé  |
-| Création de compte utilisateur                 | Créer un nouveau compte utilisateur                      | Vérifier la création de compte et l'initialisation des clés    | OK     | Élevé  |
-| Récupération des données utilisateur           | Obtenir les informations de l'utilisateur connecté       | Vérifier la récupération des données utilisateur               | OK     | Élevé  |
-| Déconnexion utilisateur                        | Déconnecter l'utilisateur et révoquer les tokens         | Vérifier la déconnexion et la révocation des tokens            | OK     | Élevé  |
-| Envoi de message                               | Envoyer un message chiffré à un autre utilisateur        | Vérifier l'envoi et le chiffrement des messages                | OK     | Élevé  |
-| Réception de message                           | Recevoir un message chiffré d'un autre utilisateur       | Vérifier la réception et le déchiffrement des messages         | OK     | Élevé  |
-| Gestion des clés publiques                     | Synchroniser et mettre à jour les clés publiques         | Vérifier la synchronisation et la mise à jour des clés         | OK     | Moyen  |
-| Stockage et récupération des messages en local | Stocker et récupérer les messages en local               | Vérifier la persistance des messages en local                  | OK     | Moyen  |
-| Reconnexion automatique                        | Reconnecter automatiquement en cas de perte de connexion | Vérifier la reconnexion automatique et la reprise des messages | OK     | Moyen  |
-| Gestion des notifications                      | Recevoir des notifications push en arrière-plan          | Vérifier la réception des notifications                        | OK     | Moyen  |
-| Statut des messages                            | Mettre à jour le statut des messages (envoyé, reçu, lu)  | Vérifier la mise à jour des statuts des messages               | OK     | Moyen  |
-| Interface utilisateur                          | Afficher les messages et interactions utilisateur        | Vérifier la bonne présentation des messages et des statuts     | OK     | Moyen  |
+| Fonctionnalité                                 | Description                                                           | Objectif                                                       | Statut | Impact |
+| ---------------------------------------------- | --------------------------------------------------------------------- | -------------------------------------------------------------- | ------ | ------ |
+| Connexion utilisateur                          | Authentifier un utilisateur avec ses identifiants                     | Vérifier l'authentification et la remise de tokens             | OK     | Élevé  |
+| Création de compte utilisateur                 | Créer un nouveau compte utilisateur                                   | Vérifier la création de compte et l'initialisation des clés    | OK     | Élevé  |
+| Récupération des données utilisateur           | Obtenir les informations de l'utilisateur connecté                    | Vérifier la récupération des données utilisateur               | OK     | Élevé  |
+| Déconnexion utilisateur                        | Déconnecter l'utilisateur et révoquer les tokens                      | Vérifier la déconnexion et la révocation des tokens            | OK     | Élevé  |
+| Stockage et récupération des messages en local | Stocker et récupérer les messages en local                            | Vérifier la persistance des messages en local                  | OK     | Élevé  |
+| Envoi de message                               | Envoyer un message chiffré à un autre utilisateur                     | Vérifier l'envoi et le chiffrement des messages                | OK     | Élevé  |
+| Implémentation du protocole Signal             | Implémenter le protocole Signal en Dart, avec libsignal_protocol_dart | Vérifier le bon fonctionnement du protocole de chiffrement     | OK     | Élevé  |
+| Réception de message                           | Recevoir un message chiffré d'un autre utilisateur                    | Vérifier la réception et le déchiffrement des messages         | OK     | Élevé  |
+| Reconnexion automatique                        | Reconnecter automatiquement en cas de perte de connexion              | Vérifier la reconnexion automatique et la reprise des messages | OK     | Moyen  |
+| Gestion des notifications                      | Recevoir des notifications push en arrière-plan                       | Vérifier la réception des notifications                        | OK     | Moyen  |
+| Statut des messages                            | Mettre à jour le statut des messages (envoyé, reçu, lu)               | Vérifier la mise à jour des statuts des messages               | OK     | Moyen  |
+| Interface utilisateur                          | Afficher les messages et interactions utilisateur                     | Vérifier la bonne présentation des messages et des statuts     | OK     | Moyen  |
 
 #### Historique
 
@@ -222,3 +222,53 @@ Ils sont organisés dans le répertoire test, ce qui est la convention pour les 
 - 2024-06-15 : Validation de la reconnexion automatique et du stockage temporaire des messages.
 - 2024-06-17 : Validation des notifications sur iOS et Android.
 - 2024-06-28 : Déploiement sur Jelastic Cloud.
+
+### Rapport de tests
+#### Création de compte
+
+J'ai tout d'abord commencé par implémenter un système d'authentification avec le client. Ayant un système d'API fonctionnelle, j'ai tout d'abord commencé par créer un écran de démarrage, qui permet d'accéder à l'écran de création de compte, et à l'écran de connexion. Ensuite, j'ai implémenté mon `AuthProvider`, qui gère l'intégralité du statut de création de compte de l'utilisateur, en utilisant l'API, et gère également les jetons, en les stockant dans le stockage sécurisé du téléphone. Le `AuthProvider` gère également l'upload des clés publiques sur le serveur, afin que les autres utilisateurs puissent les trouver.
+
+J'ai ensuite implémenté un routeur, avec `go_router`, qui me permet d'avoir des routes nommées, et d'également de permettre une redirection automatique avec la propriété `refreshListenable`, qui écoute les changements sur mon `AuthProvider`, et dès qu'il y en a, la fonction `redirect` est appelée, qui contient la logique de redirection par rapport au statut de connexion de l'utilisateur.
+
+#### Authentifier un utilisateur
+
+J'ai rajouté une fonction de connexion dans mon `AuthProvider`, qui va venir faire un appel à l'API, et vérifier les informations de l'utilisateur. Quand la connexion réussit, les jetons sont stockés comme pour la création de compte, et l'utilisateur est renvoyé sur la page d'accueil (la page des conversations).
+
+#### Récupération des données utilisateur
+
+J'ai implémenté un getter dans mon `AuthProvider`, qui permet de récupérer les informations utilisateur si elles ne sont pas disponibles. Cela permet notamment d'afficher le nom de l'utilisateur dans la barre à gauche.
+
+#### Déconnexion utilisateur
+
+La déconnexion de l'utilisateur a été implémentée en ajoutant une fonction `logout` dans mon `AuthProvider`, qui se charge de supprimer tous les jetons, remettre le statut `isLoggedIn` à `false`, et de supprimer toutes les données de connexion. La redirection au *landing screen* est ensuite effectuée automatiquement, grâce au routeur, qui écoute les changements sur `AuthProvider`.
+
+#### Envoi des messages
+
+Une fois tout ça implémenté, car j'avais besoin des jetons pour tester la connexion en temps réel, j'ai commencé à réfléchir à comment j'allais gérer les messages en temps réel. C'est une étape qui m'a pris du temps, car je n'avais jamais travaillé avec des WebSocket auparavant, je n'étais donc pas sûr de comment le faire. Je n'avais en plus jamais fait de Flutter de toute ma vie, donc j'ai dû me pencher sur la manière dont on stocke l'état global de l'application en Flutter de manière générale. L'architecture de l'application est d'ailleurs une des choses qui m'a pris le plus de temps, car les frameworks à composants non dogmatiques ont tendance à devenir extrêmement désorganisés si on ne réfléchit pas à son architecture.  
+
+J'ai donc décidé de programmer toute la logique dans un Provider, `ChatProvider`, afin de pouvoir séparer la logique le plus possible de l'interface. Le système de widgets de Flutter pouvant devenir assez complexe à suivre, en raison de l'imbrication des différentes parties, j'ai donc implémenté pour commencer une fonction `connect()`, qui permet de connecter l'application au serveur WebSocket. Une fois que tout ça a été réalisé, j'ai implémenté une fonction `sendMessage`, qui permet d'envoyer un message en clair pour commencer à tester le WebSocket. Une fois que la bonne structure JSON a été implémentée, tout a fonctionné !
+
+#### Réception des messages
+
+Une fois les messages envoyés, il était temps de programmer la manière dont j'allais les afficher. J'ai décidé, de manière temporaire, de les afficher de manière désorganisée sur la page d'accueil afin de juste pouvoir tester si j'arrivais à avoir une application réactive. Vu que ma connexion WebSocket a été enveloppée dans un Provider, ces derniers donnent accès à une fonction, `notifyListeners`, qui permet de notifier l'application et les parties de l'interface qui ont besoin d'être rechargées. Cela veut dire qu'à chaque message, on peut utiliser `notifyListeners` afin de notifier l'interface que les messages ont besoin d'être mis à jour. Il m'a ensuite fallu utiliser un widget `ListView`, qui prend une liste quelconque, en l'occurence les messages, et permet d'afficher des widgets en itérant sur la liste automatiquement. Cela permet également d'ajouter des séparateurs, et de contrôler le comportement de visualisation, ce qui sera très utile par la suite.
+
+#### Implémentation du protocole Signal
+
+Maintenant que la connexion au WebSocket fonctionne, il est temps de s'attaquer au gros morceau du projet, à savoir implémenter le protocole Signal. Une des raisons principales pour lesquelles j'ai choisi Flutter pour mon projet, est l'existence d'une implémentation de ce protocole en Dart. Après avoir lu comment fonctionnait le protocole Signal, avec le *whitepaper* que la fondation a publiée sur son site, j'ai commencé à me pencher sur comment utiliser l'implémentation en Dart.
+
+Pour faire simple, la librairie implémente toutes les fonctions mathématiques et la logique dont une application Signal a besoin. La manière dont la librairie fonctionne est très intéressante, car elle nous laisse libre arbitre sur la manière dont on souhaite implémenter le stockage des différentes clés privées et publiques. L'idée est que il est nécéssaire d'implémenter des classes, appelées des stores, qui vont gérer les interactions avec la manière de stocker de votre choix. Vous trouverez ci-dessous un exemple d'une de ces interfaces :
+```dart
+abstract mixin class PreKeyStore {
+  Future<PreKeyRecord> loadPreKey(
+      int preKeyId); //  throws InvalidKeyIdException;
+
+  Future<void> storePreKey(int preKeyId, PreKeyRecord record);
+
+  Future<bool> containsPreKey(int preKeyId);
+
+  Future<void> removePreKey(int preKeyId);
+}
+```
+Classe abstraite de PreKeyStore
+
+Ces différentes méthodes doivent être implémentées de la manière dont l'on souhaite. Le seul souci de ce procédé était malheureusement le fait que la librairie était assez mal documentée, j'ai donc dû passer beaucoup de temps à déchiffrer les implémentations et à essayer de comprendre la logique derrière.
