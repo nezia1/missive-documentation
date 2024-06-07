@@ -868,7 +868,7 @@ Missive possède une pipeline d'intégration continue, gérée par un fichier `.
 2. Tests unitaires du client
 3. Génération de la documentation d'API du client
 4. Génération de la documentation mkdocs
-5. Déploiement sur pages
+5. Déploiement sur Gitlab Pages
 
 Les tests unitaires du serveur et du client se déclenchent seulement si il y a eu des changements dans leurs dossiers respectifs, afin d'éviter d'effectuer des pipelines redondantes. Il n'a pas été possible de faire la même chose pour la documentation du client et du serveur, car ces derniers dépendent l'un de l'autre (la documentation du client se situe dans un sous-dossier du Gitlab Pages du serveur, afin de pouvoir être accessible facilement via le même domaine).
 
