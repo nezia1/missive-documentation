@@ -466,6 +466,133 @@ En Flutter, un FutureBuilder a besoin d'un Future, c'est donc pour ça qu'on est
 
 Une fois ce Future assigné, nous pouvons implémenter ce que nous souhaitons faire dans le callback `builder:`, qui nous permet de retourner le widget de notre choix par rapport à l'état de `snapshot`. Dans ce cas-là, l'intégralité de l'application est stockée dans `_buildBody`, qui sera retournée uniquement après la complétion du Future. Dans le cas échéant, un écran de chargement pleine page, apparent à un *splashscreen* sera montré à l'utilisateur afin de l'informer visuellement et l'empêcher d'interagir avec une application non pleinement initialisée.
 
+##### Démarrage d'une conversation
+
+Si l'on souhaite démarrer une conversation avec un utilisateur, il suffit de cliquer sur le bouton en haut à droite. Ce dernier ouvrira une page via le routeur, que l'on peut retrouver dans `user_search_screen.dart`. Il s'agit d'un écran de recherche, qui à chaque changement de la barre de recherche, effectue un appel à l'API afin de récupérer la liste des utilisateurs. Voici à quoi ressemble son implémentation, au niveau de la logique : 
+```dart
+  List<String> _usernames = [];
+  final TextEditingController _searchController = TextEditingController();
+  final _debouncer = Debouncer(milliseconds: 500);
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _fetchUsers() async {
+    if (_searchController.text.isEmpty) {
+      return;
+    }
+
+    final response = await dio.get('/users',
+        queryParameters: {'search': _searchController.text},
+        options: Options(headers: {
+          'Authorization':
+              'Bearer ${await Provider.of<AuthProvider>(context, listen: false).accessToken}',
+        }));
+
+    setState(() {
+      _usernames = List<String>.from(
+          response.data['data']['users'].map((user) => user['name']).toList());
+    });
+  }
+
+  void _onSearchChanged() {
+    if (_searchController.text.isEmpty) {
+      setState(() {
+        _usernames = [];
+      });
+      return;
+    }
+
+    _debouncer.run(
+      () {
+        _fetchUsers();
+      },
+    );
+  }
+```
+Implémentation de la logique de recherche des conversations
+
+Comme on peut le constater, `AuthProvider` est utilisé via `Provider.of<Type>`. C'est une fonction assez pratique qui permet de récupérer la value d'un Provider dans le contexte de l'application (la fonction va remonter l'arbre des widgets et trouver le premier Provider qui correspond au type). Cela nous permet de récupérer le jeton d'accès, et d'accéder à l'API. 
+
+Une classe appelée `Debouncer` a également été implémentée : il s'agit d'une classe qui permet de ralentir la vitesse des requêtes, à un minimum de 500ms entre les différentes requêtes. Cela permet d'éviter de surcharger l'API inutilement, car la fonction `_fetchUsers` est appelée à chaque fois que la barre de recherche change. Voici son implémentation : 
+```dart
+class Debouncer {
+  final int milliseconds;
+  VoidCallback? action;
+  Timer? _timer;
+
+  Debouncer({required this.milliseconds});
+
+  void run(VoidCallback action) {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
+  }
+}
+```
+Implémentation de la classe Debouncer
+
+Une fois les utilisateurs récupérés, ils sont affichés au moyen d'une `ListView` sur la page, grâce à la variable `_usernames`.
+```dart
+Expanded(
+            child: ListView.builder(
+              itemCount: _usernames.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_usernames[index]),
+                  onTap: () async {
+                    final accessToken =
+                        await Provider.of<AuthProvider>(context, listen: false)
+                            .accessToken;
+                    if (!context.mounted) return;
+                    await Provider.of<SignalProvider>(context, listen: false)
+                        .buildSession(
+                            name: _usernames[index], accessToken: accessToken!);
+
+                    if (!context.mounted) return;
+                    await context
+                        .push('/conversations/${_usernames[index]}')
+                        .then(
+                          (value) => context.pop('/userSearch'),
+                        );
+                  },
+                );
+              },
+            ),
+          ),
+```
+Affichage des utilisateurs trouvés
+
+Comme on peut le voir au dessus, si l'on veut commencer une conversation avec quelqu'un, les opérations suivantes vont se produire :
+
+- Une session est construite avec `SignalProvider.buildSession`, en lui passant le nom d'utilisateur ainsi que le jeton d'accès afin de pouvoir récupérer le bundle de pré-clés
+- Une nouvelle fenêtre de conversations est ouverte, avec l'addresse de routage interne `/conversations/{username}`
+- La fenêtre de recherche est fermée
+
+Cela nous permet de nous assurer qu'une session de chiffrement est présente au moment ou l'utilisateur ouvre la conversation pour la première fois.
+
+##### Envoi d'un message
+
+Une fois la conversation accédée, l'utilisateur va se retrouver sur une page de conversation, implémentée sous `conversation_screen.dart`. 
+
+En accédant à cet écran, la première opération réalisée est la vérification que la conversation existe bel et bien dans la base de données locale Realm, avec la fonction `ensureConversationExists`. Si elle n'existe pas, elle sera créé afin de pouvoir s'assurer que le stockage pourra s'effectuer correctement.
+
+Après l'initialisation de cette dernière, on peut écrire un message dans la boite de texte qui se situe en bas, et l'envoyer. Une fois le bouton pressé, la fonction `handleMessageSent` est appelée. Cette dernière va aller elle-même appeler la méthode `sendMessage` du `ChatProvider`. Voici une explication de son fonctionnement : 
+![Diagramme de séquence de la méthode sendMessage](assets/diagrams/out/technical/send_message.svg#darkable)
+
+On peut voir deux comportements possibles :
+
+- L'envoyeur est connecté : le message est directement envoyé au WebSocket
+- L'envoyeur est hors-ligne : le message est stocké dans une base de données Realm et sera envoyé à la reconnexion
+
+Une deuxième base de données Realm a donc dû être mise en place, afin de stocker ces messages en attente. Cela nous assure qu'aucun message ne sera donc perdu, du moment que le serveur fonctionne correctement. Voici un schéma de cette base de données : 
+
+![Diagramme de classe de la base de données Realm PendingMessages](assets/diagrams/out/technical/pending_messages.svg#darkable)
+
 ##### Réception
 
 Quand un message est reçu, la méthode `handleMessage` est appelée, qui se charge de déchiffrer le message et de le stocker dans la base de données locale. Voici comment elle fonctionne : 
@@ -482,9 +609,6 @@ Il implémente une méthode `connect()` qui permet d'effectuer les opérations s
 - Envoie les messages en attente au WebSocket si il y en a
 - Gère la reconnexion si jamais la connexion est perdue
 - Gère la réception des messages (leur déchiffrement ainsi que leur stockage dans la base de données locale)
-### Serveur
-
-Le serveur de Missive est composé de deux parties distinctes : l'API, et le serveur WebSocket. Ces deux parties permettent de gérer l'authentification, l'autorisation, le stockage des messages, et la communication en temps réel entre les utilisateur·rice·s. Ils sont réalisés à l'aide du framework Fastify, qui est un framework back-end rapide, et qui permet de gérer les différentes routes de manière efficace. Il permet également de gérer les différentes parties de l'application de manière découplée, ce qui est crucial dans le développement de cette application.
 
 ##### Gestion des mises à jour de statuts
 
@@ -495,6 +619,10 @@ Missive implémente également une mise à jour des statuts de lecture, sous for
 - :material-check-all:{ .done } : message lu
 
 Ces statuts sont mis à jour également grâce au `ChatProvider`. Une dépendance Flutter est tout d'abord utilisé au niveau de la conversation, 
+### Serveur
+
+Le serveur de Missive est composé de deux parties distinctes : l'API, et le serveur WebSocket. Ces deux parties permettent de gérer l'authentification, l'autorisation, le stockage des messages, et la communication en temps réel entre les utilisateur·rice·s. Ils sont réalisés à l'aide du framework Fastify, qui est un framework back-end rapide, et qui permet de gérer les différentes routes de manière efficace. Il permet également de gérer les différentes parties de l'application de manière découplée, ce qui est crucial dans le développement de cette application.
+
 
 #### Concepts Fastify
 
