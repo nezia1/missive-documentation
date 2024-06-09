@@ -202,7 +202,6 @@ Ils sont organisés dans le répertoire test, ce qui est la convention pour les 
 | Reconnexion automatique                        | Reconnecter automatiquement en cas de perte de connexion              | Vérifier la reconnexion automatique et la reprise des messages | OK     | Moyen  |
 | Gestion des notifications                      | Recevoir des notifications push en arrière-plan                       | Vérifier la réception des notifications                        | OK     | Moyen  |
 | Statut des messages                            | Mettre à jour le statut des messages (envoyé, reçu, lu)               | Vérifier la mise à jour des statuts des messages               | OK     | Moyen  |
-| Interface utilisateur                          | Afficher les messages et interactions utilisateur                     | Vérifier la bonne présentation des messages et des statuts     | OK     | Moyen  |
 
 #### Historique
 
@@ -272,3 +271,97 @@ abstract mixin class PreKeyStore {
 Classe abstraite de PreKeyStore
 
 Ces différentes méthodes doivent être implémentées de la manière dont l'on souhaite. Le seul souci de ce procédé était malheureusement le fait que la librairie était assez mal documentée, j'ai donc dû passer beaucoup de temps à déchiffrer les implémentations et à essayer de comprendre la logique derrière.
+
+Une fois tout ça terminé, il suffit simplement d'utiliser les classes qu'ils ont implémenté, comme `SessionCipher`, qui prend toutes nos classes et utilise leurs fonctions internes, et le chiffrement fonctionne ! J'ai fait en sorte de tester ces classes unitairement de manière assez extensive, afin de m'assurer du bon fonctionnement de ces dernières. J'ai également à terme créé un provider, `SignalProvider`, qui me permet d'envelopper la logique un peu plus bas niveau de ces derniers dans des fonctions simples, comme `encrypt`, `buildSession` et `decrypt`. Cela permet de rendre la logique beaucoup plus lisible à terme, et beaucoup plus facilement maintenable.
+
+#### Reconnexion automatique
+
+La reconnexion automatique est extrêmement importante pour Missive, car étant une application téléphone, la qualité de la connexion de l'appareil peut changer constamment car l'utilisateur est en mouvement.
+
+J'ai donc rajouté de la logique dans ma fonction `connect()`, qui me permet de gérer tout ça. Voici à quoi la logique ressemble :
+```dart
+
+      Future<void> connect() async {
+      ...
+      // If reconnection attempts have been made, fetch pending messages as there could have been messages sent while disconnected, and reset the attempts
+      try {
+      if (_reconnectionAttempts > 0) {
+        fetchPendingMessages();
+        fetchMessageStatuses();
+        _reconnectionAttempts = 0;
+        notifyListeners();
+      }
+
+      _channel!.stream.listen(
+        (message) async {
+          await _handleMessage(message);
+        },
+        onDone: _handleConnectionClosed,
+        onError: (error) =>
+            _logger.log(Level.SEVERE, 'WebSocket Error: $error'),
+      );
+    } catch (e) {
+      _logger.log(Level.SEVERE, 'Failed to connect: $e');
+      _connected = false;
+      _scheduleReconnection();
+    } finally {
+      _isConnecting = false;
+    }
+    ...
+  }
+
+  void _handleConnectionClosed() {
+    _logger.log(Level.WARNING, 'WebSocket connection closed.');
+    _channel = null;
+    _scheduleReconnection();
+  }
+
+  void _scheduleReconnection() {
+    if (_disposed) return;
+    if (_reconnectionTimer != null && _reconnectionTimer!.isActive) return;
+
+    _reconnectionAttempts++;
+    final delay = min(_reconnectionAttempts * 2,
+        30); // take more and more time to reconnect after each failed attempt (max 30s)
+    _reconnectionTimer = Timer(Duration(seconds: delay), () {
+      _logger.log(Level.INFO,
+          'Attempting to reconnect... (Attempt $_reconnectionAttempts)');
+      connect();
+    });
+  }
+```
+Logique de reconnexion automatique
+
+Une fois cette partie implémentée, il a fallu trouver un moyen de gérer le cas où un message est envoyée si la connection se ferme, afin d'éviter de perdre un message. 
+
+Il a fallu créer une base de données locale Realm, `PendingMessages`, qui fonctionne de la même manière que le stockage des conversations. J'ai rajouté un bout de code dans `sendMessage` qui vérifie si la connexion WebSocket est établie, et si elle ne l'est pas, le message sera stocké avec `_storePendingMessage`.
+
+Ensuite, une fois la reconnexion effectuée au WebSocket, une fonction est appelée, `_sendPendingMessages`, qui s'occupe d'envoyer l'intégralité des messages en attente. L'interface est également modifiée, au niveau de `conversation_screen.dart`, pour faire en sorte d'afficher un *spinner* de chargement si le message est en attente.
+
+#### Gestion des notifications
+
+Pour la gestion des notifications, comme dit précédemment, Firebase Cloud Messaging a été utilisé. Comme le serveur s'occupe d'envoyer les notifications, il a fallu également installer l'impléemntation de Firebase Cloud Messaging sur le client.
+
+J'ai simplement suivi le tutoriel sur le site de Firebase, qui explique en détails comment relier son application à son projet Firebase.
+
+Un des soucis principaux que j'ai rencontré était avec la mise en place des notifications iOS, qui a été plus complexe que la gestion sur Android. Il a fallu ajouter un bon nombre de profils et de clés dans ma console développeur Apple, ainsi que de les relier via XCode. 
+
+Une fois toutes ces opérations effectuées, il a simplement fallu instancier Firebase Cloud Messaging, ainsi que de générer un jeton qui permet de relier le périphérique de l'utilisateur à la base de données des connexions. Voici à quoi ressemble le code : 
+
+```dart
+      if (Platform.isAndroid || Platform.isIOS) {
+        FirebaseMessaging messaging = FirebaseMessaging.instance;
+        notificationId = await messaging.getToken();
+      } else {
+        notificationId = null;
+      }
+```
+Génération de l'ID de notification
+
+Ce code est utilisé dans la fonction `login` et `register`, car il est nécéssaire d'éviter d'envoyer des notifications si l'utilisateur est déconnecté, ou de recevoir des notifications qui ne concernent pas la connexion actuelle.
+
+#### Statut des messages
+
+La gestion des statuts de messages étant prise en compte au niveau du serveur, il a fallu également l'implémenter côté client. Cette gestion est prise en charge dans ma fonction `_handleMessage` : si une propriété `state` est présente (mise à jour de statut), et le message stocké en local sera modifié.
+
+Ensuite, une logique a été implémentée au niveau de `conversation_state.dart`, qui permet d'afficher les petites coches, ou le spinner si le message est en attente, afin d'informer l'utilisateur du statut de lecture / envoi de leur message.
