@@ -8,7 +8,7 @@ hide:
 ### Introduction
 Mon travail de diplôme sur la création de Missive a été une expérience de développement intense et enrichissante. J'ai abordé des aspects variés du développement logiciel, depuis la conception initiale de l'architecture de l'API et de la base de données jusqu'au déploiement final sur le cloud Infomaniak. Voici une rétrospective détaillée de ce que j'ai réalisé, des défis rencontrés et des apprentissages tirés de ce projet.
 
-### Réalisations Clés
+### Réalisations clés
 1. Conception et architecture
     - Conception et mise en place d'une API robuste en utilisant la spécification OpenAPI 3.0.
     - Conception d'une base de données relationnelle performante, modélisée avec Prisma. 
@@ -30,7 +30,7 @@ Mon travail de diplôme sur la création de Missive a été une expérience de d
     - Création de tests unitaires et d'intégration pour assurer la fiabilité du code.
     - Maintien d'une documentation détaillée et accessible pour tous les aspects du projet.
 
-### Défis Rencontrés
+### Défis rencontrés
 1. Protocole Signal
     - La complexité de l'implémentation du protocole Signal et la gestion des clés publiques ont nécessité une recherche approfondie et une rigueur dans la mise en œuvre.
     - Le manque de documentation sur l'implémentation en Dart a rendu la compréhension de la bibliothèque plus complexe, ce qui a nécéssité plus de temps passé dessus. L'avantage principal étant que cela m'a permis de comprendre beaucoup plus en profondeurs comment le tout fonctionnait ensemble.
@@ -64,3 +64,5 @@ Mon travail de diplôme sur la création de Missive a été une expérience de d
 
 ### Conclusion
 Ce projet a été une expérience inestimable qui m'a permis de développer une gamme complète de compétences en développement logiciel, de la conception à la mise en production. Les défis rencontrés ont renforcé ma capacité à résoudre des problèmes complexes et à m'adapter avec des contraintes temporelles. Je suis fier de la robustesse et de la sécurité de l'application Missive, ainsi que de la qualité de la documentation et des tests. Je suis convaincu que les compétences acquises lors de ce projet seront extrêmement bénéfiques pour mes futurs projets professionnels.
+
+Au-delà des compétences techniques, ce projet m'a également permis de développer une certaine éthique et méthodologie de travail. J'ai appris à gérer mon temps de manière efficace, à prioriser les tâches les plus critiques, et à maintenir un niveau de qualité élevé tout au long du développement. Cette expérience m'a aussi montré l'importance de la collaboration et de la communication, des qualités essentielles pour réussir dans n'importe quel projet technologique.

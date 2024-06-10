@@ -961,3 +961,16 @@ Voici quelques améliorations futures qui pourraient être apportées à Missive
 1. **Gestion des contacts** : La gestion des contacts permettrait de simplifier la recherche d'utilisateur•rice•s, et de faciliter l'envoi de messages. Cela permettrait également de garantir une meilleure expérience utilisateur.
 2. **Support multi-appareils** : Le support multi-appareils permettrait de garantir que les utilisateur•rice•s peuvent utiliser l'application sur plusieurs appareils en même temps, et de synchroniser les messages entre les différents appareils. Cela permettrait de garantir une meilleure expérience utilisateur. Le protocole Signal étant par défaut un protocole multi-appareils, il serait intéressant de l'implémenter dans Missive.
 3. **Amélioration de l'interface utilisateur** : L'amélioration de l'interface utilisateur permettrait de garantir une meilleure expérience utilisateur, en rendant l'application plus agréable à utiliser. Cela permettrait également de simplifier l'utilisation de l'application, et de garantir une meilleure compréhension de son fonctionnement.
+
+## Références
+
+- Protocole Signal: [https://signal.org/docs/](https://signal.org/docs/)
+- Fastify: [https://www.fastify.io/](https://www.fastify.io/)
+- Prisma: [https://www.prisma.io/docs/](https://www.prisma.io/docs/)
+- Flutter: [https://flutter.dev/](https://flutter.dev/)
+- Docker: [https://www.docker.com/](https://www.docker.com/)
+- Jelastic Cloud: [https://www.infomaniak.com/en/hosting/dedicated-and-cloud-servers/jelastic-cloud](https://www.infomaniak.com/en/hosting/dedicated-and-cloud-servers/jelastic-cloud)
+- Realm: [https://docs.mongodb.com/realm/](https://docs.mongodb.com/realm/)
+- PostgreSQL: [https://www.postgresql.org/](https://www.postgresql.org/)
+- GitLab CI/CD: [https://docs.gitlab.com/ee/ci/](https://docs.gitlab.com/ee/ci/)
+- Flutter Secure Storage: [https://pub.dev/packages/flutter_secure_storage](https://pub.dev/packages/flutter_secure_storage)
