@@ -83,7 +83,7 @@ plugins:
       author: Anthony Rodriguez
       credits: CFPT Informatique
       cover: true
-      cover_title: Documentation Missive
+      cover_title: Missive - Application de messagerie sécurisée
       cover_subtitle: Anthony Rodriguez - Technicien ES 2023/2024 - Supervisé par M. Francisco Garcia
       cover_logo: ./assets/img/missive_logo.svg
       toc_title: Table des matières
