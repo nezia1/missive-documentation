@@ -548,7 +548,7 @@ Malheureusement, je me suis heurté à de nombreux problèmes, qui sont principa
 
 Finalement, j'ai réussi ! Il me suffisait juste de passer sur une instance singleton de Prisma, et tous mes soucis ont été résolus. Il a fallu jsute apprendre à utiliser vitest, qui est ma bibliothèque de choix pour ce projet. Elle permet de développer des tests unitaires efficaces ainsi que de réaliser des mocks de manière efficace.
 
-## 2024-06-03
+## 2024-07-03
 
 Aujourd'hui, je me suis réintéressé aux tests unitaires. La fin du diplôme approchant, je me suis rendu compte que je n'avais pas de tests unitaires pour mes hooks d'authentification et d'autorisation, ainsi que pour mon serveur WebSocket. 
 
